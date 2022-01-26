@@ -46,7 +46,7 @@ class MimirQuiz(commands.Cog, Websocket):
             await self.send_hook("Websocket Already Closed!")
 
 
-client = commands.Bot(command_prefix = "m!", strip_after_prefixr = True, case_insensitive = True)
+client = commands.Bot(command_prefix = "m!", strip_after_prefix = True, case_insensitive = True)
 client.add_cog(MimirQuiz(client))
             
-client.run("ODAzMTc1OTQ1OTMwMTQ1Nzky.YA594w.Hzq49nLxp-KzwFRKh9mqDvi3Mqg")
+client.run("Nzk5NDY4ODE4Mzc1NjM5MDUw.YAEBWw.OFUuud6gDHl5TYbcie3guwxPMI8")
