@@ -58,7 +58,7 @@ class Websocket:
 		url = "https://api.mimir-prod.com//games/list?type=play_free"
 		headers = {
 			"host": "api.mimir-prod.com",
-			"authorization": f"Bearer {self.token}",
+			"authorization": self.token,
 			"user-agent": "Mozilla/5.0 (Linux; Android 10; RMX1827) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.99 Mobile Safari/537.36",
 			"content-type": "application/json",
 			"accept": "*/*",
@@ -112,7 +112,7 @@ class Websocket:
 		}
 		post_data='{"mimir":{"accessToken":"token"}}'
 		newdata = json.loads(post_data)
-		newdata["mimir"]["accessToken"] = self.token
+		newdata["mimir"]["accessToken"] = self.token[7:]
 		post_data = json.dumps(newdata)
 		async with aiohttp.ClientSession() as session:
 			async with session.post(url = url, headers = headers, data = post_data) as response:
