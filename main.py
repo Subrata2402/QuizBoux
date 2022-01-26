@@ -16,6 +16,7 @@ class MimirQuiz(commands.Cog, Websocket):
     @commands.command()
     @commands.is_owner()
     async def addtoken(self, ctx, token):
+        """Update Token."""
         await ctx.message.delete()
         update = {"token": token}
         db.token.update_one({"id": "3250"}, {"$set": update})
@@ -24,15 +25,18 @@ class MimirQuiz(commands.Cog, Websocket):
     @commands.command()
     @commands.is_owner()
     async def tq(self, ctx):
+        """Get how many questions has stored in database."""
         questions = list(db.question_base.find())
         await self.send_hook(f"Total Questions : {len(questions)}")
         
     @commands.command(aliases = ["quiz", "mimir"])
     async def nextquiz(self, ctx):
+        """Get next quiz details."""
         await self.get_quiz_details("send")
     
     @commands.command(aliases = ["open"])
     async def start(self, ctx):
+        """Start Websocket."""
         if not self.ws_is_opened:
             await self.start_hook()
         else:
@@ -40,6 +44,7 @@ class MimirQuiz(commands.Cog, Websocket):
          
     @commands.command()
     async def close (self, ctx):
+        """Close Websocket."""
         if self.ws_is_opened:
             await self.close_hook()
         else:
