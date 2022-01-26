@@ -194,6 +194,7 @@ class Websocket:
 				question = str(data["question"]).strip()
 				question_number = data["number"]
 				total_question = data["total"]
+				response_time = data["secondsToRespond"]
 				choices = data["choices"]
 				option_1 = str(choices[0]["choice"]).strip()
 				option_2 = str(choices[1]["choice"]).strip()
@@ -207,15 +208,14 @@ class Websocket:
 				embed = discord.Embed(
 					title = f"**Question {question_number} out of {total_question}**",
 					description = f"**[{question}]({google_question})\n\n[Search with all options]({search_with_all})**",
-					color = discord.Colour.random(),
-					timestamp = datetime.datetime.utcnow()
+					color = discord.Colour.random()
 					)
 				embed.add_field(name = "**Option - １**", value = f"**[{option_1}]({search_with_all})**", inline = False)
 				embed.add_field(name = "**Option - ２**", value = f"**[{option_2}]({search_with_all})**", inline = False)
 				if len(choices) >= 3: embed.add_field(name = "**Option - ３**", value = f"**[{option_3}]({search_with_all})**", inline = False)
 				if len(choices) == 4: embed.add_field(name = "**Option - ４**", value = f"**[{option_4}]({search_with_all})**", inline = False)
 				embed.set_thumbnail(url = self.icon_url)
-				embed.set_footer(text = "Mimir Quiz")
+				embed.set_footer(text = f"Response Time : {response_time} seconds")
 				await self.send_hook(embed = embed)
 				
 				answer = await self.get_answer(question)
