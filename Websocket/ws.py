@@ -17,7 +17,7 @@ class Websocket:
 		self.prize = 50
 		self.pattern = []
 		self.web_url = "https://discord.com/api/webhooks/935937488151789588/LY6aP3z3YDrSOJyMro0xTLMzdHWtThz_9Qp2TGr1yQV9aYso0n8CYCm1FYFWche055J1"
-		self.token = db.token.find_one({"id": "3250"})["token"]
+		self.token = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IkFXeURtS0VhR0NweTFqb0twckRCYSJ9.eyJuaWNrbmFtZSI6InNha2htYW4yMDAxIiwibmFtZSI6InNha2htYW4yMDAxQGdtYWlsLmNvbSIsInBpY3R1cmUiOiJodHRwczovL3MuZ3JhdmF0YXIuY29tL2F2YXRhci85NGUyZTFkZDdkYjE2YmQ0OGE2NzY2NDE5OWQ1NWIxMz9zPTQ4MCZyPXBnJmQ9aHR0cHMlM0ElMkYlMkZjZG4uYXV0aDAuY29tJTJGYXZhdGFycyUyRnNhLnBuZyIsInVwZGF0ZWRfYXQiOiIyMDIyLTAxLTI2VDE3OjQxOjM0LjIwOVoiLCJlbWFpbCI6InNha2htYW4yMDAxQGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJpc3MiOiJodHRwczovL2F1dGgubWltaXItcHJvZC5jb20vIiwic3ViIjoiYXV0aDB8NjFjYzMwODIzMjgxNmEwMDcxM2E2NmI4IiwiYXVkIjoiSm9vc0FWNU9qblVNYWpIdVR5RHB1WGM1OVRxQk5aYmMiLCJpYXQiOjE2NDMyMTg4OTUsImV4cCI6MTY0MzI1NDg5NSwibm9uY2UiOiJZM0pvVFZVeVVEZEdObUpHTUVnME1FeFNPV3RZWTFGUmQyOVlTRGxQVlM0d1lUbHdVakE1VjFsZmVnPT0ifQ.dRHFfBP_NhHUUvciMOse7yBb89bY8FD0RuWVaNP1hwrGTSzDVY6Mkk5_mTgp5qHEZRLCtzTgjfehxILGl0c-1VdwNVfVaE66kV9nNSPSZ8fw3VdrnC03VPryKo2Vic2Qz9hWd9n7hggrbZYgRjfFxj74EBEuxYcDg3Zyj6-RJ1tUBeE9SLuBi_PARS7StdlsdGtxWRv8lOaDxQnqn4DowSpe8rFvtsoYB4RATR_htPqS7EcyYY0t6_18BsLBAxgt83F1w1xNZXP01v_X-mTY9aDlNyeKx8aJ7Oap3qN4y1HJjezEl6-tbUfuDEK7caO0MGI6RY9xeMmjOviOlLYlcQ:0x4357d1eE11E7db4455527Fe3dfd0B882Cb334357"
 		self.ws_is_opened = False
 		self.icon_url = "https://cdn.discordapp.com/emojis/924632014617972736.png"
 		self.game_is_active = False
@@ -58,7 +58,7 @@ class Websocket:
 		url = "https://api.mimir-prod.com//games/list?type=play_free"
 		headers = {
 			"host": "api.mimir-prod.com",
-			"authorization": self.token,
+			"authorization": f"Bearer {self.token}",
 			"user-agent": "Mozilla/5.0 (Linux; Android 10; RMX1827) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.99 Mobile Safari/537.36",
 			"content-type": "application/json",
 			"accept": "*/*",
@@ -112,7 +112,7 @@ class Websocket:
 		}
 		post_data='{"mimir":{"accessToken":"token"}}'
 		newdata = json.loads(post_data)
-		newdata["mimir"]["accessToken"] = self.token[7:]
+		newdata["mimir"]["accessToken"] = self.token
 		post_data = json.dumps(newdata)
 		async with aiohttp.ClientSession() as session:
 			async with session.post(url = url, headers = headers, data = post_data) as response:
