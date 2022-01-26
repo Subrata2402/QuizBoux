@@ -1,1 +1,8 @@
+asyncio
+requests
 discord
+sseclient
+pytz
+bs4
+pymongo
+dnspython
