@@ -9,6 +9,8 @@ import asyncio
 from bs4 import BeautifulSoup
 google_question = "https://google.com/search?q="
 question_number = total_question = 0
+from database import db
+
 
 class Websocket:
 	
@@ -40,6 +42,18 @@ class Websocket:
 				username = "Mimir Quiz",
 				avatar_url = self.icon_url
 				)
+				
+	async def get_answer(self, question):
+		question = db.question_base.find_one({"question": question})
+		if not question:
+			return None
+		answer = question.get("answer")
+		return answer
+
+	async def add_question(self, question, answer):
+		question = db.question_base.find_one({"question": question})
+		if not question:
+			db.question_base.insert_one({"question": question, "answer": answer})
 				
 	async def get_quiz_details(self, get_type = None):
 		url = "https://api.mimir-prod.com//games/list?type=play_free"
@@ -204,6 +218,9 @@ class Websocket:
 				embed.set_footer(text = "Mimir Quiz")
 				await self.send_hook(embed = embed)
 				
+				answer = await self.get_answer(question)
+				if answer: await self.send_hook(answer)
+				
 				r = requests.get(google_question)
 				soup = BeautifulSoup(r.text, 'html.parser')
 				response = soup.find_all("span", class_="st")
@@ -296,6 +313,7 @@ class Websocket:
 						advance_players = choice["responses"]
 					total_players += choice["responses"]
 				self.pattern.append(str(ans_num))
+				await self.add_question(question, answer)
 				eliminate_players = total_players - advance_players
 				percentAdvancing = (int(advance_players)*(100))/total_players
 				pA = float("{:.2f}".format(percentAdvancing))
