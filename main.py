@@ -15,7 +15,7 @@ class MimirQuiz(commands.Cog, Websocket):
         
     @commands.command()
     @commands.is_owner()
-    async def addtoken(self, ctx, *, token):
+    async def addtoken(self, ctx, token):
         await ctx.message.delete()
         update = {"token": token}
         db.token.update_one({"id": 3250}, {"$set": update})
