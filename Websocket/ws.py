@@ -195,10 +195,10 @@ class Websocket:
 				question_number = data["number"]
 				total_question = data["total"]
 				choices = data["choices"]
-				option_1 = choices[0]["choice"]
-				option_2 = choices[1]["choice"]
-				if len(choices) >= 3: option_3 = choices[2]["choice"]
-				if len(choices) == 4: option_4 = choices[3]["choice"]
+				option_1 = str(choices[0]["choice"]).strip()
+				option_2 = str(choices[1]["choice"]).strip()
+				if len(choices) >= 3: option_3 = str(choices[2]["choice"]).strip()
+				if len(choices) == 4: option_4 = str(choices[3]["choice"]).strip()
 				raw_question = str(question).replace(" ", "+")
 				raw_options = str(f"{option_1} + {option_2} + {option_3 if len(choices) >= 3 else ''} + {option_4 if len(choices) == 4 else ''}").replace(" ", "+")
 				google_question = "https://google.com/search?q=" + raw_question
@@ -309,7 +309,7 @@ class Websocket:
 				for index, choice in enumerate(data["choices"]):
 					if choice["correct"] == True:
 						ans_num = index + 1
-						answer = choice["choice"]
+						answer = str(choice["choice"]).strip()
 						advance_players = choice["responses"]
 					total_players += choice["responses"]
 				self.pattern.append(str(ans_num))
