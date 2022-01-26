@@ -18,7 +18,7 @@ class Websocket:
 		self.prize = 50
 		self.pattern = []
 		self.web_url = "https://discord.com/api/webhooks/935937488151789588/LY6aP3z3YDrSOJyMro0xTLMzdHWtThz_9Qp2TGr1yQV9aYso0n8CYCm1FYFWche055J1"
-		self.token = db.token.find_one({"id": "3250"})["token"]
+		self.token = db.token.find_one({"id": "3250"})["token"][7:]
 		self.ws_is_opened = False
 		self.icon_url = "https://cdn.discordapp.com/emojis/924632014617972736.png"
 		self.game_is_active = False
