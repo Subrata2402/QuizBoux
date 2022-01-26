@@ -50,8 +50,8 @@ class Websocket:
 		return answer
 
 	async def add_question(self, question, answer):
-		question = db.question_base.find_one({"question": question})
-		if not question:
+		check = db.question_base.find_one({"question": question})
+		if not check:
 			db.question_base.insert_one({"question": question, "answer": answer})
 				
 	async def get_quiz_details(self, get_type = None):
