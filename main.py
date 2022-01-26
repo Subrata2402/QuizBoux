@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands
 from Websocket.ws import Websocket
+from database import db
 
 class MimirQuiz(commands.Cog, Websocket):
     
@@ -11,6 +12,20 @@ class MimirQuiz(commands.Cog, Websocket):
     @commands.Cog.listener()
     async def on_ready(self):
         print("Ready!")
+        
+    @commands.command()
+    @commands.is_owner()
+    async def addtoken(self, ctx, token):
+        await ctx.message.delete()
+        update = {"token": token}
+        db.token.update_one({"id": 3250}, {"$set": update})
+        await self.send_hook("Successfully Updated!")
+        
+    @commands.command()
+    @commands.is_owner()
+    async def tq(self, ctx):
+        questions = list(db.question_base.find())
+        await self.send_hook(f"Total Questions : {len(questions)}")
         
     @commands.command(aliases = ["quiz", "mimir"])
     async def nextquiz(self, ctx):
@@ -28,11 +43,10 @@ class MimirQuiz(commands.Cog, Websocket):
         if self.ws_is_opened:
             await self.close_hook()
         else:
-            await self.send_hook("Websocket already closed!")
-   
-    
+            await self.send_hook("Websocket Already Closed!")
 
-client = commands.Bot(command_prefix = ">")
+
+client = commands.Bot(command_prefix = "m!", strip_after_prefixr = True, case_insensitive = True)
 client.add_cog(MimirQuiz(client))
             
 client.run("ODAzMTc1OTQ1OTMwMTQ1Nzky.YA594w.Hzq49nLxp-KzwFRKh9mqDvi3Mqg")
