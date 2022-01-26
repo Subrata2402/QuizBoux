@@ -11,7 +11,6 @@ google_question = "https://google.com/search?q="
 question_number = total_question = 0
 from database import db
 
-
 class Websocket:
 	
 	def __init__(self):
