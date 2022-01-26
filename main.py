@@ -18,7 +18,7 @@ class MimirQuiz(commands.Cog, Websocket):
     async def addtoken(self, ctx, token):
         await ctx.message.delete()
         update = {"token": token}
-        db.token.update_one({"id": 3250}, {"$set": update})
+        db.token.update_one({"id": "3250"}, {"$set": update})
         await self.send_hook("Successfully Updated!")
         
     @commands.command()
