@@ -29,6 +29,10 @@ class Websocket:
 	async def close_hook(self):
 		self.ws_is_opened == False
 
+	async def get_token(self):
+		token = db.token.find_one({"id": "3250"})
+		self.token = token
+
 	async def send_hook(self, content = "", embed = None):
 		async with aiohttp.ClientSession() as session:
 			webhook = discord.Webhook.from_url(self.web_url, adapter=discord.AsyncWebhookAdapter(session))
@@ -55,6 +59,7 @@ class Websocket:
 			db.question_base.insert_one({"question": question, "answer": answer})
 				
 	async def get_quiz_details(self, get_type = None):
+		await self.get_token()
 		url = "https://api.mimir-prod.com//games/list?type=play_free"
 		headers = {
 			"host": "api.mimir-prod.com",
