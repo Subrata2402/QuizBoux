@@ -33,10 +33,10 @@ class MimirQuiz(commands.Cog, Websocket):
         async with aiohttp.ClientSession() as session:
             async with session.get(url = url, headers = headers) as response:
                 if response.status != 200:
-                    return await self.send_hook("The token is invalid or expired!")
+                    return await self.send_hook("**The token is invalid or expired!**")
                 update = {"token": token}
                 db.token.update_one({"id": "3250"}, {"$set": update})
-                await self.send_hook("Successfully Updated!")
+                await self.send_hook("**Token Successfully Updated!**")
         
     @commands.command(aliases = ["quiz", "mimir"])
     async def nextquiz(self, ctx):
@@ -47,10 +47,10 @@ class MimirQuiz(commands.Cog, Websocket):
     async def start(self, ctx):
         """Start Websocket."""
         if not self.ws_is_opened:
-            await self.send_hook("Websocket Opened!")
+            await self.send_hook("**Websocket Opened!**")
             await self.start_hook()
         else:
-            await self.send_hook("Websocket Already Opened!")
+            await self.send_hook("**Websocket Already Opened!**")
          
     @commands.command()
     async def close (self, ctx):
@@ -58,13 +58,13 @@ class MimirQuiz(commands.Cog, Websocket):
         if self.ws_is_opened:
             await self.close_hook()
         else:
-            await self.send_hook("Websocket Already Closed!")
+            await self.send_hook("**Websocket Already Closed!**")
         
     @commands.command()
     async def tq(self, ctx):
         """Get how many questions has stored in database."""
         questions = list(db.question_base.find())
-        await self.send_hook(f"Total Questions : {len(questions)}")
+        await self.send_hook(embed = discord.Embed(title = f"Total Questions : {len(questions)}", color = discord.Colour.random()))
     
 
 client = commands.Bot(command_prefix = "m!", strip_after_prefix = True, case_insensitive = True)
