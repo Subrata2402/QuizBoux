@@ -31,7 +31,7 @@ class Websocket:
 		self.ws_is_opened == False
 
 	async def get_token(self):
-		token = db.token.find_one({"id": "3250"})
+		token = db.token.find_one({"id": "3250"})["token"]
 		self.token = token
 		print(self.token)
 
