@@ -234,7 +234,7 @@ class Websocket:
 				if len(choices) == 4: cnop4 = res.count(option_4)
 				maxcount = max(cnop1, cnop2, cnop3 if len(choices) >= 3 else 0, cnop4 if len(choices) == 4 else 0)
 				mincount = min(cnop1, cnop2, cnop3 if len(choices) >= 3 else 0, cnop4 if len(choices) == 4 else 0)
-				embed = discord.Embed(title="**__Google Results !__**", color = discord.Colour.random())
+				embed = discord.Embed(title="**__Google Search Results !__**", color = discord.Colour.random())
 				if len(choices) == 4:
 					if cnop1 == maxcount:
 						embed.description=f"**１. {option_1} : {cnop1}**  ✅\n**２. {option_2} : {cnop2}**\n**３. {option_3} : {cnop3}**\n４. **{option_4} : {cnop4}**"
@@ -302,7 +302,7 @@ class Websocket:
 					await self.send_hook(embed = embed)
 
 				try:
-					r = requests.get("https://duckduckgo.com/search?q=" + raw_question)
+					r = requests.get("https://bing.com/search?q=" + raw_question)
 					soup = BeautifulSoup(r.text, 'html.parser')
 					response = soup.find_all("span", class_="st")
 					res = str(r.text)
@@ -313,7 +313,7 @@ class Websocket:
 					if len(choices) == 4: cnop4 = res.count(option_4)
 					maxcount = max(cnop1, cnop2, cnop3 if len(choices) >= 3 else 0, cnop4 if len(choices) == 4 else 0)
 					mincount = min(cnop1, cnop2, cnop3 if len(choices) >= 3 else 0, cnop4 if len(choices) == 4 else 0)
-					embed = discord.Embed(title="**__DuckDuckGo Results !__**", color = discord.Colour.random())
+					embed = discord.Embed(title="**__Bing Search Results !__**", color = discord.Colour.random())
 					if len(choices) == 4:
 						if cnop1 == maxcount:
 							embed.description=f"**１. {option_1} : {cnop1}**  ✅\n**２. {option_2} : {cnop2}**\n**３. {option_3} : {cnop3}**\n４. **{option_4} : {cnop4}**"
