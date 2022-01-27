@@ -68,5 +68,11 @@ class MimirQuiz(commands.Cog, Websocket):
 
 client = commands.Bot(command_prefix = "m!", strip_after_prefix = True, case_insensitive = True)
 client.add_cog(MimirQuiz(client))
+
+@client.event
+async def on_message(message):
+    if not message.guild:
+        return
+    await client.process_commands(message)
             
 client.run("Nzk5NDY4ODE4Mzc1NjM5MDUw.YAEBWw.OFUuud6gDHl5TYbcie3guwxPMI8")
