@@ -28,7 +28,7 @@ class Websocket:
 		self.bearer_token = None
 
 	async def close_hook(self):
-		self.ws_is_opened == False
+		self.ws_is_opened = False
 		print("Websocket Closed!")
 		await self.send_hook("**Websocket Closed!**")
 
