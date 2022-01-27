@@ -38,12 +38,6 @@ class MimirQuiz(commands.Cog, Websocket):
                 db.token.update_one({"id": "3250"}, {"$set": update})
                 await self.send_hook("Successfully Updated!")
         
-    @commands.command()
-    async def tq(self, ctx):
-        """Get how many questions has stored in database."""
-        questions = list(db.question_base.find())
-        await self.send_hook(f"Total Questions : {len(questions)}")
-        
     @commands.command(aliases = ["quiz", "mimir"])
     async def nextquiz(self, ctx):
         """Get next quiz details."""
@@ -64,7 +58,13 @@ class MimirQuiz(commands.Cog, Websocket):
             await self.close_hook()
         else:
             await self.send_hook("Websocket Already Closed!")
-
+        
+    @commands.command()
+    async def tq(self, ctx):
+        """Get how many questions has stored in database."""
+        questions = list(db.question_base.find())
+        await self.send_hook(f"Total Questions : {len(questions)}")
+    
 
 client = commands.Bot(command_prefix = "m!", strip_after_prefix = True, case_insensitive = True)
 client.add_cog(MimirQuiz(client))
