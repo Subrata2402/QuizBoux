@@ -47,6 +47,7 @@ class MimirQuiz(commands.Cog, Websocket):
     async def start(self, ctx):
         """Start Websocket."""
         if not self.ws_is_opened:
+            await self.send_hook("Websocket Opened!")
             await self.start_hook()
         else:
             await self.send_hook("Websocket Already Opened!")
