@@ -15,7 +15,6 @@ class MimirQuiz(commands.Cog, Websocket):
         print("Ready!")
         
     @commands.command()
-    @commands.is_owner()
     async def addtoken(self, ctx, token):
         """Update Token."""
         await ctx.message.delete()
@@ -40,7 +39,6 @@ class MimirQuiz(commands.Cog, Websocket):
                 await self.send_hook("Successfully Updated!")
         
     @commands.command()
-    @commands.is_owner()
     async def tq(self, ctx):
         """Get how many questions has stored in database."""
         questions = list(db.question_base.find())
