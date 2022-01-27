@@ -153,6 +153,7 @@ class Websocket:
 				return host
 
 	async def start_hook(self):
+		await self.send_hook("**Websocket Connecting...**")
 		host = await self.get_host()
 		url = f"https://{host}/v2/event-feed/games/{self.game_id}"
 		headers = {
@@ -171,7 +172,6 @@ class Websocket:
 		}
 		try:
 			messages = SSEClient(url, headers = headers)
-			await self.send_hook("**Websocket Connecting...**")
 		except:
 			return await self.send_hook("**Failed to Connect Websocket!**")
 		self.ws_is_opened = True
