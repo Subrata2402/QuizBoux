@@ -33,6 +33,7 @@ class Websocket:
 	async def get_token(self):
 		token = db.token.find_one({"id": "3250"})
 		self.token = token
+		print(self.token)
 
 	async def send_hook(self, content = "", embed = None):
 		async with aiohttp.ClientSession() as session:
