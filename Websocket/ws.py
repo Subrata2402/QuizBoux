@@ -175,7 +175,6 @@ class Websocket:
 		}
 		try:
 			messages = SSEClient(url, headers = headers)
-			await self.send_hook("Websocket is Connected Successfully!")
 		except:
 			return await self.send_hook("Failed to connect websocket!")
 		self.ws_is_opened = True
@@ -184,8 +183,9 @@ class Websocket:
 			print(event)
 			if self.ws_is_opened == False:
 				return await self.send_hook("Websocket Closed!")
+			
 			if event == "GameStatus":
-				pass
+				await self.send_hook("Websocket is Connected Successfully!")
 
 			elif event == "ViewCountUpdate":
 				pass
