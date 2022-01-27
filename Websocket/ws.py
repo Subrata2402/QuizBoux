@@ -29,6 +29,8 @@ class Websocket:
 
 	async def close_hook(self):
 		self.ws_is_opened == False
+		print("Websocket Closed!")
+		await self.send_hook("**Websocket Closed!**")
 
 	async def get_token(self):
 		token = db.token.find_one({"id": "3250"})["token"]
@@ -37,9 +39,6 @@ class Websocket:
 	async def send_hook(self, content = "", embed = None):
 		async with aiohttp.ClientSession() as session:
 			webhook = discord.Webhook.from_url(self.web_url, adapter=discord.AsyncWebhookAdapter(session))
-			if not embed:
-				embed = discord.Embed(title = content, color = discord.Colour.random())
-				content = ""
 			await webhook.send(
 				content = content,
 				embed = embed,
@@ -76,7 +75,7 @@ class Websocket:
 		async with aiohttp.ClientSession() as session:
 			async with session.get(url = url, headers = headers) as response:
 				if response.status != 200:
-					await self.send_hook("The Auth token has expired!")
+					await self.send_hook("**The Auth token has expired!**")
 					raise commands.CommandError("Token has expired!")
 				r = await response.json()
 				data = r["data"]["data"][0]
@@ -116,14 +115,11 @@ class Websocket:
 			"accept-encoding": "gzip, deflate",
 			"accept-language": "en-US,en;q=0.9"
 		}
-		post_data='{"mimir":{"accessToken":"token"}}'
-		newdata = json.loads(post_data)
-		newdata["mimir"]["accessToken"] = self.token
-		post_data = json.dumps(newdata)
+		post_data = json.dumps({"mimir":{"accessToken": self.token}})
 		async with aiohttp.ClientSession() as session:
 			async with session.post(url = url, headers = headers, data = post_data) as response:
 				if response.status != 200:
-					await self.send_hook("Get access token error!")
+					await self.send_hook("**Access Token Error...**")
 					raise commands.CommandError("Get access token error...")
 				r = await response.json()
 				new_token = r["oauth"]["accessToken"]
@@ -148,7 +144,7 @@ class Websocket:
 		async with aiohttp.ClientSession() as session:
 			async with session.get(url = url, headers = headers) as response:
 				if response.status != 200:
-					await self.send_hook("Host Error...(Game is not live)")
+					await self.send_hook("**Host Error...(Game is not live)**")
 					raise commands.CommandError("Host Error")
 				r = await response.json()
 				data = r["game"]
@@ -175,23 +171,24 @@ class Websocket:
 		}
 		try:
 			messages = SSEClient(url, headers = headers)
+			await self.send_hook("**Websocket Connecting...**")
 		except:
-			return await self.send_hook("Failed to connect websocket!")
+			return await self.send_hook("**Failed to Connect Websocket!**")
 		self.ws_is_opened = True
 		for msg in messages:
 			event = msg.event
 			print(event)
 			if self.ws_is_opened == False:
-				return await self.send_hook("Websocket Closed!")
+				return
 			
 			if event == "GameStatus":
-				await self.send_hook("Websocket is Connected Successfully!")
+				await self.send_hook("**Websocket is Connected Successfully!**")
 
 			elif event == "ViewCountUpdate":
 				pass
 
 			elif event == "GameReset":
-				await self.send_hook("The Game has Reset!")
+				await self.send_hook(embed = discord.Embed(title = "The Game has Reset!", color = discord.Colour.random()))
 
 			elif event == "QuestionStart":
 				global google_question, question_number, total_question
@@ -361,6 +358,6 @@ class Websocket:
 					description = "**Thanks for playing!**", color = discord.Colour.random()
 					)
 				await self.send_hook(embed = embed)
-				self.ws_is_opened = False
 				self.pattern.clear()
+				await self.close_hook()
 				return
