@@ -35,9 +35,9 @@ class MimirQuiz(commands.Cog, Websocket):
             async with session.get(url = url, headers = headers) as response:
                 if response.status != 200:
                     return await self.send_hook("The token is invalid or expired!")
-        update = {"token": token}
-        db.token.update_one({"id": "3250"}, {"$set": update})
-        await self.send_hook("Successfully Updated!")
+                update = {"token": token}
+                db.token.update_one({"id": "3250"}, {"$set": update})
+                await self.send_hook("Successfully Updated!")
         
     @commands.command()
     @commands.is_owner()
