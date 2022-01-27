@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 from Websocket.ws import Websocket
 from database import db
+import aiohttp
 
 class MimirQuiz(commands.Cog, Websocket):
     
