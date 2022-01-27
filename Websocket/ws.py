@@ -221,7 +221,7 @@ class Websocket:
 				await self.send_hook(embed = embed)
 				
 				answer = await self.get_answer(question)
-				if answer: await self.send_hook(answer)
+				if answer: await self.send_hook(embed = discord.Embed(title = answer, color = discord.Colour.random()))
 				
 				r = requests.get(google_question)
 				soup = BeautifulSoup(r.text, 'html.parser')
