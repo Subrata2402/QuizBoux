@@ -302,7 +302,7 @@ class Websocket:
 					await self.send_hook(embed = embed)
 
 				try:
-					r = requests.get("https://bing.com/search?q=" + raw_question)
+					r = requests.get("https://google.com/search?q=" + search_with_all)
 					soup = BeautifulSoup(r.text, 'html.parser')
 					response = soup.find_all("span", class_="st")
 					res = str(r.text)
