@@ -206,9 +206,10 @@ class Websocket:
 				raw_options = str(f"{option_1} + {option_2} + {option_3 if len(choices) >= 3 else ''} + {option_4 if len(choices) == 4 else ''}").replace(" ", "+")
 				google_question = "https://google.com/search?q=" + raw_question
 				search_with_all = "https://google.com/search?q=" + raw_question + raw_options
+				is_not = "(Not Question)" if "not" in question.lower() else ""
 				
 				embed = discord.Embed(
-					title = f"**Question {question_number} out of {total_question}**",
+					title = f"**Question {question_number} out of {total_question} {is_not}**",
 					description = f"**[{question}]({google_question})\n\n[Search with all options]({search_with_all})**",
 					color = discord.Colour.random()
 					)
@@ -234,7 +235,7 @@ class Websocket:
 				if len(choices) == 4: cnop4 = res.count(option_4)
 				maxcount = max(cnop1, cnop2, cnop3 if len(choices) >= 3 else 0, cnop4 if len(choices) == 4 else 0)
 				mincount = min(cnop1, cnop2, cnop3 if len(choices) >= 3 else 0, cnop4 if len(choices) == 4 else 0)
-				embed = discord.Embed(title="**__Google Search Results !__**", color = discord.Colour.random())
+				embed = discord.Embed(title="**__Google Results -１__**", color = discord.Colour.random())
 				if len(choices) == 4:
 					if cnop1 == maxcount:
 						embed.description=f"**１. {option_1} : {cnop1}**  ✅\n**２. {option_2} : {cnop2}**\n**３. {option_3} : {cnop3}**\n４. **{option_4} : {cnop4}**"
@@ -301,45 +302,42 @@ class Websocket:
 						embed.title=f"**__Direct Search Result !__**"
 					await self.send_hook(embed = embed)
 
-				try:
-					r = requests.get(search_with_all)
-					soup = BeautifulSoup(r.text, 'html.parser')
-					response = soup.find_all("span", class_="st")
-					res = str(r.text)
-					cnop1 = res.count(option_1)
-					cnop2 = res.count(option_2)
-					cnop3 = cnop4 = 0
-					if len(choices) >= 3: cnop3 = res.count(option_3)
-					if len(choices) == 4: cnop4 = res.count(option_4)
-					maxcount = max(cnop1, cnop2, cnop3 if len(choices) >= 3 else 0, cnop4 if len(choices) == 4 else 0)
-					mincount = min(cnop1, cnop2, cnop3 if len(choices) >= 3 else 0, cnop4 if len(choices) == 4 else 0)
-					embed = discord.Embed(title="**__Bing Search Results !__**", color = discord.Colour.random())
-					if len(choices) == 4:
-						if cnop1 == maxcount:
-							embed.description=f"**１. {option_1} : {cnop1}**  ✅\n**２. {option_2} : {cnop2}**\n**３. {option_3} : {cnop3}**\n４. **{option_4} : {cnop4}**"
-						elif cnop2 == maxcount:
-							embed.description=f"**１. {option_1} : {cnop1}**\n**２. {option_2} : {cnop2}**  ✅\n**３. {option_3} : {cnop3}**\n４. **{option_4} : {cnop4}**"
-						elif cnop3 == maxcount:
-							embed.description=f"**１. {option_1} : {cnop1}**\n**２. {option_2} : {cnop2}**\n**３. {option_3} : {cnop3}** ✅\n４. **{option_4} : {cnop4}**"
-						else:
-							embed.description=f"**１. {option_1} : {cnop1}**\n**２. {option_2} : {cnop2}**\n**３. {option_3} : {cnop3}**\n４. **{option_4} : {cnop4}** ✅"
-						await self.send_hook(embed = embed)
-					elif len(choices) == 3:
-						if cnop1 == maxcount:
-							embed.description=f"**１. {option_1} : {cnop1}**  ✅\n**２. {option_2} : {cnop2}**\n**３. {option_3} : {cnop3}**"
-						elif cnop2 == maxcount:
-							embed.description=f"**１. {option_1} : {cnop1}**\n**２. {option_2} : {cnop2}**  ✅\n**３. {option_3} : {cnop3}**"
-						else:
-							embed.description=f"**１. {option_1} : {cnop1}**\n**２. {option_2} : {cnop2}**\n**３. {option_3} : {cnop3}**  ✅"
-						await self.send_hook(embed = embed)
+				r = requests.get(search_with_all)
+				soup = BeautifulSoup(r.text, 'html.parser')
+				response = soup.find_all("span", class_="st")
+				res = str(r.text)
+				cnop1 = res.count(option_1)
+				cnop2 = res.count(option_2)
+				cnop3 = cnop4 = 0
+				if len(choices) >= 3: cnop3 = res.count(option_3)
+				if len(choices) == 4: cnop4 = res.count(option_4)
+				maxcount = max(cnop1, cnop2, cnop3 if len(choices) >= 3 else 0, cnop4 if len(choices) == 4 else 0)
+				mincount = min(cnop1, cnop2, cnop3 if len(choices) >= 3 else 0, cnop4 if len(choices) == 4 else 0)
+				embed = discord.Embed(title="**__Google Results -２__**", color = discord.Colour.random())
+				if len(choices) == 4:
+					if cnop1 == maxcount:
+						embed.description=f"**１. {option_1} : {cnop1}**  ✅\n**２. {option_2} : {cnop2}**\n**３. {option_3} : {cnop3}**\n４. **{option_4} : {cnop4}**"
+					elif cnop2 == maxcount:
+						embed.description=f"**１. {option_1} : {cnop1}**\n**２. {option_2} : {cnop2}**  ✅\n**３. {option_3} : {cnop3}**\n４. **{option_4} : {cnop4}**"
+					elif cnop3 == maxcount:
+						embed.description=f"**１. {option_1} : {cnop1}**\n**２. {option_2} : {cnop2}**\n**３. {option_3} : {cnop3}** ✅\n４. **{option_4} : {cnop4}**"
 					else:
-						if cnop1 == maxcount:
-							embed.description=f"**１. {option_1} : {cnop1}**  ✅\n**２. {option_2} : {cnop2}**"
-						else:
-							embed.description=f"**１. {option_1} : {cnop1}**\n**２. {option_2} : {cnop2}** ✅"
-						await self.send_hook(embed = embed)
-				except:
-					pass
+						embed.description=f"**１. {option_1} : {cnop1}**\n**２. {option_2} : {cnop2}**\n**３. {option_3} : {cnop3}**\n４. **{option_4} : {cnop4}** ✅"
+					await self.send_hook(embed = embed)
+				elif len(choices) == 3:
+					if cnop1 == maxcount:
+						embed.description=f"**１. {option_1} : {cnop1}**  ✅\n**２. {option_2} : {cnop2}**\n**３. {option_3} : {cnop3}**"
+					elif cnop2 == maxcount:
+						embed.description=f"**１. {option_1} : {cnop1}**\n**２. {option_2} : {cnop2}**  ✅\n**３. {option_3} : {cnop3}**"
+					else:
+						embed.description=f"**１. {option_1} : {cnop1}**\n**２. {option_2} : {cnop2}**\n**３. {option_3} : {cnop3}**  ✅"
+					await self.send_hook(embed = embed)
+				else:
+					if cnop1 == maxcount:
+						embed.description=f"**１. {option_1} : {cnop1}**  ✅\n**２. {option_2} : {cnop2}**"
+					else:
+						embed.description=f"**１. {option_1} : {cnop1}**\n**２. {option_2} : {cnop2}** ✅"
+					await self.send_hook(embed = embed)
 
 			elif event == "QuestionEnd":
 				embed = discord.Embed(title = "Question has Ended!", color = discord.Colour.random())
