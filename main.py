@@ -29,7 +29,7 @@ class MimirQuiz(commands.Cog, Websocket):
                 price = float("{:.6f}".format(price*mimir))
                 embed = discord.Embed(
                     color = discord.Colour.random(),
-                    title = "**__Current Price of {name}__**",
+                    title = f"**__Current Price of {name}__**",
                     description = f"**ᛗ{mimir} ≈ ${price}**")
                 await self.send_hook(embed = embed)
         
