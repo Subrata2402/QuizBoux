@@ -222,7 +222,13 @@ class Websocket:
 				await self.send_hook(embed = embed)
 				
 				answer = await self.get_answer(question)
-				if answer: await self.send_hook(embed = discord.Embed(title = answer, color = discord.Colour.random()))
+				answer_send = False
+				if answer:
+					for index, choice in enumerate(choices):
+						if answer == str(choice["choice"]).strip()
+							await self.send_hook(embed = discord.Embed(title = f"**__Option {index+1}. {answer}__**", color = discord.Colour.random()))
+							answer_send = True
+					if not answer_send: await self.send_hook(embed = discord.Embed(title = f"**__{answer}__**", color = discord.Colour.random()))
 				
 				r = requests.get(google_question)
 				soup = BeautifulSoup(r.text, 'html.parser')
