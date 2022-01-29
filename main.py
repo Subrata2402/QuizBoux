@@ -16,6 +16,7 @@ class MimirQuiz(commands.Cog, Websocket):
        
     @commands.command()
     async def price(self, ctx, mimir:float = None):
+        """Get or calculate current price of Mimir Token."""
         url = "https://api.coingecko.com/api/v3/coins/mimir-token"
         async with aiohttp.ClientSession() as session:
             async with session.get(url = url) as response:
@@ -85,7 +86,7 @@ class MimirQuiz(commands.Cog, Websocket):
         await self.send_hook(embed = discord.Embed(title = f"Total Questions : {len(questions)}", color = discord.Colour.random()))
     
 
-client = commands.Bot(command_prefix = "m!", strip_after_prefix = True, case_insensitive = True)
+client = commands.Bot(command_prefix = "-", strip_after_prefix = True, case_insensitive = True)
 client.add_cog(MimirQuiz(client))
 
 @client.event
