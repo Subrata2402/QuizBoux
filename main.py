@@ -21,16 +21,15 @@ class MimirQuiz(commands.Cog, Websocket):
             async with session.get(url = url) as response:
                 if response.status != 200:
                     return await self.send_hook("**Something unexpected happened while fetching current price!**")
+                if not mimir: mimir = 1.0
                 data = await response.json()
                 name = data.get("name")
                 price = data.get("market_data").get("current_price").get("usd")
-                image = data.get("image").get("thumb")
+                image = data.get("image").get("large")
+                price = float("{:.6f}".format(price*mimir))
                 embed = discord.Embed(color = discord.Colour.random())
                 embed.set_author(name = name, url = image)
-                if not mimir:
-                    embed.description = f"**Current Price of ᛗ1.00 ≈ ${price}**"
-                else:
-                    embed.description = f"**Current Price of ᛗ{mimir} ≈ ${price*mimir}**"
+                embed.description = f"**Current Price of ᛗ{mimir} ≈ ${price}**"
                 await self.send_hook(embed = embed)
         
     @commands.command()
