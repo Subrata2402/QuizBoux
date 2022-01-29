@@ -13,6 +13,25 @@ class MimirQuiz(commands.Cog, Websocket):
     @commands.Cog.listener()
     async def on_ready(self):
         print("Ready!")
+       
+    @commands.command()
+    async def price(self, ctx, mimir:float = None):
+        url = "https://api.coingecko.com/api/v3/coins/mimir-token"
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url = url) as response:
+                if response.status != 200:
+                    return await self.send_hook("**Something unexpected happened while fetching current price!**")
+                data = await response.json()
+                name = data.get("name")
+                price = data.get("market_data").get("current_price").get("usd")
+                image = data.get("image").get("thumb")
+                embed = discord.Embed(color = discord.Colour.random())
+                embed.set_author(name = name, url = image)
+                if not mimir:
+                    embed.description = f"**Current Price of ᛗ1.00 ≈ ${price}**"
+                else:
+                    embed.description = f"**Current Price of ᛗ{mimir} ≈ ${price*mimir}**"
+                await self.send_hook(embed = embed)
         
     @commands.command()
     async def addtoken(self, ctx, token):
