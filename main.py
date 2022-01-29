@@ -25,11 +25,11 @@ class MimirQuiz(commands.Cog, Websocket):
                 data = await response.json()
                 name = data.get("name")
                 price = data.get("market_data").get("current_price").get("usd")
-                image = data.get("image").get("large")
                 price = float("{:.6f}".format(price*mimir))
-                embed = discord.Embed(color = discord.Colour.random())
-                embed.set_author(name = name, url = image)
-                embed.description = f"**Current Price of ᛗ{mimir} ≈ ${price}**"
+                embed = discord.Embed(
+                    color = discord.Colour.random(),
+                    title = "**__Current Price of {name}__**",
+                    description = f"**ᛗ{mimir} ≈ ${price}**")
                 await self.send_hook(embed = embed)
         
     @commands.command()
