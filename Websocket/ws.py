@@ -135,7 +135,7 @@ class Websocket:
 
 	async def get_access_token(self):
 		await self.get_quiz_details()
-		await self.pay_fees()
+		#await self.pay_fees()
 		url = f"https://apic.us.theq.live/v2/oauth/token?partnerCode={self.partner_id}"
 		headers = {
 			"host": "apic.us.theq.live",
