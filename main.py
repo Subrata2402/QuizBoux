@@ -60,7 +60,7 @@ class MimirQuiz(commands.Cog, Websocket):
     @commands.command(aliases = ["quiz", "mimir"])
     async def nextquiz(self, ctx, quiz_type = "play_free"):
         """Get next quiz details. Quiz type = paid/free"""
-        if quiz_type.lower() = "paid":
+        if quiz_type.lower() == "paid":
             quiz_type = "play_to_win"
         else:
             quiz_type = "play_free"
@@ -70,7 +70,7 @@ class MimirQuiz(commands.Cog, Websocket):
     @commands.command(aliases = ["open"])
     async def start(self, ctx, quiz_type = "play_free"):
         """Start Websocket. Quiz type = paid/free"""
-        if quiz_type.lower() = "paid":
+        if quiz_type.lower() == "paid":
             quiz_type = "play_to_win"
         else:
             quiz_type = "play_free"
