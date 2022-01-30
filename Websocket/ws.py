@@ -102,6 +102,7 @@ class Websocket:
 			"accept-encoding": "gzip, deflate",
 			"accept-language": "en-US,en;q=0.9"
 		}
+		self.headers = headers
 		async with aiohttp.ClientSession() as session:
 			async with session.get(url = url, headers = headers) as response:
 				if response.status != 200:
