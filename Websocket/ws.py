@@ -27,6 +27,8 @@ class Websocket:
 		self.user_id = None
 		self.bearer_token = None
 		self.quiz_type = "play_free"
+		self.value = None
+		self.headers = None
 		
 	async def get_quiz_type(self, quiz_type):
 		self.quiz_type = quiz_type
@@ -62,6 +64,30 @@ class Websocket:
 		if not check:
 			db.question_base.insert_one({"question": question, "answer": answer})
 				
+	async def pay_fees(self):
+		if not self.value:
+			return
+		url = "https://api.mimir-prod.com/games/pay-fee"
+		data = json.dumps({
+				"transaction": {
+				"target": "0x4357d1eE11E7db4455527Fe3dfd0B882Cb334357",
+				"to": "0xa02963C078fd71079cCcE5e0049b0Abf8AEDD178",
+				"value": str(self.value) + "000000000000000000",
+				"deadline": 1643540139,
+				"v": 28,
+				"r": "0x8e2c03e1d075ea83032c6d2faf128e07249e2496f3a20d0598ef4d680e313ca8",
+				"s": "0x10e878cdf7164200e70b831a1cd838eb68e100839d9569c99bd27d2f98687419"
+				},
+			"game_id": self.game_id
+			})
+		async with aiohttp.ClientSession() as session:
+			async with session.post(url = url, headers = self.headers, data = data) as response:
+				if response.status != 200:
+					await self.send_hook("**Something wrong in 84 line!**")
+					raise commands.CommandError("Pay Fees Error...!")
+				r = await response.json()
+				print(r)
+				
 	async def get_quiz_details(self, get_type = None):
 		await self.get_token()
 		url = "https://api.mimir-prod.com//games/list?type=" + self.quiz_type
@@ -90,6 +116,7 @@ class Websocket:
 				self.prize = data["reward"]
 				time = f'<t:{int(data["scheduled"]/1000)}>'
 				gameType = data["winCondition"]
+				self.value = data.get("entryFee")
 				self.game_id = data["id"]
 				self.partner_id = data["partnerId"]
 				embed = discord.Embed(
@@ -108,6 +135,7 @@ class Websocket:
 
 	async def get_access_token(self):
 		await self.get_quiz_details()
+		await self.pay_fees()
 		url = f"https://apic.us.theq.live/v2/oauth/token?partnerCode={self.partner_id}"
 		headers = {
 			"host": "apic.us.theq.live",
