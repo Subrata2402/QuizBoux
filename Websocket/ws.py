@@ -60,7 +60,7 @@ class Websocket:
 				
 	async def get_quiz_details(self, get_type = None):
 		await self.get_token()
-		url = "https://api.mimir-prod.com//games/list?type=play_free"
+		url = "https://api.mimir-prod.com//games/list?type=play_to_win"
 		headers = {
 			"host": "api.mimir-prod.com",
 			"authorization": f"Bearer {self.token}",
