@@ -26,6 +26,10 @@ class Websocket:
 		self.partner_id = None
 		self.user_id = None
 		self.bearer_token = None
+		self.quiz_type = "play_free"
+		
+	async def get_quiz_type(self, quiz_type):
+		self.quiz_type = quiz_type
 
 	async def close_hook(self):
 		self.ws_is_opened = False
@@ -60,7 +64,7 @@ class Websocket:
 				
 	async def get_quiz_details(self, get_type = None):
 		await self.get_token()
-		url = "https://api.mimir-prod.com//games/list?type=play_to_win"
+		url = "https://api.mimir-prod.com//games/list?type=" + self.quiz_type
 		headers = {
 			"host": "api.mimir-prod.com",
 			"authorization": f"Bearer {self.token}",
