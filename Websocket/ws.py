@@ -111,7 +111,7 @@ class Websocket:
 				r = await response.json()
 				data = r["data"]["data"][0]
 				self.game_is_active = data["active"]
-				image = data["backgroundImageLandscapeUrl"]
+				#image = data["backgroundImageLandscapeUrl"]
 				topic = data["label"]
 				description = data["description"]
 				self.prize = data["reward"]
@@ -130,7 +130,7 @@ class Websocket:
 				embed.add_field(name = "Prize Money :", value = f"ᛗ{self.prize}", inline = False)
 				embed.add_field(name = "Date & Time :", value = time, inline = False)
 				embed.set_footer(text = "Mimir Quiz")
-				embed.set_thumbnail(url = image)
+				embed.set_thumbnail(url = self.icon_url)
 				if get_type == "send":
 					await self.send_hook(embed = embed)
 
