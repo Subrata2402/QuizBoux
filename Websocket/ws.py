@@ -99,8 +99,8 @@ class Websocket:
 			"accept": "*/*",
 			"origin": "https://app.mimirquiz.com",
 			"referer": "https://app.mimirquiz.com/",
-			"accept-encoding": "gzip, deflate",
-			"accept-language": "en-US,en;q=0.9"
+			"accept-encoding": "gzip, deflate, br",
+			"accept-language": "en-US,en;q=0.9,bn;q=0.8,hi;q=0.7"
 		}
 		self.headers = headers
 		async with aiohttp.ClientSession() as session:
@@ -142,11 +142,11 @@ class Websocket:
 			"host": "apic.us.theq.live",
 			"user-Agent": "Mozilla/5.0 (Linux; Android 10; RMX1827) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.99 Mobile Safari/537.36",
 			"accept": "application/json, text/plain, */*",
-			"content-type":"application/json",
+			"content-type": "application/json",
 			"origin": "https://play.us.theq.live",
 			"referer": "https://play.us.theq.live/",
-			"accept-encoding": "gzip, deflate",
-			"accept-language": "en-US,en;q=0.9"
+			"accept-encoding": "gzip, deflate, br",
+			"accept-language": "en-US,en;q=0.9,bn;q=0.8,hi;q=0.7"
 		}
 		post_data = json.dumps({"mimir":{"accessToken": self.token}})
 		async with aiohttp.ClientSession() as session:
@@ -201,7 +201,7 @@ class Websocket:
 			"Sec-Fetch-Mode": "cors",
 			"Referer": "https://play.us.theq.live/",
 			"Accept-Encoding": "gzip, deflate, br",
-			"Accept-Language": "en-US,en;q=0.9"
+			"Accept-Language": "en-US,en;q=0.9,bn;q=0.8,hi;q=0.7"
 		}
 		try:
 			messages = SSEClient(url, headers = headers)
