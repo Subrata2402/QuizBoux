@@ -13,6 +13,9 @@ class MimirQuiz(commands.Cog, Websocket):
     @commands.Cog.listener()
     async def on_ready(self):
         print("Ready!")
+        game = discord.Game(name = "with Mimir Quiz!", type = discord.ActivityType.streaming)
+        await client.change_presence(status=discord.Status.idle, activity=game)
+
        
     @commands.command()
     async def price(self, ctx, mimir:float = None):
