@@ -13,8 +13,8 @@ class MimirQuiz(commands.Cog, Websocket):
     @commands.Cog.listener()
     async def on_ready(self):
         print("Ready!")
-        game = discord.Game(name = "with Mimir Quiz!", type = discord.ActivityType.streaming)
-        await client.change_presence(status=discord.Status.idle, activity=game)
+        game = discord.Streaming(name = "with Mimir Quiz!", url = "https://app.mimirquiz.com")
+        await self.client.change_presence(activity=game)
 
        
     @commands.command()
