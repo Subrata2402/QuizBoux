@@ -102,7 +102,7 @@ client.add_cog(MimirQuiz(client))
 @client.event
 async def on_message(message):
     if not message.guild:
-        return
+        return await message.channel.send("**You cannot be used me in private messages.**")
     await client.process_commands(message)
             
 client.run("Nzk5NDY4ODE4Mzc1NjM5MDUw.YAEBWw.OFUuud6gDHl5TYbcie3guwxPMI8")
