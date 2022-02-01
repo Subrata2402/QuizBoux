@@ -394,6 +394,19 @@ class Websocket:
 				embed.set_footer(text = "Mimir Quiz")
 				await self.send_hook(embed = embed)
 				
+				winners = data["winners"]
+				description = ""
+				for index, winner in enumerate(winners):
+					description += f"{'0' if index+1 < 10 else ''}{index+1} - {winner}\n"
+				embed = discord.Embed(title = "**__List of Game Winners Name !__**",
+					description = description,
+					color = discord.Colour.random(),
+					timestamp = datetime.datetime.utcnow()
+					)
+				embed.set_thumbnail(url = self.icon_url)
+				embed.set_footer(text = "Mimir Quiz")
+				await self.send_hook(embed = embed)
+				
 			elif event == "GameEnded":
 				embed = discord.Embed(title = "**__Game has Ended !__**",
 					description = "**Thanks for playing!**", color = discord.Colour.random()
