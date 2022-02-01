@@ -397,7 +397,7 @@ class Websocket:
 				winners = data["winners"]
 				description = ""
 				for index, winner in enumerate(winners):
-					description += f"{'0' if index+1 < 10 else ''}{index+1} - {winner}\n"
+					description += f"{'0' if index+1 < 10 else ''}{index+1} - {winner.get("user")}\n"
 				embed = discord.Embed(title = "**__List of Game Winners Name !__**",
 					description = description,
 					color = discord.Colour.random(),
