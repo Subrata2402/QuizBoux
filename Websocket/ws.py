@@ -14,7 +14,8 @@ from database import db
 
 class Websocket:
 	
-	def __init__(self):
+	def __init__(self, client):
+		self.client = client
 		self.prize = 50
 		self.pattern = []
 		self.web_url = "https://discord.com/api/webhooks/935981741833871430/y8HWuzK074QDQhBzRlxnR5P5OQn3etGsLUuqP-JDJMk8NzjpMnu7NW2PHjc2f87aylSB"
@@ -51,6 +52,41 @@ class Websocket:
 				username = "Mimir Quiz",
 				avatar_url = self.icon_url
 				)
+				
+	async def send_answer(self, host, data):
+		question_id = data["questionId"]
+		game_id = data["gameId"]
+		choices = data["choices"]
+		response_time = data["secondsToRespond"]
+		await self.send_hook(embed = discord.Embed(title = "Send Your Answer...", color = discord.Colour.random()))
+		try:
+			message = int((await self.client.wait_for("message", check = lambda message : message.author.id == 660337342032248832, timeout = int(response_time))).strip())
+		except:
+			message = 2
+		choice_id = choices[message - 1]["id"]
+		url = f"https://{host}/v2/games/{game_id}/questions/{question_id}/responses?choiceId={choice_id}"
+		headers = {
+			"Host": host,
+			"Connection": "keep-alive",
+			"Accept": "application/json, text/plain, */*",
+			"Authorization": self.bearer_token,
+			"sec-ch-ua-mobile": "?1",
+			"User-Agent": "Mozilla/5.0 (Linux; Android 10; RMX1911) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.98 Mobile Safari/537.36",
+			"Origin": "https://play.us.theq.live",
+			"Referer": "https://play.us.theq.live/",
+			"Accept-Encoding": "gzip, deflate, br",
+			"Accept-Language": "en-US,en;q=0.9,bn;q=0.8,hi;q=0.7"
+		}
+		async with aiohttp.ClientSession() as session:
+			async with session.post(url = url, headers = headers, data = None) as response:
+				if response.status != 200:
+					return await self.send_hook("**Failed to send your answer!**")
+				r = await response.json()
+				success = r.get("success")
+				if success:
+					await self.send_hook("**Successfully Send your answer!**")
+				else:
+					await self.send_hook("**Failed to send your answer!**")
 				
 	async def get_answer(self, question):
 		question = db.question_base.find_one({"question": question})
@@ -341,6 +377,8 @@ class Websocket:
 					else:
 						embed.title=f"**__Direct Search Result !__**"
 					await self.send_hook(embed = embed)
+
+				await self.send_answer(host, data)
 
 			elif event == "QuestionEnd":
 				embed = discord.Embed(title = "Question has Ended!", color = discord.Colour.random())
