@@ -28,6 +28,7 @@ class Websocket:
 		self.user_id = None
 		self.bearer_token = None
 		self.quiz_type = "play_free"
+		self.is_paid_game = False
 		self.value = None
 		self.headers = None
 		
@@ -53,17 +54,13 @@ class Websocket:
 				avatar_url = self.icon_url
 				)
 				
-	async def send_answer(self, host, data):
+	async def send_answer(self, host, data, ans):
 		question_id = data["questionId"]
 		game_id = data["gameId"]
 		choices = data["choices"]
 		response_time = data["secondsToRespond"]
 		await self.send_hook(embed = discord.Embed(title = f"Send Your Answer within {response_time} seconds.", color = discord.Colour.random()))
-		try:
-			message = int((await self.client.wait_for("message", check = lambda message : message.author.id == 660337342032248832, timeout = int(response_time) - 3)).strip())
-		except:
-			message = 2
-		choice_id = choices[message - 1]["id"]
+		choice_id = choices[ans - 1]["id"]
 		url = f"https://{host}/v2/games/{game_id}/questions/{question_id}/responses?choiceId={choice_id}"
 		headers = {
 			"Host": host,
@@ -108,7 +105,7 @@ class Websocket:
 				"transaction": {
 				"target": "0x4357d1eE11E7db4455527Fe3dfd0B882Cb334357",
 				"to": "0xa02963C078fd71079cCcE5e0049b0Abf8AEDD178",
-				"value": str(self.value) + "000000000000000000",
+				"value": "15000000000000000000",
 				"deadline": 1643540139,
 				"v": 28,
 				"r": "0x8e2c03e1d075ea83032c6d2faf128e07249e2496f3a20d0598ef4d680e313ca8",
@@ -122,7 +119,7 @@ class Websocket:
 					await self.send_hook("**Something wrong in 84 line!**")
 					raise commands.CommandError("Pay Fees Error...!")
 				r = await response.json()
-				print(r)
+				await self.send_hook("Payment Successfully Paid!")
 				
 	async def get_quiz_details(self, get_type = None):
 		await self.get_token()
@@ -154,6 +151,7 @@ class Websocket:
 				time = f'<t:{int(data["scheduled"]/1000)}>'
 				gameType = data["winCondition"]
 				self.value = data.get("entryFee")
+				if self.value: self.is_paid_game = True
 				self.game_id = data["id"]
 				self.partner_id = data["partnerId"]
 				if get_type == "send":
@@ -173,7 +171,7 @@ class Websocket:
 
 	async def get_access_token(self):
 		await self.get_quiz_details()
-		#await self.pay_fees()
+		if self.is_paid_game: await self.pay_fees()
 		url = f"https://apic.us.theq.live/v2/oauth/token?partnerCode={self.partner_id}"
 		headers = {
 			"host": "apic.us.theq.live",
@@ -377,8 +375,8 @@ class Websocket:
 					else:
 						embed.title=f"**__Direct Search Result !__**"
 					await self.send_hook(embed = embed)
-
-				await self.send_answer(host, data)
+				
+				await self.send_answer(host, data, ans)
 
 			elif event == "QuestionEnd":
 				embed = discord.Embed(title = "Question has Ended!", color = discord.Colour.random())
@@ -433,6 +431,11 @@ class Websocket:
 				embed.set_footer(text = "Mimir Quiz")
 				await self.send_hook(embed = embed)
 				
+				if data.get("won"):
+					await self.send_hook("Congratulations! You won the quiz.")
+				else:
+					await self.send_hook("You lost the quiz! 😔")
+				
 				winners = data["winners"]
 				description = ""
 				for index, winner in enumerate(winners):
@@ -450,3 +453,10 @@ class Websocket:
 				self.pattern.clear()
 				await self.close_hook()
 				return
+
+ws = Websocket(client)
+while True:
+	if ws.game_is_active:
+		await ws.start_hook()
+	else:
+		await asyncio.sleep(300)
