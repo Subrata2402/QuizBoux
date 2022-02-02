@@ -18,7 +18,7 @@ class Websocket:
 		self.client = client
 		self.prize = 50
 		self.pattern = []
-		self.web_url = "https://discord.com/api/webhooks/935981741833871430/y8HWuzK074QDQhBzRlxnR5P5OQn3etGsLUuqP-JDJMk8NzjpMnu7NW2PHjc2f87aylSB"
+		self.web_url = "https://discord.com/api/webhooks/938473130568065135/BGawZsFeWa59epspDbywoJNX1t-rQ4hiJroj7A6-vyZ7ZBtOipZlLIWIXaEciR-y8f2I"
 		self.token = None
 		self.ws_is_opened = False
 		self.icon_url = "https://cdn.discordapp.com/emojis/924632014617972736.png"
@@ -168,7 +168,7 @@ class Websocket:
 					if self.value: embed.add_field(name = "Entry Fee :", value = f"ᛗ{self.value}", inline = False)
 					embed.add_field(name = "Date & Time :", value = time, inline = False)
 					embed.set_footer(text = "Mimir Quiz")
-					embed.set_thumbnail(url = self.icon_url)
+					embed.set_thumbnail(url = self.client.user.avatar_url)
 					await self.send_hook(embed = embed)
 
 	async def get_access_token(self):
