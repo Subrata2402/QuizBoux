@@ -7,7 +7,7 @@ import aiohttp
 class MimirQuiz(commands.Cog, Websocket):
     
     def __init__(self, client):
-        super().__init__()
+        super().__init__(client)
         self.client = client
     
     @commands.Cog.listener()
