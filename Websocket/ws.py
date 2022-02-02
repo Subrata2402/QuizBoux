@@ -120,18 +120,19 @@ class Websocket:
 				self.value = data.get("entryFee")
 				self.game_id = data["id"]
 				self.partner_id = data["partnerId"]
-				embed = discord.Embed(
-					title = "**__Mimir Upcoming Quiz Details !__**",
-					description = description,
-					color = discord.Colour.random(),
-					timestamp = datetime.datetime.utcnow()
-					)
-				embed.add_field(name = "Quiz Topic :", value = topic, inline = False)
-				embed.add_field(name = "Prize Money :", value = f"ᛗ{self.prize}", inline = False)
-				embed.add_field(name = "Date & Time :", value = time, inline = False)
-				embed.set_footer(text = "Mimir Quiz")
-				embed.set_thumbnail(url = self.icon_url)
 				if get_type == "send":
+					embed = discord.Embed(
+						title = "**__Mimir Upcoming Quiz Details !__**",
+						description = description,
+						color = discord.Colour.random(),
+						timestamp = datetime.datetime.utcnow()
+						)
+					embed.add_field(name = "Quiz Topic :", value = topic, inline = False)
+					embed.add_field(name = "Prize Money :", value = f"ᛗ{self.prize}", inline = False)
+					if self.value: embed.add_field(name = "Entry Fee :", value = f"ᛗ{self.value}", inline = False)
+					embed.add_field(name = "Date & Time :", value = time, inline = False)
+					embed.set_footer(text = "Mimir Quiz")
+					embed.set_thumbnail(url = self.icon_url)
 					await self.send_hook(embed = embed)
 
 	async def get_access_token(self):
