@@ -59,6 +59,12 @@ class Websocket:
 		answer = question.get("answer")
 		return answer
 
+	async def update_question(self, question, answer):
+		question = db.question_base.find_one({"question": question})
+		if question:
+			update = {"answer": answer}
+			db.question_base.update_one({"question": question}, {"$set", update})
+
 	async def add_question(self, question, answer):
 		check = db.question_base.find_one({"question": question})
 		if not check:
