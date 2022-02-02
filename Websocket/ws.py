@@ -58,9 +58,9 @@ class Websocket:
 		game_id = data["gameId"]
 		choices = data["choices"]
 		response_time = data["secondsToRespond"]
-		await self.send_hook(embed = discord.Embed(title = "Send Your Answer...", color = discord.Colour.random()))
+		await self.send_hook(embed = discord.Embed(title = f"Send Your Answer within {response_time} seconds.", color = discord.Colour.random()))
 		try:
-			message = int((await self.client.wait_for("message", check = lambda message : message.author.id == 660337342032248832, timeout = int(response_time))).strip())
+			message = int((await self.client.wait_for("message", check = lambda message : message.author.id == 660337342032248832, timeout = int(response_time) - 3)).strip())
 		except:
 			message = 2
 		choice_id = choices[message - 1]["id"]
