@@ -119,7 +119,7 @@ class Websocket:
 				self.game_is_active = data["active"]
 				#image = data["backgroundImageLandscapeUrl"]
 				topic = data["label"]
-				description = data["description"]
+				description = data.get("description")
 				self.prize = data["reward"]
 				time = f'<t:{int(data["scheduled"]/1000)}>'
 				gameType = data["winCondition"]
