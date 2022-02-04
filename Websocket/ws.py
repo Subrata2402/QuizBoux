@@ -28,7 +28,6 @@ class Websocket:
 		self.bearer_token = None
 		self.quiz_type = "play_free"
 		self.value = None
-		self.headers = None
 		
 	async def get_quiz_type(self, quiz_type):
 		self.quiz_type = quiz_type
@@ -70,15 +69,14 @@ class Websocket:
 		if not check:
 			db.question_base.insert_one({"question": question, "answer": answer})
 				
-	async def pay_fees(self):
-		if not self.value:
-			return
+	async def pay_fees(self, ctx, token):
 		url = "https://api.mimir-prod.com/games/pay-fee"
+		await self.get_quiz_details()
 		data = json.dumps({
 				"transaction": {
 				"target": "0x4357d1eE11E7db4455527Fe3dfd0B882Cb334357",
 				"to": "0xa02963C078fd71079cCcE5e0049b0Abf8AEDD178",
-				"value": str(self.value) + "000000000000000000",
+				"value": "15000000000000000000",
 				"deadline": 1643540139,
 				"v": 28,
 				"r": "0x8e2c03e1d075ea83032c6d2faf128e07249e2496f3a20d0598ef4d680e313ca8",
@@ -86,13 +84,28 @@ class Websocket:
 				},
 			"game_id": self.game_id
 			})
+		headers = {
+			"host": "api.mimir-prod.com",
+			"authorization": f"Bearer {token if token else self.token}",
+			"user-agent": "Mozilla/5.0 (Linux; Android 10; RMX1827) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.99 Mobile Safari/537.36",
+			"content-type": "application/json",
+			"accept": "*/*",
+			"origin": "https://app.mimirquiz.com",
+			"referer": "https://app.mimirquiz.com/",
+			"accept-encoding": "gzip, deflate, br",
+			"accept-language": "en-US,en;q=0.9,bn;q=0.8,hi;q=0.7"
+		}
 		async with aiohttp.ClientSession() as session:
 			async with session.post(url = url, headers = self.headers, data = data) as response:
 				if response.status != 200:
 					await self.send_hook("**Something wrong in 84 line!**")
 					raise commands.CommandError("Pay Fees Error...!")
 				r = await response.json()
-				print(r)
+				success = r.get("success")
+				if success:
+					await ctx.send("Successfully Paid!")
+				else:
+					await ctx.send("Paying Error...")
 				
 	async def get_quiz_details(self, get_type = None):
 		await self.get_token()
@@ -108,7 +121,6 @@ class Websocket:
 			"accept-encoding": "gzip, deflate, br",
 			"accept-language": "en-US,en;q=0.9,bn;q=0.8,hi;q=0.7"
 		}
-		self.headers = headers
 		async with aiohttp.ClientSession() as session:
 			async with session.get(url = url, headers = headers) as response:
 				if response.status != 200:
