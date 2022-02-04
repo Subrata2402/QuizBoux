@@ -101,7 +101,7 @@ class Websocket:
 					await self.send_hook("**Something wrong in 84 line!**")
 					raise commands.CommandError("Pay Fees Error...!")
 				r = await response.json()
-				success = r.get("success")
+				success = r["data"]["success"]
 				if success:
 					await ctx.send("Paid Successfull!")
 				else:
