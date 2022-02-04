@@ -71,7 +71,7 @@ class Websocket:
 				
 	async def pay_fees(self, ctx, token):
 		url = "https://api.mimir-prod.com/games/pay-fee"
-		await self.get_quiz_details()
+		await self.get_quiz_details("play_to_win")
 		data = json.dumps({
 				"transaction": {
 				"target": "0x4357d1eE11E7db4455527Fe3dfd0B882Cb334357",
@@ -103,7 +103,7 @@ class Websocket:
 				r = await response.json()
 				success = r.get("success")
 				if success:
-					await ctx.send("Successfully Paid!")
+					await ctx.send("Paid Successfull!")
 				else:
 					await ctx.send("Paying Error...")
 				
