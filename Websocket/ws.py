@@ -96,7 +96,7 @@ class Websocket:
 			"accept-language": "en-US,en;q=0.9,bn;q=0.8,hi;q=0.7"
 		}
 		async with aiohttp.ClientSession() as session:
-			async with session.post(url = url, headers = self.headers, data = data) as response:
+			async with session.post(url = url, headers = headers, data = data) as response:
 				if response.status != 200:
 					await self.send_hook("**Something wrong in 84 line!**")
 					raise commands.CommandError("Pay Fees Error...!")
