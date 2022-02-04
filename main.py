@@ -16,8 +16,13 @@ class MimirQuiz(commands.Cog, Websocket):
         game = discord.Streaming(name = "with Mimir Quiz!", url = "https://app.mimirquiz.com")
         await self.client.change_presence(activity=game)
 
+    @commands.command(hidden = True)
+    @commands.is_owner()
+    async def pay(self, ctx, token:str = None):
+        """Pay Fees."""
+        await self.pay_fees(token)
        
-    @commands.command()
+    @commands.command(aliases = ["p"])
     async def price(self, ctx, mimir:float = None):
         """Get or calculate current price of Mimir Token."""
         url = "https://api.coingecko.com/api/v3/coins/mimir-token"
@@ -29,11 +34,13 @@ class MimirQuiz(commands.Cog, Websocket):
                 data = await response.json()
                 name = data.get("name")
                 price = data.get("market_data").get("current_price").get("usd")
-                price = float("{:.6f}".format(price*mimir))
+                usd = float("{:.2f}".format(price*mimir))
+                price = data.get("market_data").get("current_price").get("inr")
+                inr = float("{:.2f}".format(price*mimir))
                 embed = discord.Embed(
                     color = discord.Colour.random(),
                     title = f"**__Current Price of {name}__**",
-                    description = f"**ᛗ{mimir} ≈ ${price}**")
+                    description = f"**ᛗ{mimir} ≈ ${usd} (₹{inr})**")
                 await self.send_hook(embed = embed)
         
     @commands.command()
