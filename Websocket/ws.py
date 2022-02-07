@@ -114,7 +114,10 @@ class Websocket:
 					await self.send_hook("**Something unexpected happened while fetching quiz details!**")
 					raise commands.CommandError("Token has expired!")
 				r = await response.json()
-				data = r["data"]["data"][game_num-1]
+				data = r["data"]["data"]
+				if len(data) < game_num:
+				    return await self.send_hook("**Quiz Not Found!**")
+				data = data[game_num-1]
 				self.game_is_active = data["active"]
 				#image = data["backgroundImageLandscapeUrl"]
 				topic = data["label"]
@@ -130,13 +133,13 @@ class Websocket:
 						title = "**__Mimir Upcoming Quiz Details !__**",
 						description = description,
 						color = discord.Colour.random(),
-						timestamp = datetime.datetime.utcnow()
 						)
+						#timestamp = datetime.datetime.utcnow()
 					embed.add_field(name = "Quiz Topic :", value = topic, inline = False)
 					embed.add_field(name = "Prize Money :", value = f"ᛗ{self.prize}", inline = False)
 					if self.value: embed.add_field(name = "Entry Fee :", value = f"ᛗ{self.value}", inline = False)
 					embed.add_field(name = "Date & Time :", value = time, inline = False)
-					embed.set_footer(text = "Mimir Quiz")
+					embed.set_footer(text = f"Upcoming Quiz No. - {'0' if game_num < 10 else ''}{game_num}")
 					embed.set_thumbnail(url = self.icon_url)
 					await self.send_hook(embed = embed)
 
