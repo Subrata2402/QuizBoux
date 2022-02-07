@@ -80,24 +80,14 @@ class MimirQuiz(commands.Cog, Websocket):
                 await self.send_hook("**Token Successfully Updated!**")
         
     @commands.command(aliases = ["quiz", "mimir"])
-    async def nextquiz(self, ctx, quiz_type = "play_free"):
-        """Get next quiz details. Quiz type = paid/free"""
-        if quiz_type.lower() == "paid":
-            quiz_type = "play_to_win"
-        else:
-            quiz_type = "play_free"
-        await self.get_quiz_type(quiz_type)
-        await self.get_quiz_details("send")
+    async def nextquiz(self, ctx, game_num:int = 1):
+        """Get next quiz details."""
+        await self.get_quiz_details(get_type = "send", game_num = game_num)
     
     @commands.command(aliases = ["open"])
-    async def start(self, ctx, quiz_type = "play_free"):
-        """Start Websocket. Quiz type = paid/free"""
-        if quiz_type.lower() == "paid":
-            quiz_type = "play_to_win"
-        else:
-            quiz_type = "play_free"
+    async def start(self, ctx):
+        """Start Websocket."""
         if not self.ws_is_opened:
-            await self.get_quiz_type(quiz_type)
             await self.send_hook("**Websocket Opened!**")
             await self.start_hook()
         else:
