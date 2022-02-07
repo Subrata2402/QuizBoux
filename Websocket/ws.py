@@ -68,6 +68,8 @@ class Websocket:
 		check = db.question_base.find_one({"question": question})
 		if not check:
 			db.question_base.insert_one({"question": question, "answer": answer})
+			return True
+		return False
 				
 	async def pay_fees(self, ctx, token):
 		url = "https://api.mimir-prod.com/games/pay-fee"
