@@ -26,12 +26,8 @@ class Websocket:
 		self.partner_id = None
 		self.user_id = None
 		self.bearer_token = None
-		self.quiz_type = "play_free"
 		self.value = None
 		
-	async def get_quiz_type(self, quiz_type):
-		self.quiz_type = quiz_type
-
 	async def close_hook(self):
 		self.ws_is_opened = False
 		print("Websocket Closed!")
@@ -109,27 +105,16 @@ class Websocket:
 				else:
 					await ctx.send("Paying Error...")
 				
-	async def get_quiz_details(self, get_type = None):
+	async def get_quiz_details(self, get_type, game_num:int = 1):
 		await self.get_token()
-		url = "https://api.mimir-prod.com//games/list?type=" + self.quiz_type
-		headers = {
-			"host": "api.mimir-prod.com",
-			"authorization": f"Bearer {self.token}",
-			"user-agent": "Mozilla/5.0 (Linux; Android 10; RMX1827) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.99 Mobile Safari/537.36",
-			"content-type": "application/json",
-			"accept": "*/*",
-			"origin": "https://app.mimirquiz.com",
-			"referer": "https://app.mimirquiz.com/",
-			"accept-encoding": "gzip, deflate, br",
-			"accept-language": "en-US,en;q=0.9,bn;q=0.8,hi;q=0.7"
-		}
+		url = "https://api.mimir-prod.com//games/next?"
 		async with aiohttp.ClientSession() as session:
 			async with session.get(url = url, headers = headers) as response:
 				if response.status != 200:
-					await self.send_hook("**The Auth token has expired!**")
+					await self.send_hook("**Something unexpected happened while fetching quiz details!**")
 					raise commands.CommandError("Token has expired!")
 				r = await response.json()
-				data = r["data"]["data"][0]
+				data = r["data"]["data"][game_num-1]
 				self.game_is_active = data["active"]
 				#image = data["backgroundImageLandscapeUrl"]
 				topic = data["label"]
