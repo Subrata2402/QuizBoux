@@ -105,7 +105,7 @@ class Websocket:
 				else:
 					await ctx.send("Paying Error...")
 				
-	async def get_quiz_details(self, get_type, game_num:int = 1):
+	async def get_quiz_details(self, get_type = None, game_num:int = 1):
 		await self.get_token()
 		url = "https://api.mimir-prod.com//games/next?"
 		async with aiohttp.ClientSession() as session:
