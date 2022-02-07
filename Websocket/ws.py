@@ -109,7 +109,7 @@ class Websocket:
 		await self.get_token()
 		url = "https://api.mimir-prod.com//games/next?"
 		async with aiohttp.ClientSession() as session:
-			async with session.get(url = url, headers = headers) as response:
+			async with session.get(url = url) as response:
 				if response.status != 200:
 					await self.send_hook("**Something unexpected happened while fetching quiz details!**")
 					raise commands.CommandError("Token has expired!")
