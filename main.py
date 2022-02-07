@@ -15,7 +15,19 @@ class MimirQuiz(commands.Cog, Websocket):
         print("Ready!")
         game = discord.Streaming(name = "with Mimir Quiz!", url = "https://app.mimirquiz.com")
         await self.client.change_presence(activity=game)
-
+        
+    @commands.command()
+    async def add(self, ctx, *, args):
+        """Added a question in databse. Usage -add question | answer"""
+        qa = args.split(" | ")
+        question = qa[0]
+        answer = qa[1]
+        get_type = await self.add_question(question, answer)
+        if get_type:
+            await self.send_hook("**Successfully Added Question!**")
+        else:
+            await self.send_hook("**Already Added!**")
+    
     @commands.command(hidden = True)
     @commands.is_owner()
     async def pay(self, ctx, token:str = None):
