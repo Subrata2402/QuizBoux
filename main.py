@@ -3,6 +3,7 @@ from discord.ext import commands
 from Websocket.ws import Websocket
 from database import db
 import aiohttp
+import asyncio
 
 class MimirQuiz(commands.Cog, Websocket):
     
@@ -70,8 +71,9 @@ class MimirQuiz(commands.Cog, Websocket):
         await self.get_quiz_details(get_type = "send", game_num = game_num)
     
     @commands.command(aliases = ["open"])
-    async def start(self, ctx):
+    async def start(self, ctx, time:int = 0):
         """Start Websocket."""
+        await asyncio.sleep(time)
         if not self.ws_is_opened:
             await self.send_hook("**Websocket Opened!**")
             await self.start_hook()
