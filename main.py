@@ -17,6 +17,16 @@ class MimirQuiz(commands.Cog, Websocket):
         game = discord.Streaming(name = "with Mimir Quiz!", url = "https://app.mimirquiz.com")
         await self.client.change_presence(activity=game)
         
+    @commands.Cog.listener()
+    async def on_message_delete(self, message):
+        channel = self.client.get_channel(940580545375637524) or (await self.client.fetch_channel(940580545375637524))
+        deleted = discord.Embed(title=f"Username: `{message.author}`\nChannel: `{message.channel.name}`\nMessage Content :-", description=message.content, color=0x4040EC)
+        deleted.set_author(name=message.guild.name, icon_url=message.guild.icon_url)
+        deleted.set_thumbnail(url= message.guild.icon_url)
+        deleted.set_footer(text=self.client.user.name, icon_url=self.client.user.avatar_url)
+        deleted.timestamp = message.created_at
+        await channel.send(embed=deleted)
+        
     @commands.command()
     async def add(self, ctx, *, args):
         """Added a question in databse. Usage -add question | answer"""
