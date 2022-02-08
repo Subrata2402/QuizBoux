@@ -220,6 +220,7 @@ class Websocket:
 		for msg in messages:
 			event = msg.event
 			print(event)
+			print(msg.data)
 			if self.ws_is_opened == False:
 				return
 			
@@ -227,7 +228,12 @@ class Websocket:
 				await self.send_hook("**Websocket is Connected Successfully!**")
 
 			elif event == "ViewCountUpdate":
-				pass
+				data = json.loads(msg.data)
+				count = data.get("viewCnt")
+				await self.send_hook(embed = discord.Embed(title = f"🔴 Total Lives : {count} Users", color = discord.Colour.random()))
+			
+			elif event == "GameUpdate":
+				await self.send_hook(embed = discord.Embed(title = "The Game has Updated!", color = discord.Colour.random()))
 
 			elif event == "GameReset":
 				await self.send_hook(embed = discord.Embed(title = "The Game has Reset!", color = discord.Colour.random()))
