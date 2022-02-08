@@ -268,7 +268,7 @@ class Websocket:
 				if len(choices) >= 3: embed.add_field(name = "**Option - ３**", value = f"**[{option_3}]({search_with_all})**", inline = False)
 				if len(choices) == 4: embed.add_field(name = "**Option - ４**", value = f"**[{option_4}]({search_with_all})**", inline = False)
 				embed.set_thumbnail(url = self.icon_url)
-				embed.set_footer(text = f"Response Time : {response_time} secs | Points : 0{point_value}")
+				embed.set_footer(text = f"Response Time : {response_time} seconds")
 				await self.send_hook(embed = embed)
 				
 				answer = await self.get_answer(question)
@@ -389,15 +389,15 @@ class Websocket:
 					title = f"**Question {question_number} out of {total_question}**",
 					description = f"**[{question}]({google_question})**",
 					color = discord.Colour.random(),
+					timestamp = datetime.datetime.utcnow()
 					)
-					#timestamp = datetime.datetime.utcnow()
 				embed.add_field(name = "**Correct Answer :-**", value = f"**Option {ans_num}. {answer}**", inline = False)
 				embed.add_field(name = "**Status :-**",
 					value = f"**Advancing Players : {advance_players} ({pA}%)\nEliminated Players : {eliminate_players} ({pE}%)\nCurrent Payout : ᛗ{payout}**",
 					inline = False
 				)
 				embed.add_field(name = "**Ongoing Pattern :-**", value = f"**{self.pattern}**", inline = False)
-				#embed.set_footer(text = f"Correct : {'True' if (selection == answer_id and not selection) else 'False'} | Total Points : {'0' if score < 10 else ''}{score}")
+				embed.set_footer(text = f"Mimir Quiz")
 				embed.set_thumbnail(url = self.icon_url)
 				await self.send_hook(embed = embed)
 
