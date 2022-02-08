@@ -397,7 +397,7 @@ class Websocket:
 					inline = False
 				)
 				embed.add_field(name = "**Ongoing Pattern :-**", value = f"**{self.pattern}**", inline = False)
-				embed.set_footer(text = f"Correct : {'True' if (selection == answer_id and not selection) else 'False'} | Total Points : {'0' if score < 10 else ''}{score}")
+				#embed.set_footer(text = f"Correct : {'True' if (selection == answer_id and not selection) else 'False'} | Total Points : {'0' if score < 10 else ''}{score}")
 				embed.set_thumbnail(url = self.icon_url)
 				await self.send_hook(embed = embed)
 
