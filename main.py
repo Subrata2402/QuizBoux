@@ -104,8 +104,8 @@ class MimirQuiz(commands.Cog, Websocket):
         questions = list(db.question_base.find())
         await self.send_hook(embed = discord.Embed(title = f"Total Questions : {len(questions)}", color = discord.Colour.random()))
     
-
-client = commands.Bot(command_prefix = "-", strip_after_prefix = True, case_insensitive = True)
+intents = discord.Intents.all()
+client = commands.Bot(command_prefix = "-", strip_after_prefix = True, case_insensitive = True, intents = intents)
 client.add_cog(MimirQuiz(client))
 
 @client.event
