@@ -69,12 +69,12 @@ class Websocket:
 				
 	async def pay_fees(self, ctx, token):
 		url = "https://api.mimir-prod.com/games/pay-fee"
-		await self.get_quiz_details("play_to_win")
+		await self.get_quiz_details()
 		data = json.dumps({
 				"transaction": {
 				"target": "0x4357d1eE11E7db4455527Fe3dfd0B882Cb334357",
 				"to": "0xa02963C078fd71079cCcE5e0049b0Abf8AEDD178",
-				"value": "15000000000000000000",
+				"value": "40000000000000000000",
 				"deadline": 1643540139,
 				"v": 28,
 				"r": "0x8e2c03e1d075ea83032c6d2faf128e07249e2496f3a20d0598ef4d680e313ca8",
