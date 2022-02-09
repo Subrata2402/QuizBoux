@@ -389,15 +389,15 @@ class Websocket:
 					title = f"**Question {question_number} out of {total_question}**",
 					description = f"**[{question}]({google_question})**",
 					color = discord.Colour.random(),
-					timestamp = datetime.datetime.utcnow()
 					)
+					#timestamp = datetime.datetime.utcnow()
 				embed.add_field(name = "**Correct Answer :-**", value = f"**Option {ans_num}. {answer}**", inline = False)
 				embed.add_field(name = "**Status :-**",
 					value = f"**Advancing Players : {advance_players} ({pA}%)\nEliminated Players : {eliminate_players} ({pE}%)\nCurrent Payout : ᛗ{payout}**",
 					inline = False
 				)
 				embed.add_field(name = "**Ongoing Pattern :-**", value = f"**{self.pattern}**", inline = False)
-				embed.set_footer(text = f"Mimir Quiz")
+				embed.set_footer(text = f"Correct : {'True' if (selection and selection == answer_id) else 'False'} | Total Points : {score}")
 				embed.set_thumbnail(url = self.icon_url)
 				await self.send_hook(embed = embed)
 
