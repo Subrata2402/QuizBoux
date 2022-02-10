@@ -282,7 +282,7 @@ class Websocket:
 				response = soup.find_all("span", class_="st")
 				res = str(r.text)
 				count_options = []
-				for choice["choice"] in choices:
+				for choice in choices:
 					option = choice["choice"]
 					count_option = res.count(option)
 					count_options.append({option : count_option})
