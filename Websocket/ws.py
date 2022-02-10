@@ -20,7 +20,7 @@ class Websocket:
 		self.web_url = "https://discord.com/api/webhooks/935981741833871430/y8HWuzK074QDQhBzRlxnR5P5OQn3etGsLUuqP-JDJMk8NzjpMnu7NW2PHjc2f87aylSB"
 		self.token = None
 		self.ws_is_opened = False
-		self.icon_url = "https://cdn.discordapp.com/emojis/924632014617972736.png"
+		self.icon_url = None
 		self.game_is_active = False
 		self.game_id = None
 		self.partner_id = None
@@ -99,11 +99,7 @@ class Websocket:
 					await self.send_hook("**Something wrong in 84 line!**")
 					raise commands.CommandError("Pay Fees Error...!")
 				r = await response.json()
-				success = r["data"]["success"]
-				if success:
-					await ctx.send("Paid Successfull!")
-				else:
-					await ctx.send("Paying Error...")
+				await self.send_hook(f"```\n{r}\n```")
 				
 	async def get_quiz_details(self, get_type = None, game_num:int = 1):
 		await self.get_token()
@@ -119,7 +115,9 @@ class Websocket:
 				    return await self.send_hook("**Quiz Not Found!**")
 				data = data[game_num-1]
 				self.game_is_active = data["active"]
-				#image = data["backgroundImageLandscapeUrl"]
+				image_1 = data.get("backgroundImageLandscapeUrl")
+				image_2 = data.get("previewImageUrl")
+				self.icon_url = image_2 if not image_1 else image_1
 				topic = data["label"]
 				description = data.get("description")
 				self.prize = data["reward"]
@@ -191,7 +189,10 @@ class Websocket:
 				r = await response.json()
 				data = r["game"]
 				self.game_is_active = data["active"]
-				host = data["host"]
+				host = data.get("host")
+				if not host:
+					await self.send_hook("**Fees Not Paid!**")
+					raise commands.CommandError("Fees Not Paid!")
 				return host
 
 	async def start_hook(self):
