@@ -253,7 +253,7 @@ class Websocket:
 				raw_question = str(question).replace(" ", "+")
 				google_question = "https://google.com/search?q=" + raw_question
 				options = ""
-				for choice["choice"] in choices:
+				for choice in choices:
 					option = choice["choice"]
 					options += option.strip() + "+"
 				raw_options = str(options).replace(" ", "+")
