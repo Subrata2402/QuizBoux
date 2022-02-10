@@ -310,7 +310,7 @@ class Websocket:
 				embed.set_footer(text="Search with Google")
 				option_found = False
 				for index, choice in enumerate(choices):
-					if choice["choice"].lower() in result.lower()
+					if choice["choice"].lower() in result.lower():
 						embed.title = f"**__Option {index+1}. {choice['choice']}__**"
 						option_found = True
 				if not option_found:
