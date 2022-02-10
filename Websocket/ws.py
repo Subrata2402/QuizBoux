@@ -17,10 +17,10 @@ class Websocket:
 	def __init__(self):
 		self.prize = 50
 		self.pattern = []
-		self.web_url = "https://discord.com/api/webhooks/935981741833871430/y8HWuzK074QDQhBzRlxnR5P5OQn3etGsLUuqP-JDJMk8NzjpMnu7NW2PHjc2f87aylSB"
+		self.web_url = "https://discord.com/api/webhooks/938473130568065135/BGawZsFeWa59epspDbywoJNX1t-rQ4hiJroj7A6-vyZ7ZBtOipZlLIWIXaEciR-y8f2I"
 		self.token = None
 		self.ws_is_opened = False
-		self.icon_url = None
+		self.icon_url = "https://media.discordapp.net/attachments/938473054718279730/941230541687119932/924632014617972736.png"
 		self.game_is_active = False
 		self.game_id = None
 		self.partner_id = None
@@ -263,7 +263,7 @@ class Websocket:
 				embed.title = f"**Question {question_number} out of {total_question} {is_not}**"
 				embed.description = f"**[{question}]({google_question})\n\n[Search with all options]({search_with_all})**"
 				for index, choice["choice"] in enumerate(choices):
-					embed.add_field(name = f"**Option - {index+1}**", value = f"**[{choice["choice"].strip()}]({search_with_all})**", inline = False)
+					embed.add_field(name = f"**Option - {index+1}**", value = f"**[{choice['choice'].strip()}]({search_with_all})**", inline = False)
 				embed.set_thumbnail(url = self.icon_url)
 				embed.set_footer(text = f"Response Time : {response_time} secs | Points : {point_value}")
 				await self.send_hook(embed = embed)
@@ -311,7 +311,7 @@ class Websocket:
 				option_found = False
 				for index, choice in enumerate(choices):
 					if choice["choice"].lower() in result.lower()
-						embed.title = f"**__Option {index+1}. {choice["choice"]}__**"
+						embed.title = f"**__Option {index+1}. {choice['choice']}__**"
 						option_found = True
 				if not option_found:
 					embed.title = f"**__Direct Search Result !__**"
