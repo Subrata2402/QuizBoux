@@ -254,7 +254,7 @@ class Websocket:
 				google_question = "https://google.com/search?q=" + raw_question
 				options = ""
 				for option := choice["choice"] in choices:
-					options += option + "+"
+					options += option.strip() + "+"
 				raw_options = str(options).replace(" ", "+")
 				search_with_all = "https://google.com/search?q=" + raw_question + raw_options
 				is_not = "(Not Question)" if "not" in question.lower() else ""
@@ -262,7 +262,7 @@ class Websocket:
 				embed.title = f"**Question {question_number} out of {total_question} {is_not}**"
 				embed.description = f"**[{question}]({google_question})\n\n[Search with all options]({search_with_all})**"
 				for index, option := choice["choice"] in enumerate(choices):
-					embed.add_field(name = f"**Option - {index+1}**", value = f"**[{option}]({search_with_all})**", inline = False)
+					embed.add_field(name = f"**Option - {index+1}**", value = f"**[{option.strip()}]({search_with_all})**", inline = False)
 				embed.set_thumbnail(url = self.icon_url)
 				embed.set_footer(text = f"Response Time : {response_time} secs | Points : {point_value}")
 				await self.send_hook(embed = embed)
