@@ -340,7 +340,7 @@ class Websocket:
 				pE = float("{:.2f}".format(total_ratio - advance_ratio))
 				pA = float("{:.2f}".format(advance_ratio))
 				self.pattern.append(str(ans_num))
-				await self.add_question(question, answer)
+				#await self.add_question(question, answer)
 				ans = (self.prize)/(advance_players)
 				payout = float("{:.2f}".format(ans))
 				embed = discord.Embed(
