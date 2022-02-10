@@ -359,6 +359,7 @@ class Websocket:
 						advance_ratio = choice["userResponseRatio"]
 					total_players += choice["responses"]
 					total_ratio += choice["userResponseRatio"]
+				eliminate_players = total_players - advance_players
 				pE = float("{:.2f}".format(total_ratio - advance_ratio))
 				pA = float("{:.2f}".format(advance_ratio))
 				self.pattern.append(str(ans_num))
