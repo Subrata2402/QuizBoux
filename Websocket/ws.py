@@ -252,6 +252,7 @@ class Websocket:
 				choices = data["choices"]
 				raw_question = str(question).replace(" ", "+")
 				google_question = "https://google.com/search?q=" + raw_question
+				bing_question = "https://bing.com/search?q=" + raw_question
 				options = ""
 				for choice in choices:
 					option = choice["choice"]
@@ -277,6 +278,27 @@ class Websocket:
 							answer_send = True
 					if not answer_send: await self.send_hook(embed = discord.Embed(title = f"**__{answer}__**", color = discord.Colour.random()))
 				
+				r = requests.get(bing_question)
+				soup = BeautifulSoup(r.text, 'html.parser')
+				response = soup.find_all("span", class_="st")
+				res = str(r.text)
+				count_options = {}
+				for choice in choices:
+					option = choice["choice"]
+					count_option = res.count(option)
+					count_options["option"] = count_option
+				max_count = max(list(count_options.values()))
+				min_count = min(list(count_options.values()))
+				embed = discord.Embed(title="**__Google Results - 1__**", color = discord.Colour.random())
+				description = ""
+				for index, option in enumerate(count_options):
+					if max_count != 0 and count_options[option] == max_count:
+						description += f"{index+1}. {option} : {count_options[option]} ✅\n"
+					else:
+						description += f"{index+1}. {option} : {count_options[option]}\n"
+				embed.description = description
+				await self.send_hook(embed = embed)
+				
 				r = requests.get(google_question)
 				soup = BeautifulSoup(r.text, 'html.parser')
 				response = soup.find_all("span", class_="st")
@@ -288,7 +310,7 @@ class Websocket:
 					count_options["option"] = count_option
 				max_count = max(list(count_options.values()))
 				min_count = min(list(count_options.values()))
-				embed = discord.Embed(title="**__Google Search Results !__**", color = discord.Colour.random())
+				embed = discord.Embed(title="**__Google Results - 2__**", color = discord.Colour.random())
 				description = ""
 				for index, option in enumerate(count_options):
 					if max_count != 0 and count_options[option] == max_count:
