@@ -264,7 +264,7 @@ class Websocket:
 				for index, option := choice["choice"] in enumerate(choices):
 					embed.add_field(name = f"**Option - {index+1}**", value = f"**[{option}]({search_with_all})**", inline = False)
 				embed.set_thumbnail(url = self.icon_url)
-				embed.set_footer(text = f"Response Time : {response_time} seconds")
+				embed.set_footer(text = f"Response Time : {response_time} secs | Points : {point_value}")
 				await self.send_hook(embed = embed)
 				
 				answer = await self.get_answer(question)
