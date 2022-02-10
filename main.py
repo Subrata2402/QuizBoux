@@ -3,11 +3,12 @@ from discord.ext import commands
 from Websocket.ws import Websocket
 from database import db
 import aiohttp
+import asyncio
 
 class MimirQuiz(commands.Cog, Websocket):
     
     def __init__(self, client):
-        super().__init__(client)
+        super().__init__()
         self.client = client
     
     @commands.Cog.listener()
@@ -15,9 +16,36 @@ class MimirQuiz(commands.Cog, Websocket):
         print("Ready!")
         game = discord.Streaming(name = "with Mimir Quiz!", url = "https://app.mimirquiz.com")
         await self.client.change_presence(activity=game)
-
-       
+        
+    @commands.Cog.listener()
+    async def on_message_delete(self, message):
+        channel = self.client.get_channel(940580545375637524) or (await self.client.fetch_channel(940580545375637524))
+        deleted = discord.Embed(title=f"Username: `{message.author}`\nChannel: `{message.channel.name}`\nMessage Content :-", description=message.content, color=0x4040EC)
+        deleted.set_author(name=message.guild.name, icon_url=message.guild.icon_url)
+        deleted.set_thumbnail(url= message.guild.icon_url)
+        deleted.set_footer(text=self.client.user.name, icon_url=self.client.user.avatar_url)
+        deleted.timestamp = message.created_at
+        await channel.send(embed=deleted)
+        
     @commands.command()
+    async def add(self, ctx, *, args):
+        """Added a question in databse. Usage -add question | answer"""
+        qa = args.split(" | ")
+        question = qa[0]
+        answer = qa[1]
+        get_type = await self.add_question(question, answer)
+        if get_type:
+            await self.send_hook("**Successfully Added Question!**")
+        else:
+            await self.send_hook("**Already Added!**")
+    
+    @commands.command(hidden = True)
+    @commands.is_owner()
+    async def pay(self, ctx, token:str = None):
+        """Pay Fees."""
+        await self.pay_fees(ctx, token)
+       
+    @commands.command(aliases = ["p"])
     async def price(self, ctx, mimir:float = None):
         """Get or calculate current price of Mimir Token."""
         url = "https://api.coingecko.com/api/v3/coins/mimir-token"
@@ -29,56 +57,34 @@ class MimirQuiz(commands.Cog, Websocket):
                 data = await response.json()
                 name = data.get("name")
                 price = data.get("market_data").get("current_price").get("usd")
-                price = float("{:.6f}".format(price*mimir))
+                usd = float("{:.2f}".format(price*mimir))
+                price = data.get("market_data").get("current_price").get("inr")
+                inr = float("{:.2f}".format(price*mimir))
                 embed = discord.Embed(
                     color = discord.Colour.random(),
                     title = f"**__Current Price of {name}__**",
-                    description = f"**ᛗ{mimir} ≈ ${price}**")
+                    description = f"**ᛗ{mimir} ≈ ${usd} ≈ ₹{inr}**")
                 await self.send_hook(embed = embed)
         
     @commands.command()
     async def addtoken(self, ctx, token):
         """Update Token."""
         await ctx.message.delete()
-        url = "https://api.mimir-prod.com//games/list?type=play_free"
-        headers = {
-            "host": "api.mimir-prod.com",
-            "authorization": f"Bearer {token}",
-            "user-agent": "Mozilla/5.0 (Linux; Android 10; RMX1827) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.99 Mobile Safari/537.36",
-            "content-type": "application/json",
-            "accept": "*/*",
-            "origin": "https://app.mimirquiz.com",
-            "referer": "https://app.mimirquiz.com/",
-            "accept-encoding": "gzip, deflate",
-            "accept-language": "en-US,en;q=0.9"
-            }
-        async with aiohttp.ClientSession() as session:
-            async with session.get(url = url, headers = headers) as response:
-                if response.status != 200:
-                    return await self.send_hook("**The token is invalid or expired!**")
-                update = {"token": token}
-                db.token.update_one({"id": "3250"}, {"$set": update})
-                await self.send_hook("**Token Successfully Updated!**")
+        update = {"token": token}
+        db.token.update_one({"id": "3250"}, {"$set": update})
+        await self.send_hook("**Token Successfully Updated!**")
+        
         
     @commands.command(aliases = ["quiz", "mimir"])
-    async def nextquiz(self, ctx, quiz_type = "play_free"):
-        """Get next quiz details. Quiz type = paid/free"""
-        if quiz_type.lower() == "paid":
-            quiz_type = "play_to_win"
-        else:
-            quiz_type = "play_free"
-        await self.get_quiz_type(quiz_type)
-        await self.get_quiz_details("send")
+    async def nextquiz(self, ctx, game_num:int = 1):
+        """Get next quiz details."""
+        await self.get_quiz_details(get_type = "send", game_num = game_num)
     
     @commands.command(aliases = ["open"])
-    async def start(self, ctx, quiz_type = "play_free"):
-        """Start Websocket. Quiz type = paid/free"""
-        if quiz_type.lower() == "paid":
-            quiz_type = "play_to_win"
-        else:
-            quiz_type = "play_free"
+    async def start(self, ctx, time:int = 0):
+        """Start Websocket."""
+        await asyncio.sleep(time)
         if not self.ws_is_opened:
-            await self.get_quiz_type(quiz_type)
             await self.send_hook("**Websocket Opened!**")
             await self.start_hook()
         else:
@@ -98,14 +104,16 @@ class MimirQuiz(commands.Cog, Websocket):
         questions = list(db.question_base.find())
         await self.send_hook(embed = discord.Embed(title = f"Total Questions : {len(questions)}", color = discord.Colour.random()))
     
-
-client = commands.Bot(command_prefix = ">", strip_after_prefix = True, case_insensitive = True)
+intents = discord.Intents.all()
+client = commands.Bot(command_prefix = ">", strip_after_prefix = True, case_insensitive = True, intents = intents)
 client.add_cog(MimirQuiz(client))
 
 @client.event
 async def on_message(message):
-    if not message.guild and not message.author.bot:
-        return #await message.channel.send("**You cannot be used me in private messages.**")
+    if not message.guild:
+        return #await messag 08e.channel.send("**You cannot be used me in private messages.**")
+    if message.guild.id != 935980609908658277:
+    	return
     await client.process_commands(message)
             
 client.run("Nzk5NDY4ODE4Mzc1NjM5MDUw.YAEBWw.OFUuud6gDHl5TYbcie3guwxPMI8")
