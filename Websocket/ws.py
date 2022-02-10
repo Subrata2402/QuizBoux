@@ -253,7 +253,8 @@ class Websocket:
 				raw_question = str(question).replace(" ", "+")
 				google_question = "https://google.com/search?q=" + raw_question
 				options = ""
-				for option := choice["choice"] in choices:
+				for choice["choice"] in choices:
+					option = choice["choice"]
 					options += option.strip() + "+"
 				raw_options = str(options).replace(" ", "+")
 				search_with_all = "https://google.com/search?q=" + raw_question + raw_options
@@ -261,8 +262,8 @@ class Websocket:
 				
 				embed.title = f"**Question {question_number} out of {total_question} {is_not}**"
 				embed.description = f"**[{question}]({google_question})\n\n[Search with all options]({search_with_all})**"
-				for index, option := choice["choice"] in enumerate(choices):
-					embed.add_field(name = f"**Option - {index+1}**", value = f"**[{option.strip()}]({search_with_all})**", inline = False)
+				for index, choice["choice"] in enumerate(choices):
+					embed.add_field(name = f"**Option - {index+1}**", value = f"**[{choice["choice"].strip()}]({search_with_all})**", inline = False)
 				embed.set_thumbnail(url = self.icon_url)
 				embed.set_footer(text = f"Response Time : {response_time} secs | Points : {point_value}")
 				await self.send_hook(embed = embed)
@@ -281,7 +282,8 @@ class Websocket:
 				response = soup.find_all("span", class_="st")
 				res = str(r.text)
 				count_options = []
-				for option := choice["choice"] in choices:
+				for choice["choice"] in choices:
+					option = choice["choice"]
 					count_option = res.count(option)
 					count_options.append({option : count_option})
 				max_count = max(list(count_options.values()))
@@ -289,10 +291,10 @@ class Websocket:
 				embed = discord.Embed(title="**__Google Search Results !__**", color = discord.Colour.random())
 				description = ""
 				for index, option in enumerate(count_options):
-					if max_count != 0 and count := count_options[option] == max_count:
-						description += f"{index+1}. {option} : {count} ✅\n"
+					if max_count != 0 and count_options[option] == max_count:
+						description += f"{index+1}. {option} : {count_options[option]} ✅\n"
 					else:
-						description += f"{index+1}. {option} : {count}\n"
+						description += f"{index+1}. {option} : {count_options[option]}\n"
 				embed.description = description
 				await self.send_hook(embed = embed)
 				
