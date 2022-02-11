@@ -10,7 +10,8 @@ from bs4 import BeautifulSoup
 google_question = "https://google.com/search?q="
 question_number = total_question = 0
 from database import db
-order = ["１", "２", "３", "４"]
+order = ["１", "２", "３", "４", "５", "６", "７", "８", "９", "１０", "１１", "１２",
+		"１３", "１４", "１５", "１６", "１７", "１８", "１９", "２０"]
 
 class Websocket:
 	
@@ -261,7 +262,7 @@ class Websocket:
 				search_with_all = "https://google.com/search?q=" + raw_question + raw_options
 				is_not = "(Not Question)" if "not" in question.lower() else ""
 				
-				embed.title = f"**Question {question_number} out of {total_question} {is_not}**"
+				embed.title = f"**Question {order[int(question_number)-1]} out of {order[int(total_question)-1]} {is_not}**"
 				embed.description = f"**[{question}]({google_question})\n\n[Search with all options]({search_with_all})**"
 				for index, choice in enumerate(choices):
 					embed.add_field(name = f"**Option -{order[index]}**", value = f"**[{choice['choice'].strip()}]({search_with_all})**", inline = False)
@@ -367,7 +368,7 @@ class Websocket:
 				ans = (self.prize)/(advance_players)
 				payout = float("{:.2f}".format(ans))
 				embed = discord.Embed(
-					title = f"**Question {question_number} out of {total_question}**",
+					title = f"**Question {order[int(question_number)-1]} out of {order[int(total_question)-1]}**",
 					description = f"**[{question}]({google_question})**",
 					color = discord.Colour.random(),
 					)
