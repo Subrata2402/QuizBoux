@@ -378,7 +378,7 @@ class Websocket:
 						advance_players = choice["responses"]
 					total_players += choice["responses"]
 				self.pattern.append(str(ans_num))
-				await self.add_question(question, answer)
+				#await self.add_question(question, answer)
 				eliminate_players = total_players - advance_players
 				percentAdvancing = (int(advance_players)*(100))/total_players
 				pA = float("{:.2f}".format(percentAdvancing))
