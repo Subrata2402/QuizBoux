@@ -257,6 +257,7 @@ class Websocket:
 				await self.send_hook(embed = discord.Embed(title = "The Game has Reset!", color = discord.Colour.random()))
 
 			elif event == "QuestionStart":
+				"""Question start event when question coming up on the mobile screen."""
 				global google_question, question_number, total_question
 				data = json.loads(msg.data)
 				embed = discord.Embed(color = discord.Colour.random())
