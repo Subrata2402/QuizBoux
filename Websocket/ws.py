@@ -296,7 +296,7 @@ class Websocket:
 						description += f"{index+1}. {option} : {count_options[option]} ✅\n"
 					else:
 						description += f"{index+1}. {option} : {count_options[option]}\n"
-				embed.description = description
+				embed.description = f"**{description}**"
 				await self.send_hook(embed = embed)
 				
 				r = requests.get(google_question)
@@ -317,7 +317,7 @@ class Websocket:
 						description += f"{index+1}. {option} : {count_options[option]} ✅\n"
 					else:
 						description += f"{index+1}. {option} : {count_options[option]}\n"
-				embed.description = description
+				embed.description = f"**{description}**"
 				await self.send_hook(embed = embed)
 				
 				r = requests.get(google_question)
