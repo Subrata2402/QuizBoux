@@ -279,7 +279,7 @@ class Websocket:
 							answer_send = True
 					if not answer_send: await self.send_hook(embed = discord.Embed(title = f"**__{answer}__**", color = discord.Colour.random()))
 				
-				r = requests.get(bing_question)
+				r = requests.get(search_with_all)
 				soup = BeautifulSoup(r.text, 'html.parser')
 				response = soup.find_all("span", class_="st")
 				res = str(r.text)
