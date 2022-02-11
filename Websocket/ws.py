@@ -10,7 +10,7 @@ from bs4 import BeautifulSoup
 google_question = "https://google.com/search?q="
 question_number = total_question = 0
 from database import db
-
+order = ["１", "２", "３", "４"]
 
 class Websocket:
 	
@@ -264,7 +264,7 @@ class Websocket:
 				embed.title = f"**Question {question_number} out of {total_question} {is_not}**"
 				embed.description = f"**[{question}]({google_question})\n\n[Search with all options]({search_with_all})**"
 				for index, choice in enumerate(choices):
-					embed.add_field(name = f"**Option - {index+1}**", value = f"**[{choice['choice'].strip()}]({search_with_all})**", inline = False)
+					embed.add_field(name = f"**Option -{order[index]}**", value = f"**[{choice['choice'].strip()}]({search_with_all})**", inline = False)
 				embed.set_thumbnail(url = self.icon_url)
 				embed.set_footer(text = f"Response Time : {response_time} secs | Points : {point_value}")
 				await self.send_hook(embed = embed)
@@ -274,7 +274,7 @@ class Websocket:
 				if answer:
 					for index, choice in enumerate(choices):
 						if answer.lower() == str(choice["choice"]).strip().lower():
-							await self.send_hook(embed = discord.Embed(title = f"**__Option {index+1}. {answer}__**", color = discord.Colour.random()))
+							await self.send_hook(embed = discord.Embed(title = f"**__Option {order[index]}. {answer}__**", color = discord.Colour.random()))
 							answer_send = True
 					if not answer_send: await self.send_hook(embed = discord.Embed(title = f"**__{answer}__**", color = discord.Colour.random()))
 				
@@ -289,13 +289,13 @@ class Websocket:
 					count_options[option] = count_option
 				max_count = max(list(count_options.values()))
 				min_count = min(list(count_options.values()))
-				embed = discord.Embed(title="**__Google Results - 1__**", color = discord.Colour.random())
+				embed = discord.Embed(title="**__Google Results -１__**", color = discord.Colour.random())
 				description = ""
 				for index, option in enumerate(count_options):
 					if max_count != 0 and count_options[option] == max_count:
-						description += f"{index+1}. {option} : {count_options[option]} ✅\n"
+						description += f"{order[index]}. {option} : {count_options[option]} ✅\n"
 					else:
-						description += f"{index+1}. {option} : {count_options[option]}\n"
+						description += f"{order[index]}. {option} : {count_options[option]}\n"
 				embed.description = f"**{description}**"
 				await self.send_hook(embed = embed)
 				
@@ -310,13 +310,13 @@ class Websocket:
 					count_options[option] = count_option
 				max_count = max(list(count_options.values()))
 				min_count = min(list(count_options.values()))
-				embed = discord.Embed(title="**__Google Results - 2__**", color = discord.Colour.random())
+				embed = discord.Embed(title="**__Google Results -２__**", color = discord.Colour.random())
 				description = ""
 				for index, option in enumerate(count_options):
 					if max_count != 0 and count_options[option] == max_count:
-						description += f"{index+1}. {option} : {count_options[option]} ✅\n"
+						description += f"{order[index]}. {option} : {count_options[option]} ✅\n"
 					else:
-						description += f"{index+1}. {option} : {count_options[option]}\n"
+						description += f"{order[index]}. {option} : {count_options[option]}\n"
 				embed.description = f"**{description}**"
 				await self.send_hook(embed = embed)
 				
@@ -333,7 +333,7 @@ class Websocket:
 				option_found = False
 				for index, choice in enumerate(choices):
 					if choice["choice"].lower() in result.lower():
-						embed.title = f"**__Option {index+1}. {choice['choice']}__**"
+						embed.title = f"**__Option {order[index]}. {choice['choice']}__**"
 						option_found = True
 				if not option_found:
 					embed.title = f"**__Direct Search Result !__**"
@@ -372,7 +372,7 @@ class Websocket:
 					color = discord.Colour.random(),
 					)
 					#timestamp = datetime.datetime.utcnow()
-				embed.add_field(name = "**Correct Answer :-**", value = f"**Option {ans_num}. {answer}**", inline = False)
+				embed.add_field(name = "**Correct Answer :-**", value = f"**Option {order[ans_num-1]}. {answer}**", inline = False)
 				embed.add_field(name = "**Status :-**",
 					value = f"**Advancing Players : {advance_players} ({pA}%)\nEliminated Players : {eliminate_players} ({pE}%)\nCurrent Payout : ᛗ{payout}**",
 					inline = False
