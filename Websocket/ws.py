@@ -286,7 +286,7 @@ class Websocket:
 				for choice in choices:
 					option = choice["choice"]
 					count_option = res.count(option)
-					count_options["option"] = count_option
+					count_options[option] = count_option
 				max_count = max(list(count_options.values()))
 				min_count = min(list(count_options.values()))
 				embed = discord.Embed(title="**__Google Results - 1__**", color = discord.Colour.random())
@@ -307,7 +307,7 @@ class Websocket:
 				for choice in choices:
 					option = choice["choice"]
 					count_option = res.count(option)
-					count_options["option"] = count_option
+					count_options[option] = count_option
 				max_count = max(list(count_options.values()))
 				min_count = min(list(count_options.values()))
 				embed = discord.Embed(title="**__Google Results - 2__**", color = discord.Colour.random())
