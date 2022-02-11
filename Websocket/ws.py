@@ -15,8 +15,8 @@ order = ["１", "２", "３", "４", "５", "６", "７", "８", "９", "０"]
 class Websocket:
 	
 	def __init__(self):
-		self.prize = 50
-		self.pattern = []
+		self.prize = 50 # Default prize money of quiz
+		self.pattern = [] # Store answer pattern of the current quiz
 		self.web_url = "https://discord.com/api/webhooks/938473130568065135/BGawZsFeWa59epspDbywoJNX1t-rQ4hiJroj7A6-vyZ7ZBtOipZlLIWIXaEciR-y8f2I"
 		self.token = None
 		self.ws_is_opened = False
@@ -26,7 +26,7 @@ class Websocket:
 		self.partner_id = None
 		self.user_id = None
 		self.bearer_token = None
-		self.value = None
+		self.value = None # Entry Fee of the quiz
 		
 	async def close_hook(self):
 		"""Close Websocket."""
@@ -67,8 +67,10 @@ class Websocket:
 
 	async def add_question(self, question, answer):
 		"""Add Question in the database for the repeated questions."""
+		# check if question is in the database
 		check = db.question_base.find_one({"question": question})
 		if not check:
+			# insert question and answer if question not in databse
 			db.question_base.insert_one({"question": question, "answer": answer})
 			return True
 		return False
@@ -110,8 +112,8 @@ class Websocket:
 				
 	async def get_quiz_details(self, get_type = None, game_num:int = 1):
 		"""Get quiz details and take game_id, partner_id, prize money etc."""
-		await self.get_token()
-		url = "https://api.mimir-prod.com//games/next?"
+		await self.get_token() # Take token from the database
+		url = "https://api.mimir-prod.com//games/next?" # api url of the mimir quiz details
 		async with aiohttp.ClientSession() as session:
 			async with session.get(url = url) as response:
 				if response.status != 200:
@@ -122,7 +124,7 @@ class Websocket:
 				if len(data) < game_num:
 				    return await self.send_hook("**Quiz Not Found!**")
 				data = data[game_num-1]
-				self.game_is_active = data["active"]
+				self.game_is_active = data["active"] # if game is live
 				image_1 = data.get("backgroundImageLandscapeUrl")
 				image_2 = data.get("previewImageUrl")
 				self.icon_url = image_2 if not image_1 else image_1
@@ -152,9 +154,9 @@ class Websocket:
 	async def get_access_token(self):
 		"""Fetch access token to pass the authorization token.
 		It's need for get the host of the live quiz api url."""
-		await self.get_quiz_details()
+		await self.get_quiz_details() # To run this function take partner id of the quiz
 		#await self.pay_fees()
-		url = f"https://apic.us.theq.live/v2/oauth/token?partnerCode={self.partner_id}"
+		url = f"https://apic.us.theq.live/v2/oauth/token?partnerCode={self.partner_id}" # Get access token api url
 		headers = {
 			"host": "apic.us.theq.live",
 			"user-Agent": "Mozilla/5.0 (Linux; Android 10; RMX1827) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.99 Mobile Safari/537.36",
@@ -179,6 +181,7 @@ class Websocket:
 				
 	async def get_host(self):
 		"""Take host for live quiz api url."""
+		# To run this function take live quiz bearer token
 		await self.get_access_token()
 		url = f"https://apic.us.theq.live/v2/games/active/{self.game_id}?userId={self.user_id}"
 		headers = {
@@ -202,6 +205,7 @@ class Websocket:
 				self.game_is_active = data["active"]
 				host = data.get("host")
 				if not host:
+					# check if not host that means fees not paid for the paid quiz.
 					await self.send_hook("**Fees Not Paid!**")
 					raise commands.CommandError("Fees Not Paid!")
 				return host
@@ -225,7 +229,7 @@ class Websocket:
 			"Accept-Encoding": "gzip, deflate, br",
 			"Accept-Language": "en-US,en;q=0.9,bn;q=0.8,hi;q=0.7"
 		}
-		try:
+		try: # try to connect sseclient
 			messages = SSEClient(url, headers = headers)
 		except:
 			return await self.send_hook("**Failed to Connect Websocket!**")
