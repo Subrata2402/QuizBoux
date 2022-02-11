@@ -29,15 +29,18 @@ class Websocket:
 		self.value = None
 		
 	async def close_hook(self):
+		"""Close Websocket."""
 		self.ws_is_opened = False
 		print("Websocket Closed!")
 		await self.send_hook("**Websocket Closed!**")
 
 	async def get_token(self):
+		"""Take Authorization Bearer Token from the database."""
 		token = db.token.find_one({"id": "3250"})["token"]
 		self.token = token
 
 	async def send_hook(self, content = "", embed = None):
+		"""Send message with Discord channel Webhook."""
 		async with aiohttp.ClientSession() as session:
 			webhook = discord.Webhook.from_url(self.web_url, adapter=discord.AsyncWebhookAdapter(session))
 			await webhook.send(
@@ -48,6 +51,7 @@ class Websocket:
 				)
 				
 	async def get_answer(self, question):
+		"""Take answer from the database if question found in db."""
 		question = db.question_base.find_one({"question": question})
 		if not question:
 			return None
@@ -55,12 +59,14 @@ class Websocket:
 		return answer
 
 	async def update_question(self, question, answer):
+		"""Update answer if question found but answer not found."""
 		question = db.question_base.find_one({"question": question})
 		if question:
 			update = {"answer": answer}
 			db.question_base.update_one({"question": question}, {"$set", update})
 
 	async def add_question(self, question, answer):
+		"""Add Question in the database for the repeated questions."""
 		check = db.question_base.find_one({"question": question})
 		if not check:
 			db.question_base.insert_one({"question": question, "answer": answer})
@@ -68,6 +74,7 @@ class Websocket:
 		return False
 				
 	async def pay_fees(self, ctx, token):
+		"""Pay fees in the paid games."""
 		url = "https://api.mimir-prod.com/games/pay-fee"
 		await self.get_quiz_details()
 		data = json.dumps({
@@ -102,6 +109,7 @@ class Websocket:
 				await self.send_hook(f"```\n{r}\n```")
 				
 	async def get_quiz_details(self, get_type = None, game_num:int = 1):
+		"""Get quiz details and take game_id, partner_id, prize money etc."""
 		await self.get_token()
 		url = "https://api.mimir-prod.com//games/next?"
 		async with aiohttp.ClientSession() as session:
@@ -142,6 +150,8 @@ class Websocket:
 					await self.send_hook(embed = embed)
 
 	async def get_access_token(self):
+		"""Fetch access token to pass the authorization token.
+		It's need for get the host of the live quiz api url."""
 		await self.get_quiz_details()
 		#await self.pay_fees()
 		url = f"https://apic.us.theq.live/v2/oauth/token?partnerCode={self.partner_id}"
@@ -160,7 +170,7 @@ class Websocket:
 			async with session.post(url = url, headers = headers, data = post_data) as response:
 				if response.status != 200:
 					await self.send_hook("**Access Token Error...**")
-					raise commands.CommandError("Get access token error...")
+					raise commands.CommandError("Get access token error...") # If response status not equal to 200 then raise an exception.
 				r = await response.json()
 				new_token = r["oauth"]["accessToken"]
 				token_type = r["oauth"]["tokenType"]
@@ -168,6 +178,7 @@ class Websocket:
 				self.bearer_token = token_type + " " + new_token
 				
 	async def get_host(self):
+		"""Take host for live quiz api url."""
 		await self.get_access_token()
 		url = f"https://apic.us.theq.live/v2/games/active/{self.game_id}?userId={self.user_id}"
 		headers = {
@@ -196,6 +207,7 @@ class Websocket:
 				return host
 
 	async def start_hook(self):
+		"""Main function of the websocket. For Start websocket."""
 		await self.send_hook("**Websocket Connecting...**")
 		host = await self.get_host()
 		url = f"https://{host}/v2/event-feed/games/{self.game_id}"
@@ -223,21 +235,25 @@ class Websocket:
 			print(event)
 			print(msg.data)
 			if self.ws_is_opened == False:
+				"""For close socket."""
 				return
 			
 			if event == "GameStatus":
+				"""Game status event when connect socket successfully it shows the current status of the quiz."""
 				await self.send_hook("**Websocket is Connected Successfully!**")
 
 			elif event == "ViewCountUpdate":
+				"""Live users update event."""
 				data = json.loads(msg.data)
 				count = data.get("viewCnt")
 				await self.send_hook(embed = discord.Embed(title = f"🔴 Total Lives : {count} Users", color = discord.Colour.random()))
 			
 			elif event == "GameUpdate":
-			    pass
+			    """When the Game will update like as rewards."""
 				#await self.send_hook(embed = discord.Embed(title = "The Game has Updated!", color = discord.Colour.random()))
 
 			elif event == "GameReset":
+				"""When the game was reset."""
 				await self.send_hook(embed = discord.Embed(title = "The Game has Reset!", color = discord.Colour.random()))
 
 			elif event == "QuestionStart":
@@ -340,10 +356,12 @@ class Websocket:
 				await self.send_hook(embed = embed)
 
 			elif event == "QuestionEnd":
+				"""Raised when the question has ended!"""
 				embed = discord.Embed(title = "Question has Ended!", color = discord.Colour.random())
 				await self.send_hook(embed = embed)
 
 			elif event == "QuestionResult":
+				"""Raised when show the result of the question."""
 				data = json.loads(msg.data)
 				question = str(data["question"]).strip()
 				point_value = data.get("pointValue")
@@ -383,6 +401,7 @@ class Websocket:
 				await self.send_hook(embed = embed)
 
 			elif event == "GameWinners":
+				"""Raised this event when Show the winners."""
 				data = json.loads(msg.data)
 				winners = int(data["winnerCount"])
 				ans = (self.prize)/(winners)
@@ -406,10 +425,11 @@ class Websocket:
 				await self.send_hook(embed = embed)
 				
 			elif event == "GameEnded":
+				"""When game has ended, raise this event."""
 				embed = discord.Embed(title = "**__Game has Ended !__**",
 					description = "**Thanks for playing!**", color = discord.Colour.random()
 					)
 				await self.send_hook(embed = embed)
-				self.pattern.clear()
-				await self.close_hook()
+				self.pattern.clear() # Clear answer pattern.
+				await self.close_hook() # Socket Close automatically when the game was ended.
 				return
