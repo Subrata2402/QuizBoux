@@ -280,7 +280,8 @@ class Websocket:
 					options += option.strip() + "+"
 				raw_options = str(options).replace(" ", "+")
 				search_with_all = "https://google.com/search?q=" + raw_question + raw_options
-				is_not = "(Not Question)" if "not" in question.lower() else ""
+				not_question = True if "not" in question.lower() else False
+				is_not = "(Not Question)" if not_question else ""
 				
 				embed.title = f"**Question {question_number} out of {total_question} {is_not}**"
 				embed.description = f"**[{question}]({google_question})\n\n[Search with all options]({search_with_all})**"
@@ -299,27 +300,6 @@ class Websocket:
 							answer_send = True
 					if not answer_send: await self.send_hook(embed = discord.Embed(title = f"**__{answer}__**", color = discord.Colour.random()))
 				
-				r = requests.get(search_with_all)
-				soup = BeautifulSoup(r.text, 'html.parser')
-				response = soup.find_all("span", class_="st")
-				res = str(r.text)
-				count_options = {}
-				for choice in choices:
-					option = choice["choice"]
-					count_option = res.count(option)
-					count_options[option] = count_option
-				max_count = max(list(count_options.values()))
-				min_count = min(list(count_options.values()))
-				embed = discord.Embed(title="**__Google Results -１__**", color = discord.Colour.random())
-				description = ""
-				for index, option in enumerate(count_options):
-					if max_count != 0 and count_options[option] == max_count:
-						description += f"{order[index]}. {option} : {count_options[option]} ✅\n"
-					else:
-						description += f"{order[index]}. {option} : {count_options[option]}\n"
-				embed.description = f"**{description}**"
-				await self.send_hook(embed = embed)
-				
 				r = requests.get(google_question)
 				soup = BeautifulSoup(r.text, 'html.parser')
 				response = soup.find_all("span", class_="st")
@@ -331,10 +311,11 @@ class Websocket:
 					count_options[option] = count_option
 				max_count = max(list(count_options.values()))
 				min_count = min(list(count_options.values()))
+				min_max_count = min_count if not_question else max_count
 				embed = discord.Embed(title="**__Google Results -２__**", color = discord.Colour.random())
 				description = ""
 				for index, option in enumerate(count_options):
-					if max_count != 0 and count_options[option] == max_count:
+					if min_max_count != 0 and count_options[option] == min_max_count:
 						description += f"{order[index]}. {option} : {count_options[option]} ✅\n"
 					else:
 						description += f"{order[index]}. {option} : {count_options[option]}\n"
