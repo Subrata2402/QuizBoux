@@ -75,7 +75,7 @@ class Websocket:
 			return True
 		return False
 				
-	async def pay_fees(self, ctx, token):
+	async def pay_fees(self):
 		"""Pay fees in the paid games."""
 		url = "https://api.mimir-prod.com/games/pay-fee"
 		await self.get_quiz_details()
@@ -83,7 +83,7 @@ class Websocket:
 				"transaction": {
 				"target": "0x4357d1eE11E7db4455527Fe3dfd0B882Cb334357",
 				"to": "0xa02963C078fd71079cCcE5e0049b0Abf8AEDD178",
-				"value": "40000000000000000000",
+				"value": "50000000000000000000",
 				"deadline": 1643540139,
 				"v": 28,
 				"r": "0x8e2c03e1d075ea83032c6d2faf128e07249e2496f3a20d0598ef4d680e313ca8",
@@ -93,7 +93,7 @@ class Websocket:
 			})
 		headers = {
 			"host": "api.mimir-prod.com",
-			"authorization": f"Bearer {token if token else self.token}",
+			"authorization": f"Bearer {self.token}",
 			"user-agent": "Mozilla/5.0 (Linux; Android 10; RMX1827) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.99 Mobile Safari/537.36",
 			"content-type": "application/json",
 			"accept": "*/*",
@@ -105,7 +105,7 @@ class Websocket:
 		async with aiohttp.ClientSession() as session:
 			async with session.post(url = url, headers = headers, data = data) as response:
 				if response.status != 200:
-					await self.send_hook("**Something wrong in 84 line!**")
+					await self.send_hook("**Something wrong in 108 line!**")
 					raise commands.CommandError("Pay Fees Error...!")
 				r = await response.json()
 				await self.send_hook(f"```\n{r}\n```")
