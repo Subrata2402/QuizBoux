@@ -258,7 +258,7 @@ class Websocket:
 				await self.send_hook(embed = discord.Embed(title = f"🔴 Total Lives : {count} Users", color = discord.Colour.random()))
 			
 			elif event == "GameUpdate":
-			    """When the Game will update like as rewards."""
+				"""When the Game will update like as rewards."""
 				data = json.loads(msg.data)
 				self.prize = data["reward"]
 
