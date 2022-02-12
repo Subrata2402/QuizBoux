@@ -255,7 +255,7 @@ class Websocket:
 				if len(choices) == 4: option_4 = str(choices[3]["choice"]).strip()
 				raw_question = str(question).replace(" ", "+")
 				raw_options = str(f"{option_1} + {option_2} + {option_3 if len(choices) >= 3 else ''} + {option_4 if len(choices) == 4 else ''}").replace(" ", "+")
-				google_question = "https://google.com/search?q=" + raw_question
+				google_question = "https://google.com/search?q=" + raw_question + "from+which+movie?"
 				search_with_all = "https://google.com/search?q=" + raw_question + raw_options
 				is_not = "(Not Question)" if "not" in question.lower() else ""
 				
