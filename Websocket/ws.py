@@ -305,6 +305,7 @@ class Websocket:
 							answer_send = True
 					if not answer_send: await self.send_hook(embed = discord.Embed(title = f"**__{answer}__**", color = discord.Colour.random()))
 				
+				# Google Search Results
 				r = requests.get(google_question)
 				soup = BeautifulSoup(r.text, 'html.parser')
 				response = soup.find_all("span", class_="st")
@@ -329,6 +330,7 @@ class Websocket:
 				embed.description = f"**{description}**"
 				await self.send_hook(embed = embed)
 				
+				# Print Direct Search Results Text
 				r = requests.get(google_question)
 				soup = BeautifulSoup(r.text , "html.parser")
 				response = soup.find("div" , class_='BNeawe')
