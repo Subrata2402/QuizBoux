@@ -68,7 +68,7 @@ class Websocket:
 		return False
 				
 	async def pay_fees(self, ctx, token):
-		url = "https://api.mimir-prod.com/games/pay-fee"
+		url = "https://api.mimir-prod.com/games/pay-to-win"
 		await self.get_quiz_details()
 		data = json.dumps({
 				"transaction": {
