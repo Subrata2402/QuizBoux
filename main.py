@@ -41,9 +41,9 @@ class MimirQuiz(commands.Cog, Websocket):
     
     @commands.command(hidden = True)
     @commands.is_owner()
-    async def pay(self, ctx, token:str = None):
+    async def pay(self, ctx):
         """Pay Fees."""
-        await self.pay_fees(ctx, token)
+        await self.pay_fees()
        
     @commands.command(aliases = ["p"])
     async def price(self, ctx, mimir:float = None):
