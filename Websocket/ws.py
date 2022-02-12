@@ -259,7 +259,8 @@ class Websocket:
 			
 			elif event == "GameUpdate":
 			    """When the Game will update like as rewards."""
-				#await self.send_hook(embed = discord.Embed(title = "The Game has Updated!", color = discord.Colour.random()))
+				data = json.loads(msg.data)
+				self.prize = data["reward"]
 
 			elif event == "GameReset":
 				"""When the game was reset."""
