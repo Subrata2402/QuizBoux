@@ -21,12 +21,25 @@ class Websocket:
 		self.token = None
 		self.ws_is_opened = False
 		self.icon_url = "https://media.discordapp.net/attachments/938473054718279730/941230541687119932/924632014617972736.png"
-		self.game_is_active = False
+		#self.game_is_active = False
 		self.game_id = None
 		self.partner_id = None
 		self.user_id = None
 		self.bearer_token = None
 		self.value = None # Entry Fee of the quiz
+		
+	@property
+	def game_is_active(self):
+		url = "https://api.mimir-prod.com//games/next?" # api url of the mimir quiz details
+		async with aiohttp.ClientSession() as session:
+			async with session.get(url = url) as response:
+				if response.status != 200:
+					await self.send_hook("**Something unexpected happened while fetching quiz details!**")
+					raise commands.CommandError("Token has expired!")
+				r = await response.json()
+				data = r["data"]["data"][0]
+				active = data["active"]
+				return active
 		
 	async def close_hook(self):
 		"""Close Websocket."""
@@ -130,7 +143,7 @@ class Websocket:
 				if len(data) < game_num:
 				    return await self.send_hook("**Quiz Not Found!**")
 				data = data[game_num-1]
-				self.game_is_active = data["active"] # if game is live
+				#self.game_is_active = data["active"] # if game is live
 				image_1 = data.get("backgroundImageLandscapeUrl")
 				image_2 = data.get("previewImageUrl")
 				self.icon_url = image_2 if not image_1 else image_1
@@ -208,7 +221,7 @@ class Websocket:
 					raise commands.CommandError("Host Error")
 				r = await response.json()
 				data = r["game"]
-				self.game_is_active = data["active"]
+				#self.game_is_active = data["active"]
 				host = data.get("host")
 				if not host:
 					# check if not host that means fees not paid for the paid quiz.
@@ -433,3 +446,11 @@ class Websocket:
 				self.pattern.clear() # Clear answer pattern.
 				await self.close_hook() # Socket Close automatically when the game was ended.
 				return
+
+ws = Websocket()
+while True:
+	if ws.game_is_active:
+		await ws.start_hook()
+	else:
+		print("Game is not Live!")
+		time.sleep(300)
