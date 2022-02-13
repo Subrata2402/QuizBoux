@@ -1,1 +1,1 @@
-from .ws import Websocket, Loop
+from .ws import Websocket
