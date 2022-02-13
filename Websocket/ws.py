@@ -443,10 +443,11 @@ class Websocket:
 				await self.close_hook() # Socket Close automatically when the game was ended.
 				return
 
-ws = Websocket()
-while True:
-	if ws.game_is_active == True:
-		asyncio.run(ws.start_hook())
-	else:
-		print("Game is not Live!")
-		time.sleep(300)
+async def start_loop():
+	ws = Websocket()
+	while True:
+		if ws.game_is_active == True:
+			await ws.start_hook()
+		else:
+			print("Game is not Live!")
+			time.sleep(300)
