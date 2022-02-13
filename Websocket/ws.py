@@ -442,12 +442,3 @@ class Websocket:
 				self.pattern.clear() # Clear answer pattern.
 				await self.close_hook() # Socket Close automatically when the game was ended.
 				return
-
-	async def start_ws_loop(self):
-		while True:
-			self.loop_is_active = True
-			if self.game_is_active == True:
-				await self.start_hook()
-			else:
-				print("Game is not Live!")
-				time.sleep(300)
