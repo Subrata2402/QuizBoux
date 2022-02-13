@@ -88,6 +88,7 @@ class MimirQuiz(commands.Cog, Websocket):
         if self.loop_is_active:
             await self.send_hook("**Loop Already Activated!**")
         else:
+            await self.send_hook("**Loop Started!**")
             await self.start_ws_loop()
         
     @commands.command(aliases = ["quiz", "mimir"])
