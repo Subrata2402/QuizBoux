@@ -321,8 +321,6 @@ class Websocket:
 				
 				# Google Search Results
 				r = requests.get(google_question)
-				soup = BeautifulSoup(r.text, 'html.parser')
-				response = soup.find_all("span", class_="st")
 				res = str(r.text)
 				count_options = {}
 				for choice in choices:
@@ -359,10 +357,16 @@ class Websocket:
 				for index, choice in enumerate(choices):
 					if choice["choice"].lower() in result.lower():
 						embed.title = f"**__Option {order[index]}. {choice['choice']}__**"
+						await self.send_hook(embed = embed)
 						option_found = True
 				if not option_found:
-					embed.title = f"**__Direct Search Result !__**"
-				await self.send_hook(embed = embed)
+					response = soup.find_all("div" , class_='BNeawe')
+					for index, result in enumerate(response):
+						embed.description = result
+						embed.title = f"**__Direct Search Result !__**"
+						await self.send_hook(embed = embed)
+						if index == 3:
+							break
 
 			elif event == "QuestionEnd":
 				"""Raised when the question has ended!"""
