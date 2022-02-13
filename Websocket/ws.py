@@ -227,7 +227,7 @@ class Websocket:
 
 	async def start_hook(self):
 		"""Main function of the websocket. For Start websocket."""
-		#await self.send_hook("**Websocket Connecting...**")
+		await self.send_hook("**Websocket Connecting...**")
 		host = await self.get_host()
 		url = f"https://{host}/v2/event-feed/games/{self.game_id}"
 		headers = {
