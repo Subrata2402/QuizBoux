@@ -6,6 +6,7 @@ import datetime
 from sseclient import SSEClient
 import aiohttp
 import asyncio
+import time
 from bs4 import BeautifulSoup
 google_question = "https://google.com/search?q="
 question_number = total_question = 0
@@ -31,15 +32,10 @@ class Websocket:
 	@property
 	def game_is_active(self):
 		url = "https://api.mimir-prod.com//games/next?" # api url of the mimir quiz details
-		async with aiohttp.ClientSession() as session:
-			async with session.get(url = url) as response:
-				if response.status != 200:
-					await self.send_hook("**Something unexpected happened while fetching quiz details!**")
-					raise commands.CommandError("Token has expired!")
-				r = await response.json()
-				data = r["data"]["data"][0]
-				active = data["active"]
-				return active
+		r = requests.get(url).json()
+		data = r["data"]["data"][0]
+		active = data["active"]
+		return active
 		
 	async def close_hook(self):
 		"""Close Websocket."""
@@ -231,7 +227,7 @@ class Websocket:
 
 	async def start_hook(self):
 		"""Main function of the websocket. For Start websocket."""
-		await self.send_hook("**Websocket Connecting...**")
+		#await self.send_hook("**Websocket Connecting...**")
 		host = await self.get_host()
 		url = f"https://{host}/v2/event-feed/games/{self.game_id}"
 		headers = {
