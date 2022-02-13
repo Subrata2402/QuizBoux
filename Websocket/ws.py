@@ -441,12 +441,11 @@ class Websocket:
 				await self.send_hook(embed = embed)
 				self.pattern.clear() # Clear answer pattern.
 				await self.close_hook() # Socket Close automatically when the game was ended.
-				await asyncio.sleep(300)
 				return
 
 ws = Websocket()
 while True:
-	if ws.game_is_active:
+	if ws.game_is_active == True:
 		asyncio.run(ws.start_hook())
 	else:
 		print("Game is not Live!")
