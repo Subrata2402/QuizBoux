@@ -22,7 +22,7 @@ class Websocket:
 		self.token = None
 		self.ws_is_opened = False
 		self.icon_url = "https://media.discordapp.net/attachments/938473054718279730/941230541687119932/924632014617972736.png"
-		self.loop_active = False
+		self.loop_is_active = False
 		self.game_id = None
 		self.partner_id = None
 		self.user_id = None
@@ -445,7 +445,7 @@ class Websocket:
 
 	async def start_loop():
 		while True:
-			self.loop_active = True
+			self.loop_is_active = True
 			if self.game_is_active == True:
 				await self.start_hook()
 			else:
