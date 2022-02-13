@@ -122,8 +122,8 @@ class Websocket:
 					print("Fee Paid!")
 					#await self.send_hook("**Fee Successfully Paid!**")
 					#await self.send_hook(f"```\n{r}\n```")
-				else:
-					await self.send_hook("**Something wrong in 117 line!**")
+				#else:
+					#await self.send_hook("**Something wrong in 117 line!**")
 				
 	async def get_quiz_details(self, get_type = None, game_num:int = 1):
 		"""Get quiz details and take game_id, partner_id, prize money etc."""
