@@ -105,15 +105,16 @@ class Websocket:
 		async with aiohttp.ClientSession() as session:
 			async with session.post(url = url, headers = headers, data = data) as response:
 				if response.status != 200:
-					await self.send_hook("**Something wrong in 108 line!**")
+					await self.send_hook("**The Token has Expired!**")
 					raise commands.CommandError("Pay Fees Error...!")
 				r = await response.json()
 				success = r["data"]["success"] # Return True if success else False
 				if success:
-					await self.send_hook("**Fee Successfully Paid!**")
+					print("Fee Paid!")
+					#await self.send_hook("**Fee Successfully Paid!**")
 					#await self.send_hook(f"```\n{r}\n```")
 				else:
-					await self.send_hook("**Failed to Pay Fee!**")
+					await self.send_hook("**Something wrong in 117 line!**")
 				
 	async def get_quiz_details(self, get_type = None, game_num:int = 1):
 		"""Get quiz details and take game_id, partner_id, prize money etc."""
@@ -160,7 +161,7 @@ class Websocket:
 		"""Fetch access token to pass the authorization token.
 		It's need for get the host of the live quiz api url."""
 		await self.get_quiz_details() # To run this function take partner id of the quiz
-		#await self.pay_fees()
+		if self.value: await self.pay_fees()
 		url = f"https://apic.us.theq.live/v2/oauth/token?partnerCode={self.partner_id}" # Get access token api url
 		headers = {
 			"host": "apic.us.theq.live",
