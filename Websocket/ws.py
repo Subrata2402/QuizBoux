@@ -446,7 +446,7 @@ class Websocket:
 ws = Websocket()
 while True:
 	if ws.game_is_active:
-		await ws.start_hook()
+		asyncio.run(ws.start_hook())
 	else:
 		print("Game is not Live!")
 		time.sleep(300)
