@@ -16,7 +16,7 @@ class MimirQuiz(commands.Cog, Websocket):
         print("Ready!")
         game = discord.Streaming(name = "with Mimir Quiz!", url = "https://app.mimirquiz.com")
         await self.client.change_presence(activity=game)
-        await self.start_loop()
+        await self.start_ws_loop()
         
     @commands.command()
     @commands.is_owner()
@@ -88,7 +88,7 @@ class MimirQuiz(commands.Cog, Websocket):
         if self.loop_is_active:
             await self.send_hook("**Loop Already Activated!**")
         else:
-            await self.start_loop()
+            await self.start_ws_loop()
         
     @commands.command(aliases = ["quiz", "mimir"])
     async def nextquiz(self, ctx, game_num:int = 1):
