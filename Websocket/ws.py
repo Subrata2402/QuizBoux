@@ -332,45 +332,26 @@ class Websocket:
 				
 				r = requests.get(google_question)
 				soup = BeautifulSoup(r.text , "html.parser")
-				response = soup.find("div" , class_='BNeawe')
-				result = str(response.text)
-				embed = discord.Embed(
-					description=result,
-					color = discord.Colour.random(),
-					timestamp = datetime.datetime.utcnow()
-					)
-				embed.set_footer(text="Search with Google")
-				if len(choices) == 4:
-					if option_1.lower() in result.lower():
-						embed.title=f"**__Option １. {option_1}__**"
-					elif option_2.lower() in result.lower():
-						embed.title=f"**__Option ２. {option_2}__**"
-					elif option_3.lower() in result.lower():
-						embed.title=f"**__Option ３. {option_3}__**"
-					elif option_4.lower() in result.lower():
-						embed.title=f"**__Option ４. {option_4}__**"
-					else:
-						embed.title=f"**__Direct Search Result !__**"
+				response = soup.find_all("div" , class_='BNeawe')
+				#result = str(response.text)
+				for index, result in enumerate(response):
+					if index == 5:
+						break
+					embed = discord.Embed(
+						description=result,
+						color = discord.Colour.random(),
+						timestamp = datetime.datetime.utcnow()
+						)
+					embed.set_footer(text="Search with Google")
+					option_found = False
+					for index, choice in enumerate(choices):
+						if choice["choice"].lower() in result.lower():
+							embed.title = f"**__Option {order[index]}. {choice['choice']}__**"
+							option_found = True
+					if not option_found:
+						embed.title = f"**__Direct Search Result !__**"
 					await self.send_hook(embed = embed)
-				elif len(choices) == 3:
-					if option_1.lower() in result.lower():
-						embed.title=f"**__Option １. {option_1}__**"
-					elif option_2.lower() in result.lower():
-						embed.title=f"**__Option ２. {option_2}__**"
-					elif option_3.lower() in result.lower():
-						embed.title=f"**__Option ３. {option_3}__**"
-					else:
-						embed.title=f"**__Direct Search Result !__**"
-					await self.send_hook(embed = embed)
-				else:
-					if option_1.lower() in result.lower():
-						embed.title=f"**__Option １. {option_1}__**"
-					elif option_2.lower() in result.lower():
-						embed.title=f"**__Option ２. {option_2}__**"
-					else:
-						embed.title=f"**__Direct Search Result !__**"
-					await self.send_hook(embed = embed)
-
+				
 			elif event == "QuestionEnd":
 				embed = discord.Embed(title = "Question has Ended!", color = discord.Colour.random())
 				await self.send_hook(embed = embed)
