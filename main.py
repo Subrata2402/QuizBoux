@@ -58,9 +58,11 @@ class MimirQuiz(commands.Cog, Websocket):
                 await self.send_hook(embed = embed)
         
     @commands.command()
-    async def addtoken(self, ctx, token):
+    async def addtoken(self, ctx, *, token = None):
         """Update Token."""
+        if not token: return
         await ctx.message.delete()
+        token = token.strip("Bearer").strip()
         url = "https://api.mimir-prod.com//games/list?type=both"
         headers = {
             "host": "api.mimir-prod.com",
