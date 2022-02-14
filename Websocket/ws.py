@@ -291,10 +291,17 @@ class Websocket:
 				total_question = data["total"]
 				response_time = data["secondsToRespond"]
 				point_value = data.get("pointValue")
-				if data["questionType"] == "TRIVIA":
+				raw_question = str(question).replace(" ", "+")
+				google_question = "https://google.com/search?q=" + raw_question
+				if data["questionType"] == "POPULAR":
+					embed.title = f"**Question {question_number} out of {total_question}**"
+					embed.description = f"**[{question}]({google_question})**"
+					embed.set_thumbnail(url = self.icon_url)
+					embed.set_footer(text = f"Response Time : {response_time} secs | Points : {point_value}")
+					await self.send_hook(embed = embed)
+					
+				elif data["questionType"] == "TRIVIA":
 					choices = data["choices"]
-					raw_question = str(question).replace(" ", "+")
-					google_question = "https://google.com/search?q=" + raw_question
 					bing_question = "https://bing.com/search?q=" + raw_question
 					options = ""
 					for choice in choices:
