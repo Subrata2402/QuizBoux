@@ -329,7 +329,7 @@ class Websocket:
 								answer_send = True
 						if not answer_send: await self.send_hook(embed = discord.Embed(title = f"**__{answer}__**", color = discord.Colour.random()))
 					
-					# Google Search Results
+					# Google Search Results 1
 					r = requests.get(google_question)
 					res = str(r.text).lower()
 					count_options = {}
@@ -340,7 +340,7 @@ class Websocket:
 					max_count = max(list(count_options.values()))
 					min_count = min(list(count_options.values()))
 					min_max_count = min_count if not_question else max_count
-					embed = discord.Embed(title="**__Google Search Results !__**", color = discord.Colour.random())
+					embed = discord.Embed(title="**__Google Results -１__**", color = discord.Colour.random())
 					embed.set_footer(text = "Mimir Quiz")
 					embed.timestamp = datetime.datetime.utcnow()
 					description = ""
@@ -353,33 +353,30 @@ class Websocket:
 					await self.send_hook(embed = embed)
 					
 					#Google Search Results 2
-					try:
-						r = requests.get(google_question)
-						res = str(r.text).lower()
-						count_options = {}
-						for choice in choices:
-							option = choice["choice"]
-							count_option = 0
-							options = tuple(choice["choice"].split(" "))
-							for opt in options:
-								count_option += res.count(opt.lower())
-							count_options[option] = count_option
-						max_count = max(list(count_options.values()))
-						min_count = min(list(count_options.values()))
-						min_max_count = min_count if not_question else max_count
-						embed = discord.Embed(title="**__Google Search Results !__**", color = discord.Colour.random())
-						embed.set_footer(text = "Mimir Quiz")
-						embed.timestamp = datetime.datetime.utcnow()
-						description = ""
-						for index, option in enumerate(count_options):
-							if min_max_count != 0 and count_options[option] == min_max_count:
-								description += f"{order[index]}. {option} : {count_options[option]} ✅\n"
-							else:
-								description += f"{order[index]}. {option} : {count_options[option]}\n"
-						embed.description = f"**{description}**"
-						await self.send_hook(embed = embed)
-					except:
-						pass
+					r = requests.get(google_question)
+					res = str(r.text).lower()
+					count_options = {}
+					for choice in choices:
+						option = choice["choice"]
+						count_option = 0
+						options = tuple(choice["choice"].split(" "))
+						for opt in options:
+							count_option += res.count(opt.lower())
+						count_options[option] = count_option
+					max_count = max(list(count_options.values()))
+					min_count = min(list(count_options.values()))
+					min_max_count = min_count if not_question else max_count
+					embed = discord.Embed(title="**__Google Results -２__**", color = discord.Colour.random())
+					embed.set_footer(text = "Mimir Quiz")
+					embed.timestamp = datetime.datetime.utcnow()
+					description = ""
+					for index, option in enumerate(count_options):
+						if min_max_count != 0 and count_options[option] == min_max_count:
+							description += f"{order[index]}. {option} : {count_options[option]} ✅\n"
+						else:
+							description += f"{order[index]}. {option} : {count_options[option]}\n"
+					embed.description = f"**{description}**"
+					await self.send_hook(embed = embed)
 					
 					# Print Direct Search Results Text
 					r = requests.get(google_question)
