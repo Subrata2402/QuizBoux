@@ -358,7 +358,7 @@ class Websocket:
 					response = soup.find("div" , class_='BNeawe')
 					result = str(response.text)
 					embed = discord.Embed(
-						description = f"[{result}]({google_question})",
+						description = result,
 						color = discord.Colour.random(),
 						timestamp = datetime.datetime.utcnow()
 						)
