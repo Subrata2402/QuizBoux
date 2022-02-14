@@ -228,6 +228,8 @@ class Websocket:
 	async def start_hook(self):
 		"""Main function of the websocket. For Start websocket."""
 		await self.send_hook("**Websocket Connecting...**")
+		if not game_is_active:
+			return await self.send_hook("**Game is Not Live!**")
 		host = await self.get_host()
 		url = f"https://{host}/v2/event-feed/games/{self.game_id}"
 		headers = {
@@ -289,78 +291,79 @@ class Websocket:
 				total_question = data["total"]
 				response_time = data["secondsToRespond"]
 				point_value = data.get("pointValue")
-				choices = data["choices"]
-				raw_question = str(question).replace(" ", "+")
-				google_question = "https://google.com/search?q=" + raw_question
-				bing_question = "https://bing.com/search?q=" + raw_question
-				options = ""
-				for choice in choices:
-					option = choice["choice"]
-					options += option.strip() + "+"
-				raw_options = str(options).replace(" ", "+")
-				search_with_all = "https://google.com/search?q=" + raw_question + raw_options
-				not_question = True if "not" in question.lower() else False
-				is_not = "(Not Question)" if not_question else ""
-				
-				embed.title = f"**Question {question_number} out of {total_question} {is_not}**"
-				embed.description = f"**[{question}]({google_question})\n\n[Search with all options]({search_with_all})**"
-				for index, choice in enumerate(choices):
-					embed.add_field(name = f"**Option -{order[index]}**", value = f"**[{choice['choice'].strip()}]({search_with_all})**", inline = False)
-				embed.set_thumbnail(url = self.icon_url)
-				embed.set_footer(text = f"Response Time : {response_time} secs | Points : {point_value}")
-				await self.send_hook(embed = embed)
-				
-				answer = await self.get_answer(question)
-				answer_send = False
-				if answer:
+				if data["questionType"] == "TRIVIA":
+					choices = data["choices"]
+					raw_question = str(question).replace(" ", "+")
+					google_question = "https://google.com/search?q=" + raw_question
+					bing_question = "https://bing.com/search?q=" + raw_question
+					options = ""
+					for choice in choices:
+						option = choice["choice"]
+						options += option.strip() + "+"
+					raw_options = str(options).replace(" ", "+")
+					search_with_all = "https://google.com/search?q=" + raw_question + raw_options
+					not_question = True if "not" in question.lower() else False
+					is_not = "(Not Question)" if not_question else ""
+					
+					embed.title = f"**Question {question_number} out of {total_question} {is_not}**"
+					embed.description = f"**[{question}]({google_question})\n\n[Search with all options]({search_with_all})**"
 					for index, choice in enumerate(choices):
-						if answer.lower() == str(choice["choice"]).strip().lower():
-							await self.send_hook(embed = discord.Embed(title = f"**__Option {order[index]}. {answer}__**", color = discord.Colour.random()))
-							answer_send = True
-					if not answer_send: await self.send_hook(embed = discord.Embed(title = f"**__{answer}__**", color = discord.Colour.random()))
-				
-				# Google Search Results
-				r = requests.get(google_question)
-				res = str(r.text)
-				count_options = {}
-				for choice in choices:
-					option = choice["choice"]
-					count_option = res.count(option)
-					count_options[option] = count_option
-				max_count = max(list(count_options.values()))
-				min_count = min(list(count_options.values()))
-				min_max_count = min_count if not_question else max_count
-				embed = discord.Embed(title="**__Google Search Results !__**", color = discord.Colour.random())
-				embed.set_footer(text = "Mimir Quiz")
-				embed.timestamp = datetime.datetime.utcnow()
-				description = ""
-				for index, option in enumerate(count_options):
-					if min_max_count != 0 and count_options[option] == min_max_count:
-						description += f"{order[index]}. {option} : {count_options[option]} ✅\n"
-					else:
-						description += f"{order[index]}. {option} : {count_options[option]}\n"
-				embed.description = f"**{description}**"
-				await self.send_hook(embed = embed)
-				
-				# Print Direct Search Results Text
-				r = requests.get(google_question)
-				soup = BeautifulSoup(r.text , "html.parser")
-				response = soup.find("div" , class_='BNeawe')
-				result = str(response.text)
-				embed = discord.Embed(
-					description=result,
-					color = discord.Colour.random(),
-					timestamp = datetime.datetime.utcnow()
-					)
-				embed.set_footer(text="Search with Google")
-				option_found = False
-				for index, choice in enumerate(choices):
-					if choice["choice"].lower() in result.lower():
-						embed.title = f"**__Option {order[index]}. {choice['choice']}__**"
-						option_found = True
-				if not option_found:
-					embed.title = f"**__Direct Search Result !__**"
-				await self.send_hook(embed = embed)
+						embed.add_field(name = f"**Option -{order[index]}**", value = f"**[{choice['choice'].strip()}]({search_with_all})**", inline = False)
+					embed.set_thumbnail(url = self.icon_url)
+					embed.set_footer(text = f"Response Time : {response_time} secs | Points : {point_value}")
+					await self.send_hook(embed = embed)
+					
+					answer = await self.get_answer(question)
+					answer_send = False
+					if answer:
+						for index, choice in enumerate(choices):
+							if answer.lower() == str(choice["choice"]).strip().lower():
+								await self.send_hook(embed = discord.Embed(title = f"**__Option {order[index]}. {answer}__**", color = discord.Colour.random()))
+								answer_send = True
+						if not answer_send: await self.send_hook(embed = discord.Embed(title = f"**__{answer}__**", color = discord.Colour.random()))
+					
+					# Google Search Results
+					r = requests.get(google_question)
+					res = str(r.text)
+					count_options = {}
+					for choice in choices:
+						option = choice["choice"]
+						count_option = res.count(option)
+						count_options[option] = count_option
+					max_count = max(list(count_options.values()))
+					min_count = min(list(count_options.values()))
+					min_max_count = min_count if not_question else max_count
+					embed = discord.Embed(title="**__Google Search Results !__**", color = discord.Colour.random())
+					embed.set_footer(text = "Mimir Quiz")
+					embed.timestamp = datetime.datetime.utcnow()
+					description = ""
+					for index, option in enumerate(count_options):
+						if min_max_count != 0 and count_options[option] == min_max_count:
+							description += f"{order[index]}. {option} : {count_options[option]} ✅\n"
+						else:
+							description += f"{order[index]}. {option} : {count_options[option]}\n"
+					embed.description = f"**{description}**"
+					await self.send_hook(embed = embed)
+					
+					# Print Direct Search Results Text
+					r = requests.get(google_question)
+					soup = BeautifulSoup(r.text , "html.parser")
+					response = soup.find("div" , class_='BNeawe')
+					result = str(response.text)
+					embed = discord.Embed(
+						description=result,
+						color = discord.Colour.random(),
+						timestamp = datetime.datetime.utcnow()
+						)
+					embed.set_footer(text="Search with Google")
+					option_found = False
+					for index, choice in enumerate(choices):
+						if choice["choice"].lower() in result.lower():
+							embed.title = f"**__Option {order[index]}. {choice['choice']}__**"
+							option_found = True
+					if not option_found:
+						embed.title = f"**__Direct Search Result !__**"
+					await self.send_hook(embed = embed)
 
 			elif event == "QuestionEnd":
 				"""Raised when the question has ended!"""
@@ -371,41 +374,42 @@ class Websocket:
 				"""Raised when show the result of the question."""
 				data = json.loads(msg.data)
 				question = str(data["question"]).strip()
-				point_value = data.get("pointValue")
-				answer_id = data.get("answerId")
-				selection = data.get("selection")
-				score = data.get("score")
-				total_players, total_ratio = 0, 0
-				for index, choice in enumerate(data["choices"]):
-					if choice["correct"] == True:
-						ans_num = index + 1
-						answer = str(choice["choice"]).strip()
-						advance_players = choice["responses"]
-						advance_ratio = choice["userResponseRatio"]
-					total_players += choice["responses"]
-					total_ratio += choice["userResponseRatio"]
-				eliminate_players = total_players - advance_players
-				pE = float("{:.2f}".format(total_ratio - advance_ratio))
-				pA = float("{:.2f}".format(advance_ratio))
-				self.pattern.append(str(ans_num))
-				await self.add_question(question, answer)
-				ans = (self.prize)/(advance_players)
-				payout = float("{:.2f}".format(ans))
-				embed = discord.Embed(
-					title = f"**Question {question_number} out of {total_question}**",
-					description = f"**[{question}]({google_question})**",
-					color = discord.Colour.random(),
+				if data["questionType"] == "TRIVIA":
+					point_value = data.get("pointValue")
+					answer_id = data.get("answerId")
+					selection = data.get("selection")
+					score = data.get("score")
+					total_players, total_ratio = 0, 0
+					for index, choice in enumerate(data["choices"]):
+						if choice["correct"] == True:
+							ans_num = index + 1
+							answer = str(choice["choice"]).strip()
+							advance_players = choice["responses"]
+							advance_ratio = choice["userResponseRatio"]
+						total_players += choice["responses"]
+						total_ratio += choice["userResponseRatio"]
+					eliminate_players = total_players - advance_players
+					pE = float("{:.2f}".format(total_ratio - advance_ratio))
+					pA = float("{:.2f}".format(advance_ratio))
+					self.pattern.append(str(ans_num))
+					await self.add_question(question, answer)
+					ans = (self.prize)/(advance_players)
+					payout = float("{:.2f}".format(ans))
+					embed = discord.Embed(
+						title = f"**Question {question_number} out of {total_question}**",
+						description = f"**[{question}]({google_question})**",
+						color = discord.Colour.random(),
+						)
+						#timestamp = datetime.datetime.utcnow()
+					embed.add_field(name = "**Correct Answer :-**", value = f"**Option {order[ans_num-1]}. {answer}**", inline = False)
+					embed.add_field(name = "**Status :-**",
+						value = f"**Advancing Players : {advance_players} ({pA}%)\nEliminated Players : {eliminate_players} ({pE}%)\nCurrent Payout : ᛗ{payout}**",
+						inline = False
 					)
-					#timestamp = datetime.datetime.utcnow()
-				embed.add_field(name = "**Correct Answer :-**", value = f"**Option {order[ans_num-1]}. {answer}**", inline = False)
-				embed.add_field(name = "**Status :-**",
-					value = f"**Advancing Players : {advance_players} ({pA}%)\nEliminated Players : {eliminate_players} ({pE}%)\nCurrent Payout : ᛗ{payout}**",
-					inline = False
-				)
-				embed.add_field(name = "**Ongoing Pattern :-**", value = f"**{self.pattern}**", inline = False)
-				embed.set_footer(text = f"Correct : {'True' if (selection and selection == answer_id) else 'False'} | Total Points : {score}")
-				embed.set_thumbnail(url = self.icon_url)
-				await self.send_hook(embed = embed)
+					embed.add_field(name = "**Ongoing Pattern :-**", value = f"**{self.pattern}**", inline = False)
+					embed.set_footer(text = f"Correct : {'True' if (selection and selection == answer_id) else 'False'} | Total Points : {score}")
+					embed.set_thumbnail(url = self.icon_url)
+					await self.send_hook(embed = embed)
 
 			elif event == "GameWinners":
 				"""Raised this event when Show the winners."""
