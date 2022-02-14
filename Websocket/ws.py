@@ -331,11 +331,11 @@ class Websocket:
 					
 					# Google Search Results
 					r = requests.get(google_question)
-					res = str(r.text)
+					res = str(r.text).lower()
 					count_options = {}
 					for choice in choices:
 						option = choice["choice"]
-						count_option = res.count(option)
+						count_option = res.count(option.lower())
 						count_options[option] = count_option
 					max_count = max(list(count_options.values()))
 					min_count = min(list(count_options.values()))
