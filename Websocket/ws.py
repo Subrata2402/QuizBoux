@@ -346,9 +346,9 @@ class Websocket:
 					description = ""
 					for index, option in enumerate(count_options):
 						if min_max_count != 0 and count_options[option] == min_max_count:
-							description += f"{order[index]}. {option} : {count_options[option]} ✅\n"
+							description += f"{order[index]}. [{option}]({google_question}) : {count_options[option]} ✅\n"
 						else:
-							description += f"{order[index]}. {option} : {count_options[option]}\n"
+							description += f"{order[index]}. [{option}]({google_question}) : {count_options[option]}\n"
 					embed.description = f"**{description}**"
 					await self.send_hook(embed = embed)
 					
@@ -358,7 +358,7 @@ class Websocket:
 					response = soup.find("div" , class_='BNeawe')
 					result = str(response.text)
 					embed = discord.Embed(
-						description=result,
+						description = f"[{result}]({google_question})",
 						color = discord.Colour.random(),
 						timestamp = datetime.datetime.utcnow()
 						)
