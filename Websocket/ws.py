@@ -332,7 +332,7 @@ class Websocket:
 					res = str(r.text).lower()
 					count_options = {}
 					for choice in choices:
-						option = choice["choice"]
+						option = choice["choice"].strip()
 						count_option = res.count(option.lower())
 						count_options[option] = count_option
 					max_count = max(list(count_options.values()))
@@ -355,7 +355,7 @@ class Websocket:
 					res = str(r.text).lower()
 					count_options = {}
 					for choice in choices:
-						option = choice["choice"]
+						option = choice["choice"].strip()
 						count_option = 0
 						options = tuple(choice["choice"].split(" "))
 						for opt in options:
@@ -389,8 +389,8 @@ class Websocket:
 					embed.set_footer(text="Search with Google")
 					option_found = False
 					for index, choice in enumerate(choices):
-						if choice["choice"].lower() in result.lower():
-							embed.title = f"**__Option {order[index]}. {choice['choice']}__**"
+						if choice["choice"].lower().strip() in result.lower():
+							embed.title = f"**__Option {order[index]}. {choice['choice'].strip()}__**"
 							option_found = True
 					if not option_found:
 						embed.title = f"**__Direct Search Result !__**"
