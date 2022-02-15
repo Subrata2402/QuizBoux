@@ -306,7 +306,7 @@ class Websocket:
 					options_list = [choice["choice"] for choice in choices]
 					options = "+".join(options_list)
 					raw_options = str(options).replace(" ", "+")
-					search_with_all = "https://google.com/search?q=" + raw_question + raw_options
+					search_with_all = "https://google.com/search?q=" + raw_question + "+" + raw_options
 					not_question = True if "not" in question.lower() else False
 					is_not = "(Not Question)" if not_question else ""
 					
