@@ -337,13 +337,13 @@ class Websocket:
 						count_options[option] = count_option
 					max_count = max(list(count_options.values()))
 					min_count = min(list(count_options.values()))
-					min_max_count = min_count if not_question else max_count
+					#min_max_count = min_count if not_question else max_count
 					embed = discord.Embed(title="**__Google Results -１__**", color = discord.Colour.random())
 					embed.set_footer(text = "Mimir Quiz")
 					embed.timestamp = datetime.datetime.utcnow()
 					description = ""
 					for index, option in enumerate(count_options):
-						if min_max_count != 0 and count_options[option] == min_max_count:
+						if max_count != 0 and count_options[option] == max_count:
 							description += f"{order[index]}. {option} : {count_options[option]} ✅\n"
 						else:
 							description += f"{order[index]}. {option} : {count_options[option]}\n"
@@ -363,13 +363,13 @@ class Websocket:
 						count_options[option] = count_option
 					max_count = max(list(count_options.values()))
 					min_count = min(list(count_options.values()))
-					min_max_count = min_count if not_question else max_count
+					#min_max_count = min_count if not_question else max_count
 					embed = discord.Embed(title="**__Google Results -２__**", color = discord.Colour.random())
 					embed.set_footer(text = "Mimir Quiz")
 					embed.timestamp = datetime.datetime.utcnow()
 					description = ""
 					for index, option in enumerate(count_options):
-						if min_max_count != 0 and count_options[option] == min_max_count:
+						if max_count != 0 and count_options[option] == max_count:
 							description += f"{order[index]}. {option} : {count_options[option]} ✅\n"
 						else:
 							description += f"{order[index]}. {option} : {count_options[option]}\n"
