@@ -17,7 +17,7 @@ class MimirQuiz(commands.Cog, Websocket):
         game = discord.Streaming(name = "with Mimir Quiz!", url = "https://app.mimirquiz.com")
         await self.client.change_presence(activity=game)
         
-    @commands.command()
+    @commands.command(hidden = True)
     @commands.is_owner()
     async def add(self, ctx, *, args):
         """Added a question in databse."""
