@@ -313,7 +313,7 @@ class Websocket:
 					embed.title = f"**Question {question_number} out of {total_question} {is_not}**"
 					embed.description = f"**[{question}]({google_question})\n\n[Search with all options]({search_with_all})**"
 					for index, choice in enumerate(choices):
-						embed.add_field(name = f"**Option -{order[index]}**", value = f"**[{choice['choice'].strip()}]({google_question + str(choice['choice']).strip().replace(' ', '+')})**", inline = False)
+						embed.add_field(name = f"**Option -{order[index]}**", value = f"**[{choice['choice'].strip()}]({google_question + '+' + str(choice['choice']).strip().replace(' ', '+')})**", inline = False)
 					embed.set_thumbnail(url = self.icon_url)
 					embed.set_footer(text = f"Response Time : {response_time} secs | Points : {point_value}")
 					await self.send_hook(embed = embed)
