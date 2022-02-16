@@ -228,7 +228,7 @@ class Websocket:
 	async def start_hook(self):
 		"""Main function of the websocket. For Start websocket."""
 		await self.send_hook("**Websocket Connecting...**")
-		if not self.game_is_active:
+		if self.game_is_active != True:
 			return await self.send_hook("**Game is Not Live!**")
 		host = await self.get_host()
 		url = f"https://{host}/v2/event-feed/games/{self.game_id}"
