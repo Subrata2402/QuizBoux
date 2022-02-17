@@ -180,9 +180,20 @@ class Websocket:
 	async def get_quiz_details(self, get_type = None, game_num:int = 1):
 		"""Get quiz details and take game_id, partner_id, prize money etc."""
 		await self.get_token() # Take token from the database
-		url = "https://api.mimir-prod.com//games/next?" # api url of the mimir quiz details
+		url = "https://api.mimir-prod.com/games/list?type=both"
+		headers = {
+			"host": "api.mimir-prod.com",
+			"authorization": f"Bearer {self.token}",
+			"user-agent": "Mozilla/5.0 (Linux; Android 10; RMX1827) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.99 Mobile Safari/537.36",
+			"content-type": "application/json",
+			"accept": "*/*",
+			"origin": "https://app.mimirquiz.com",
+			"referer": "https://app.mimirquiz.com/",
+			"accept-encoding": "gzip, deflate",
+			"accept-language": "en-US,en;q=0.9"
+		}
 		async with aiohttp.ClientSession() as session:
-			async with session.get(url = url) as response:
+			async with session.get(url = url, headers = headers) as response:
 				if response.status != 200:
 					await self.send_hook("**Something unexpected happened while fetching quiz details!**")
 					raise commands.CommandError("Token has expired!")
