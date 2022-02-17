@@ -87,7 +87,7 @@ class Websocket:
 
 	async def rating_search_one(self, question_url, choices, index):
 		r = requests.get(question_url)
-		soup = bs4.BeautifulSoup(r.text, "html.parser")
+		soup = BeautifulSoup(r.text, "html.parser")
 		res = str(soup.text).lower()
 		count_options = {}
 		for choice in choices:
@@ -111,7 +111,7 @@ class Websocket:
 		
 	async def rating_search_two(self, question_url, choices, index):
 		r = requests.get(question_url)
-		soup = bs4.BeautifulSoup(r.text, "html.parser")
+		soup = BeautifulSoup(r.text, "html.parser")
 		res = str(soup.text).lower()
 		count_options = {}
 		for choice in choices:
