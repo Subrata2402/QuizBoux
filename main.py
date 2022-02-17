@@ -122,7 +122,7 @@ class MimirQuiz(commands.Cog, Websocket):
         
     @commands.command()
     async def tq(self, ctx):
-    	if ctx.guild.id != 935980609908658277:
+        if ctx.guild.id != 935980609908658277:
             return
         """Get how many questions has stored in database."""
         questions = list(db.question_base.find())
