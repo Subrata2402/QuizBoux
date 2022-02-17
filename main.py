@@ -21,6 +21,8 @@ class MimirQuiz(commands.Cog, Websocket):
     @commands.is_owner()
     async def add(self, ctx, *, args):
         """Added a question in databse."""
+        if ctx.guild.id != 935980609908658277:
+            return
         qa = args.split(" | ")
         question = qa[0]
         answer = qa[1]
@@ -34,6 +36,8 @@ class MimirQuiz(commands.Cog, Websocket):
     @commands.is_owner()
     async def pay(self, ctx):
         """Pay Fees."""
+        if ctx.guild.id != 935980609908658277:
+            return
         await self.pay_fees()
        
     @commands.command(aliases = ["p"])
@@ -55,11 +59,15 @@ class MimirQuiz(commands.Cog, Websocket):
                     color = discord.Colour.random(),
                     title = f"**__Current Price of {name}__**",
                     description = f"**ᛗ{mimir} ≈ ${usd} ≈ ₹{inr}**")
+                if ctx.guild.id != 935980609908658277:
+                    return await ctx.send(embed = embed)
                 await self.send_hook(embed = embed)
         
     @commands.command()
     async def addtoken(self, ctx, *, token = None):
         """Update Token."""
+        if ctx.guild.id != 935980609908658277:
+            return
         if not token: return
         await ctx.message.delete()
         token = token.strip("Bearer").strip()
@@ -86,11 +94,15 @@ class MimirQuiz(commands.Cog, Websocket):
     @commands.command(aliases = ["quiz", "mimir"])
     async def nextquiz(self, ctx, game_num:int = 1):
         """Get next quiz details."""
+        if ctx.guild.id != 935980609908658277:
+            return await ctx.send(embed = embed)
         await self.get_quiz_details(get_type = "send", game_num = game_num)
     
     @commands.command(aliases = ["open"])
     async def start(self, ctx, time:int = 0):
         """Start Websocket."""
+        if ctx.guild.id != 935980609908658277:
+            return
         await asyncio.sleep(time)
         if not self.ws_is_opened:
             await self.send_hook("**Websocket Opened!**")
@@ -101,6 +113,8 @@ class MimirQuiz(commands.Cog, Websocket):
     @commands.command()
     async def close (self, ctx):
         """Close Websocket."""
+        if ctx.guild.id != 935980609908658277:
+            return
         if self.ws_is_opened:
             await self.close_hook()
         else:
@@ -108,6 +122,8 @@ class MimirQuiz(commands.Cog, Websocket):
         
     @commands.command()
     async def tq(self, ctx):
+    	if ctx.guild.id != 935980609908658277:
+            return
         """Get how many questions has stored in database."""
         questions = list(db.question_base.find())
         await self.send_hook(embed = discord.Embed(title = f"Total Questions : {len(questions)}", color = discord.Colour.random()))
@@ -120,8 +136,6 @@ client.add_cog(MimirQuiz(client))
 async def on_message(message):
     if not message.guild:
         return #await messag 08e.channel.send("**You cannot be used me in private messages.**")
-    if message.guild.id != 935980609908658277:
-    	return
     await client.process_commands(message)
             
 client.run("Nzk5NDY4ODE4Mzc1NjM5MDUw.YAEBWw.OFUuud6gDHl5TYbcie3guwxPMI8")
