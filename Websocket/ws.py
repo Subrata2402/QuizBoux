@@ -7,7 +7,6 @@ from sseclient import SSEClient
 import aiohttp
 import asyncio
 import time
-import bs4
 from bs4 import BeautifulSoup
 google_question = "https://google.com/search?q="
 question_number = total_question = 0
@@ -280,8 +279,8 @@ class Websocket:
 	async def start_hook(self):
 		"""Main function of the websocket. For Start websocket."""
 		await self.send_hook("**Websocket Connecting...**")
-		#if self.game_is_active == "false":
-			#return await self.send_hook("**Game is Not Live!**")
+		if self.game_is_active == "false":
+			return await self.send_hook("**Game is Not Live!**")
 		host = await self.get_host()
 		url = f"https://{host}/v2/event-feed/games/{self.game_id}"
 		headers = {
