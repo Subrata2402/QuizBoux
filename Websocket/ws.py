@@ -83,6 +83,57 @@ class Websocket:
 			db.question_base.insert_one({"question": question, "answer": answer})
 			return True
 		return False
+
+	async def rating_search_one(self, question_url, choices, index):
+		r = requests.get(question_url)
+		soup = bs4.BeautifulSoup(r.text, "html.parser")
+		res = str(soup.text).lower()
+		count_options = {}
+		for choice in choices:
+			option = choice["choice"].strip()
+			count_option = res.count(option.lower())
+			count_options[option] = count_option
+		max_count = max(list(count_options.values()))
+		min_count = min(list(count_options.values()))
+		#min_max_count = min_count if not_question else max_count
+		embed = discord.Embed(title=f"**__Search Results -{order[index]}__**", color = discord.Colour.random())
+		embed.set_footer(text = "Mimir Quiz")
+		embed.timestamp = datetime.datetime.utcnow()
+		description = ""
+		for index, option in enumerate(count_options):
+			if max_count != 0 and count_options[option] == max_count:
+				description += f"{order[index]}. {option} : {count_options[option]} ✅\n"
+			else:
+				description += f"{order[index]}. {option} : {count_options[option]}\n"
+		embed.description = f"**{description}**"
+		await self.send_hook(embed = embed)
+		
+	async def rating_search_two(self, question_url, choices, index):
+		r = requests.get(question_url)
+		soup = bs4.BeautifulSoup(r.text, "html.parser")
+		res = str(soup.text).lower()
+		count_options = {}
+		for choice in choices:
+			option = choice["choice"].strip()
+			count_option = 0
+			options = tuple(choice["choice"].split(" "))
+			for opt in options:
+				count_option += res.count(opt.lower())
+			count_options[option] = count_option
+		max_count = max(list(count_options.values()))
+		min_count = min(list(count_options.values()))
+		#min_max_count = min_count if not_question else max_count
+		embed = discord.Embed(title="**__Google Results -{order[index]}__**", color = discord.Colour.random())
+		embed.set_footer(text = "Mimir Quiz")
+		embed.timestamp = datetime.datetime.utcnow()
+		description = ""
+		for index, option in enumerate(count_options):
+			if max_count != 0 and count_options[option] == max_count:
+				description += f"{order[index]}. {option} : {count_options[option]} ✅\n"
+			else:
+				description += f"{order[index]}. {option} : {count_options[option]}\n"
+		embed.description = f"**{description}**"
+		await self.send_hook(embed = embed)
 				
 	async def pay_fees(self):
 		"""Pay fees in the paid games."""
@@ -328,53 +379,16 @@ class Websocket:
 						if not answer_send: await self.send_hook(embed = discord.Embed(title = f"**__{answer}__**", color = discord.Colour.random()))
 					
 					# Google Search Results 1
-					r = requests.get(google_question)
-					res = str(r.text).lower()
-					count_options = {}
-					for choice in choices:
-						option = choice["choice"].strip()
-						count_option = res.count(option.lower())
-						count_options[option] = count_option
-					max_count = max(list(count_options.values()))
-					min_count = min(list(count_options.values()))
-					#min_max_count = min_count if not_question else max_count
-					embed = discord.Embed(title="**__Google Results -１__**", color = discord.Colour.random())
-					embed.set_footer(text = "Mimir Quiz")
-					embed.timestamp = datetime.datetime.utcnow()
-					description = ""
-					for index, option in enumerate(count_options):
-						if max_count != 0 and count_options[option] == max_count:
-							description += f"{order[index]}. {option} : {count_options[option]} ✅\n"
-						else:
-							description += f"{order[index]}. {option} : {count_options[option]}\n"
-					embed.description = f"**{description}**"
-					await self.send_hook(embed = embed)
+					await self.rating_search_one(google_question, choices, 0)
 					
 					#Google Search Results 2
-					r = requests.get(google_question)
-					res = str(r.text).lower()
-					count_options = {}
-					for choice in choices:
-						option = choice["choice"].strip()
-						count_option = 0
-						options = tuple(choice["choice"].split(" "))
-						for opt in options:
-							count_option += res.count(opt.lower())
-						count_options[option] = count_option
-					max_count = max(list(count_options.values()))
-					min_count = min(list(count_options.values()))
-					#min_max_count = min_count if not_question else max_count
-					embed = discord.Embed(title="**__Google Results -２__**", color = discord.Colour.random())
-					embed.set_footer(text = "Mimir Quiz")
-					embed.timestamp = datetime.datetime.utcnow()
-					description = ""
-					for index, option in enumerate(count_options):
-						if max_count != 0 and count_options[option] == max_count:
-							description += f"{order[index]}. {option} : {count_options[option]} ✅\n"
-						else:
-							description += f"{order[index]}. {option} : {count_options[option]}\n"
-					embed.description = f"**{description}**"
-					await self.send_hook(embed = embed)
+					await self.rating_search_two(google_question, choices, 1)
+					
+					#Bing Search Results 3
+					await self.rating_search_one(bing_question, choices, 2)
+					
+					#Bing Search Results 4
+					await self.rating_search_two(bing_question, choices, 3)
 					
 					# Print Direct Search Results Text
 					r = requests.get(google_question)
@@ -387,6 +401,25 @@ class Websocket:
 						timestamp = datetime.datetime.utcnow()
 						)
 					embed.set_footer(text="Search with Google")
+					option_found = False
+					for index, choice in enumerate(choices):
+						if choice["choice"].lower().strip() in result.lower():
+							embed.title = f"**__Option {order[index]}. {choice['choice'].strip()}__**"
+							option_found = True
+					if not option_found:
+						embed.title = f"**__Direct Search Result !__**"
+					await self.send_hook(embed = embed)
+					
+					r = requests.get(bing_question)
+					soup = BeautifulSoup(r.text , "html.parser")
+					response = soup.find("p")
+					result = str(response.text)
+					embed = discord.Embed(
+						description = result,
+						color = discord.Colour.random(),
+						timestamp = datetime.datetime.utcnow()
+						)
+					embed.set_footer(text="Search with Bing")
 					option_found = False
 					for index, choice in enumerate(choices):
 						if choice["choice"].lower().strip() in result.lower():
