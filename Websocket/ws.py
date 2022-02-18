@@ -123,7 +123,7 @@ class Websocket:
 		max_count = max(list(count_options.values()))
 		min_count = min(list(count_options.values()))
 		#min_max_count = min_count if not_question else max_count
-		embed = discord.Embed(title="**__Google Results -{order[index]}__**", color = discord.Colour.random())
+		embed = discord.Embed(title=f"**__Google Results -{order[index]}__**", color = discord.Colour.random())
 		embed.set_footer(text = "Mimir Quiz")
 		embed.timestamp = datetime.datetime.utcnow()
 		description = ""
@@ -385,10 +385,10 @@ class Websocket:
 					await self.rating_search_two(google_question, choices, 1)
 					
 					#Bing Search Results 3
-					await self.rating_search_one(bing_question, choices, 2)
+					#await self.rating_search_one(bing_question, choices, 2)
 					
 					#Bing Search Results 4
-					await self.rating_search_two(bing_question, choices, 3)
+					#await self.rating_search_two(bing_question, choices, 3)
 					
 					# Print Direct Search Results Text
 					r = requests.get(google_question)
