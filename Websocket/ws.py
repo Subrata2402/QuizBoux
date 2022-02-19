@@ -186,8 +186,7 @@ class Websocket:
 				"v": 28,
 				"r": "0x8e2c03e1d075ea83032c6d2faf128e07249e2496f3a20d0598ef4d680e313ca8",
 				"s": "0x10e878cdf7164200e70b831a1cd838eb68e100839d9569c99bd27d2f98687419"
-				}
-			})
+				}})
 		async with aiohttp.ClientSession() as session:
 			async with session.post(url = url, headers = self.headers, data = data) as response:
 				if response.status != 200:
