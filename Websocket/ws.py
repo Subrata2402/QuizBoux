@@ -126,7 +126,7 @@ class Websocket:
 		max_count = max(list(count_options.values()))
 		min_count = min(list(count_options.values()))
 		#min_max_count = min_count if not_question else max_count
-		embed = discord.Embed(title=f"**__Google Results -{order[index]}__**", color = discord.Colour.random())
+		embed = discord.Embed(title=f"**__Search Results -{order[index]}__**", color = discord.Colour.random())
 		embed.set_footer(text = "Mimir Quiz")
 		embed.timestamp = datetime.datetime.utcnow()
 		description = ""
@@ -425,25 +425,6 @@ class Websocket:
 						timestamp = datetime.datetime.utcnow()
 						)
 					embed.set_footer(text="Search with Google")
-					option_found = False
-					for index, choice in enumerate(choices):
-						if choice["choice"].lower().strip() in result.lower():
-							embed.title = f"**__Option {order[index]}. {choice['choice'].strip()}__**"
-							option_found = True
-					if not option_found:
-						embed.title = f"**__Direct Search Result !__**"
-					await self.send_hook(embed = embed)
-					
-					r = requests.get(bing_question)
-					soup = BeautifulSoup(r.text , "html.parser")
-					response = soup.find("p")
-					result = str(response.text)
-					embed = discord.Embed(
-						description = result,
-						color = discord.Colour.random(),
-						timestamp = datetime.datetime.utcnow()
-						)
-					embed.set_footer(text="Search with Bing")
 					option_found = False
 					for index, choice in enumerate(choices):
 						if choice["choice"].lower().strip() in result.lower():
