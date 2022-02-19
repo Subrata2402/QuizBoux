@@ -22,7 +22,7 @@ class Websocket:
 		self.web_url = "https://discord.com/api/webhooks/938473130568065135/BGawZsFeWa59epspDbywoJNX1t-rQ4hiJroj7A6-vyZ7ZBtOipZlLIWIXaEciR-y8f2I"
 		self.token = None
 		self.ws_is_opened = False
-		self.icon_url = "https://media.discordapp.net/attachments/938473054718279730/941230541687119932/924632014617972736.png"
+		self.icon_url = "https://pbs.twimg.com/profile_images/1427270008531562496/xaq5Xlzg_400x400.jpg"
 		self.loop_is_active = False
 		self.game_id = None
 		self.partner_id = None
