@@ -15,7 +15,8 @@ order = ["１", "２", "３", "４", "５", "６", "７", "８", "９", "０"]
 
 class Websocket:
 	
-	def __init__(self):
+	def __init__(self, client):
+		self.client = client
 		self.prize = 50 # Default prize money of quiz
 		self.pattern = [] # Store answer pattern of the current quiz
 		self.web_url = "https://discord.com/api/webhooks/938473130568065135/BGawZsFeWa59epspDbywoJNX1t-rQ4hiJroj7A6-vyZ7ZBtOipZlLIWIXaEciR-y8f2I"
@@ -134,6 +135,41 @@ class Websocket:
 				description += f"{order[index]}. {option} : {count_options[option]}\n"
 		embed.description = f"**{description}**"
 		await self.send_hook(embed = embed)
+				
+	async def send_answer(self, host, data):
+		question_id = data["questionId"]
+		game_id = data["gameId"]
+		choices = data["choices"]
+		response_time = data["secondsToRespond"]
+		await self.send_hook(embed = discord.Embed(title = f"Send Your Answer within {response_time} seconds.", color = discord.Colour.random()))
+		try:
+			message = int((await self.client.wait_for("message", check = lambda message : message.channel_id == 939963301931143238, timeout = int(response_time) - 3)).strip())
+		except:
+			message = 2
+		choice_id = choices[message - 1]["id"]
+		url = f"https://{host}/v2/games/{game_id}/questions/{question_id}/responses?choiceId={choice_id}"
+		headers = {
+			"Host": host,
+			"Connection": "keep-alive",
+			"Accept": "application/json, text/plain, */*",
+			"Authorization": self.bearer_token,
+			"sec-ch-ua-mobile": "?1",
+			"User-Agent": "Mozilla/5.0 (Linux; Android 10; RMX1911) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.98 Mobile Safari/537.36",
+			"Origin": "https://play.us.theq.live",
+			"Referer": "https://play.us.theq.live/",
+			"Accept-Encoding": "gzip, deflate, br",
+			"Accept-Language": "en-US,en;q=0.9,bn;q=0.8,hi;q=0.7"
+		}
+		async with aiohttp.ClientSession() as session:
+			async with session.post(url = url, headers = headers, data = None) as response:
+				if response.status != 200:
+					return await self.send_hook("**Failed to send your answer!**")
+				r = await response.json()
+				success = r.get("success")
+				if success:
+					await self.send_hook(embed = discord.Embed(title = f"Successfully Send your answer!", color = discord.Colour.random()))
+				else:
+					await self.send_hook(embed = discord.Embed(title = f"Failed to send your answer!", color = discord.Colour.random()))
 				
 	async def pay_fees(self):
 		"""Pay fees in the paid games."""
