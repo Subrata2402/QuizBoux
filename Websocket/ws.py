@@ -30,6 +30,7 @@ class Websocket:
 		self.bearer_token = None
 		self.value = None # Entry Fee of the quiz
 		self.headers = None
+		self.game_active = None
 		
 	@property
 	def game_is_active(self):
@@ -215,7 +216,7 @@ class Websocket:
 				if len(data) < game_num:
 				    return await self.send_hook("**Quiz Not Found!**")
 				data = data[game_num-1]
-				#self.game_is_active = data["active"] # if game is live
+				self.game_active = data["active"] # if game is live
 				self.icon_url = data.get("previewImageUrl") or data.get("backgroundImageLandscapeUrl")
 				topic = data["label"]
 				description = data.get("description")
@@ -302,7 +303,7 @@ class Websocket:
 	async def start_hook(self):
 		"""Main function of the websocket. For Start websocket."""
 		await self.send_hook("**Websocket Connecting...**")
-		if self.game_is_active == "false":
+		if self.game_active == "false":
 			return await self.send_hook("**Game is Not Live!**")
 		host = await self.get_host()
 		url = f"https://{host}/v2/event-feed/games/{self.game_id}"
