@@ -29,6 +29,7 @@ class Websocket:
 		self.user_id = None
 		self.bearer_token = None
 		self.value = None # Entry Fee of the quiz
+		self.headers = None
 		
 	@property
 	def game_is_active(self):
@@ -176,7 +177,8 @@ class Websocket:
 		url = "https://api.mimir-prod.com/games/pay-fee"
 		await self.get_quiz_details()
 		data = json.dumps({
-				"transaction": {
+			"game_id": self.game_id,
+			"transaction": {
 				"target": "0x4357d1eE11E7db4455527Fe3dfd0B882Cb334357",
 				"to": "0xa02963C078fd71079cCcE5e0049b0Abf8AEDD178",
 				"value": "50000000000000000000",
@@ -184,22 +186,10 @@ class Websocket:
 				"v": 28,
 				"r": "0x8e2c03e1d075ea83032c6d2faf128e07249e2496f3a20d0598ef4d680e313ca8",
 				"s": "0x10e878cdf7164200e70b831a1cd838eb68e100839d9569c99bd27d2f98687419"
-				},
-			"game_id": self.game_id
+				}
 			})
-		headers = {
-			"host": "api.mimir-prod.com",
-			"authorization": f"Bearer {self.token}",
-			"user-agent": "Mozilla/5.0 (Linux; Android 10; RMX1827) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.99 Mobile Safari/537.36",
-			"content-type": "application/json",
-			"accept": "*/*",
-			"origin": "https://app.mimirquiz.com",
-			"referer": "https://app.mimirquiz.com/",
-			"accept-encoding": "gzip, deflate, br",
-			"accept-language": "en-US,en;q=0.9,bn;q=0.8,hi;q=0.7"
-		}
 		async with aiohttp.ClientSession() as session:
-			async with session.post(url = url, headers = headers, data = data) as response:
+			async with session.post(url = url, headers = self.headers, data = data) as response:
 				if response.status != 200:
 					await self.send_hook("**The Token has Expired!**")
 					raise commands.CommandError("Pay Fees Error...!")
@@ -215,11 +205,23 @@ class Websocket:
 	async def get_quiz_details(self, get_type = None, game_num:int = 1):
 		"""Get quiz details and take game_id, partner_id, prize money etc."""
 		await self.get_token() # Take token from the database
-		url = "https://api.mimir-prod.com//games/next?" # api url of the mimir quiz details
+		url = "https://api.mimir-prod.com//games/list?type=both
+		headers = {
+			"host": "api.mimir-prod.com",
+			"authorization": f"Bearer {self.token}",
+			"user-agent": "Mozilla/5.0 (Linux; Android 10; RMX1827) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.99 Mobile Safari/537.36",
+			"content-type": "application/json",
+			"accept": "*/*",
+			"origin": "https://app.mimirquiz.com",
+			"referer": "https://app.mimirquiz.com/",
+			"accept-encoding": "gzip, deflate, br",
+			"accept-language": "en-US,en;q=0.9,bn;q=0.8,hi;q=0.7"
+		}
+		self.headers = headers
 		async with aiohttp.ClientSession() as session:
-			async with session.get(url = url) as response:
+			async with session.get(url = url, headers = headers) as response:
 				if response.status != 200:
-					await self.send_hook("**Something unexpected happened while fetching quiz details!**")
+					await self.send_hook("**The Token has Expired!**")
 					raise commands.CommandError("Token has expired!")
 				r = await response.json()
 				data = r["data"]["data"]
