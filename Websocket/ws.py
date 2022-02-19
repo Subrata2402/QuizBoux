@@ -137,30 +137,15 @@ class Websocket:
 		embed.description = f"**{description}**"
 		await self.send_hook(embed = embed)
 				
-	async def send_answer(self, host, data):
+	async def send_answer(self, host, headers, data, answer):
 		question_id = data["questionId"]
 		game_id = data["gameId"]
 		choices = data["choices"]
 		response_time = data["secondsToRespond"]
-		await self.send_hook(embed = discord.Embed(title = f"Send Your Answer within {response_time} seconds.", color = discord.Colour.random()))
-		try:
-			message = int((await self.client.wait_for("message", check = lambda message : message.channel_id == 939963301931143238, timeout = int(response_time) - 3)).strip())
-		except:
-			message = 2
-		choice_id = choices[message - 1]["id"]
+		#await self.send_hook(embed = discord.Embed(title = f"Send Your Answer within {response_time} seconds.", color = discord.Colour.random()))
+		choice_id = choices[answer - 1]["id"]
 		url = f"https://{host}/v2/games/{game_id}/questions/{question_id}/responses?choiceId={choice_id}"
-		headers = {
-			"Host": host,
-			"Connection": "keep-alive",
-			"Accept": "application/json, text/plain, */*",
-			"Authorization": self.bearer_token,
-			"sec-ch-ua-mobile": "?1",
-			"User-Agent": "Mozilla/5.0 (Linux; Android 10; RMX1911) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.98 Mobile Safari/537.36",
-			"Origin": "https://play.us.theq.live",
-			"Referer": "https://play.us.theq.live/",
-			"Accept-Encoding": "gzip, deflate, br",
-			"Accept-Language": "en-US,en;q=0.9,bn;q=0.8,hi;q=0.7"
-		}
+		await asyncio.sleep(2)
 		async with aiohttp.ClientSession() as session:
 			async with session.post(url = url, headers = headers, data = None) as response:
 				if response.status != 200:
@@ -168,9 +153,11 @@ class Websocket:
 				r = await response.json()
 				success = r.get("success")
 				if success:
-					await self.send_hook(embed = discord.Embed(title = f"Successfully Send your answer!", color = discord.Colour.random()))
+					print("Answer Sent.")
+					#await self.send_hook(embed = discord.Embed(title = f"Successfully Send your answer!", color = discord.Colour.random()))
 				else:
-					await self.send_hook(embed = discord.Embed(title = f"Failed to send your answer!", color = discord.Colour.random()))
+					print("Failed to send answer.")
+					#await self.send_hook(embed = discord.Embed(title = f"Failed to send your answer!", color = discord.Colour.random()))
 				
 	async def pay_fees(self):
 		"""Pay fees in the paid games."""
@@ -198,13 +185,14 @@ class Websocket:
 					print("Fee Paid!")
 					#await self.send_hook("**Fee Successfully Paid!**")
 					#await self.send_hook(f"```\n{r}\n```")
-				#else:
+				else:
+					print("Failed to pay fee.")
 					#await self.send_hook("**Something wrong in 117 line!**")
 				
 	async def get_quiz_details(self, get_type = None, game_num:int = 1):
 		"""Get quiz details and take game_id, partner_id, prize money etc."""
 		await self.get_token() # Take token from the database
-		url = "https://api.mimir-prod.com//games/list?type=both
+		url = "https://api.mimir-prod.com//games/list?type=both"
 		headers = {
 			"host": "api.mimir-prod.com",
 			"authorization": f"Bearer {self.token}",
