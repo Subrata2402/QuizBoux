@@ -216,9 +216,7 @@ class Websocket:
 				    return await self.send_hook("**Quiz Not Found!**")
 				data = data[game_num-1]
 				#self.game_is_active = data["active"] # if game is live
-				image_1 = data.get("backgroundImageLandscapeUrl")
-				image_2 = data.get("previewImageUrl")
-				self.icon_url = image_2 if not image_1 else image_1
+				self.icon_url = data.get("previewImageUrl") or data.get("backgroundImageLandscapeUrl")
 				topic = data["label"]
 				description = data.get("description")
 				self.prize = data["reward"]
