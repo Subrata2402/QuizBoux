@@ -409,10 +409,10 @@ class Websocket:
 					await self.rating_search_two(google_question, choices, 1)
 					
 					#Bing Search Results 3
-					await self.rating_search_one(search_with_all, choices, 2)
+					#await self.rating_search_one(search_with_all, choices, 2)
 					
 					#Bing Search Results 4
-					await self.rating_search_two(search_with_all, choices, 3)
+					#await self.rating_search_two(search_with_all, choices, 3)
 					
 					# Print Direct Search Results Text
 					r = requests.get(google_question)
