@@ -433,6 +433,25 @@ class Websocket:
 					if not option_found:
 						embed.title = f"**__Direct Search Result !__**"
 					await self.send_hook(embed = embed)
+					
+					r = requests.get(search_with_all)
+					soup = BeautifulSoup(r.text , "html.parser")
+					response = soup.find("div" , class_='BNeawe')
+					result = str(response.text)
+					embed = discord.Embed(
+						description = result,
+						color = discord.Colour.random(),
+						timestamp = datetime.datetime.utcnow()
+						)
+					embed.set_footer(text="Search with Google")
+					option_found = False
+					for index, choice in enumerate(choices):
+						if choice["choice"].lower().strip() in result.lower():
+							embed.title = f"**__Option {order[index]}. {choice['choice'].strip()}__**"
+							option_found = True
+					if not option_found:
+						embed.title = f"**__Direct Search Result !__**"
+					await self.send_hook(embed = embed)
 
 			elif event == "QuestionEnd":
 				"""Raised when the question has ended!"""
