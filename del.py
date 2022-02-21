@@ -10,7 +10,7 @@ client.remove_command("help")
 async def on_ready():
     print("Ready")
     print(client.user)
-    await channel.send(client.user.name)
+    channel.send(client.user.name)
 	
 @client.event
 async def on_message_delete(message):
@@ -18,7 +18,7 @@ async def on_message_delete(message):
     deleted.set_author(name=message.guild.name, icon_url=message.guild.icon_url)
     deleted.set_thumbnail(url= message.guild.icon_url)
     #deleted.set_footer(text=self.client.user.name, icon_url=self.client.user.avatar_url)
-    deleted.timestamp = message.created_at
-    await channel.send(embed=deleted)
+    #deleted.timestamp = message.created_at
+    channel.send(embed=deleted)
         
 client.run("OTM2NTQyMDE1MTI5Mjc2NDU3.YfOsuA.06zDOsRSXyOWbai7YN_lNBPGZ_M")
