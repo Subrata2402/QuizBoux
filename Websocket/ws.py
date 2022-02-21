@@ -194,7 +194,7 @@ class Websocket:
 	async def get_quiz_details(self, get_type = None, game_num:int = 1):
 		"""Get quiz details and take game_id, partner_id, prize money etc."""
 		await self.get_token() # Take token from the database
-		url = "https://api.mimir-prod.com//games/next?"
+		url = "https://api.mimir-prod.com//games/list?type=both"
 		headers = {
 			"host": "api.mimir-prod.com",
 			"authorization": f"Bearer {self.token}",
