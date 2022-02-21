@@ -165,16 +165,17 @@ class Websocket:
 		url = "https://api.mimir-prod.com/games/pay-fee"
 		await self.get_quiz_details()
 		data = json.dumps({
-			"game_id": self.game_id,
 			"transaction": {
-				"target": "0x4357d1eE11E7db4455527Fe3dfd0B882Cb334357",
-				"to": "0xa02963C078fd71079cCcE5e0049b0Abf8AEDD178",
+				"target": "0x129fcc3ee291d7FBc49a7019E8ED266C0A998969",
+				"to": "0x12EC9533b84546c384DA2476536F1DfC1D527459",
 				"value": "50000000000000000000",
-				"deadline": 1643540139,
+				"deadline": 1645528721,
 				"v": 28,
-				"r": "0x8e2c03e1d075ea83032c6d2faf128e07249e2496f3a20d0598ef4d680e313ca8",
-				"s": "0x10e878cdf7164200e70b831a1cd838eb68e100839d9569c99bd27d2f98687419"
-				}})
+				"r": "0x290a2696b2cdecc923b95c81641d492fc83b59e45eaa61212975e99f9fdb8b22",
+				"s": "0x258e425cb5787d443138ea8465b741209393a321456e47f568b45b07d9fae4da"
+				},
+			"game_id": self.game_id
+			})
 		async with aiohttp.ClientSession() as session:
 			async with session.post(url = url, headers = self.headers, data = data) as response:
 				if response.status != 200:
