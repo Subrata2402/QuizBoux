@@ -10,7 +10,7 @@ client.remove_command("help")
 async def on_ready():
     print("Ready")
     print(client.user)
-    await channel.send(client.user)
+    await channel.send(client.user.name)
 	
 @client.event
 async def on_message_delete(message):
