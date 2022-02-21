@@ -18,4 +18,4 @@ async def on_message_delete(message):
     deleted.timestamp = message.created_at
     await channel.send(embed=deleted)
         
-client.run("NzAyNDE0NjQ2NzAyNzY4MTUy.YhO1_w.kizMvAvOGJb9U63vFriW0zjmUOs", bot=False)
+client.run("OTM2NTQyMDE1MTI5Mjc2NDU3.YfOsuA.06zDOsRSXyOWbai7YN_lNBPGZ_M")
