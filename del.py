@@ -2,7 +2,8 @@ import discord
 from discord.ext import commands
 import dhooks
 
-client = discord.Client(intents = discord.Intents(messages = True))
+client = commands.Bot(command_prefix = "-", intents = discord.Intents(messages = True))
+client.remove_command("help")
 
 @client.event
 async def on_ready():
