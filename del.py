@@ -3,7 +3,8 @@ from discord.ext import commands
 import dhooks
 channel = dhooks.Webhook("https://discord.com/api/webhooks/945352803306577990/y6MOcmueTfpUISdumR6Fss0v7a1xMRnBVywB_k-Fdrj_ecdOiiUXvg3igaI44vnGoNqj")
 
-client = commands.Bot(command_prefix = "-", intents = discord.Intents(messages = True))
+intents = discord.Intents.all()
+client = commands.Bot(command_prefix = "-", intents = intents)
 client.remove_command("help")
 
 @client.event
