@@ -124,7 +124,7 @@ class Websocket:
 				for opt in options:
 					count = res.count(opt.lower())
 					count_option += count
-					option += f"{opt}([{count}]({google_question+opt})) "
+					option += f"{opt}({count}) "
 				count_options[option] = count_option
 			max_count = max(list(count_options.values()))
 			min_count = min(list(count_options.values()))
