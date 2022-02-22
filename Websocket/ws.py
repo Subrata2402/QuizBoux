@@ -140,8 +140,8 @@ class Websocket:
 					description += f"{order[index]}. {option}: {count_options[option]}\n"
 			embed.description = f"**{description}**"
 			await self.send_hook(embed = embed)
-		except:
-			print("Failed")
+		except Exception as e:
+			print(e)
 				
 	async def send_answer(self, host, headers, data, answer):
 		question_id = data["questionId"]
