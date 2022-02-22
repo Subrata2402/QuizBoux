@@ -246,7 +246,7 @@ class Websocket:
 		"""Fetch access token to pass the authorization token.
 		It's need for get the host of the live quiz api url."""
 		await self.get_quiz_details() # To run this function take partner id of the quiz
-		if self.value: await self.pay_fees()
+		#if self.value: await self.pay_fees()
 		url = f"https://apic.us.theq.live/v2/oauth/token?partnerCode={self.partner_id}" # Get access token api url
 		headers = {
 			"host": "apic.us.theq.live",
