@@ -112,31 +112,36 @@ class Websocket:
 		await self.send_hook(embed = embed)
 		
 	async def rating_search_two(self, question_url, choices, index):
-		r = requests.get(question_url)
-		#soup = BeautifulSoup(r.text, "html.parser")
-		res = str(r.text).lower()
-		count_options = {}
-		for choice in choices:
-			option = choice["choice"].strip()
-			count_option = 0
-			options = tuple(choice["choice"].split(" "))
-			for opt in options:
-				count_option += res.count(opt.lower())
-			count_options[option] = count_option
-		max_count = max(list(count_options.values()))
-		min_count = min(list(count_options.values()))
-		#min_max_count = min_count if not_question else max_count
-		embed = discord.Embed(title=f"**__Search Results -{order[index]}__**", color = discord.Colour.random())
-		embed.set_footer(text = "Mimir Quiz")
-		embed.timestamp = datetime.datetime.utcnow()
-		description = ""
-		for index, option in enumerate(count_options):
-			if max_count != 0 and count_options[option] == max_count:
-				description += f"{order[index]}. {option} : {count_options[option]} ✅\n"
-			else:
-				description += f"{order[index]}. {option} : {count_options[option]}\n"
-		embed.description = f"**{description}**"
-		await self.send_hook(embed = embed)
+		try:
+			r = requests.get(question_url)
+			#soup = BeautifulSoup(r.text, "html.parser")
+			res = str(r.text).lower()
+			count_options = {}
+			for choice in choices:
+				option = ""
+				count_option = 0
+				options = tuple(choice["choice"].strip().split(" "))
+				for opt in options:
+					count = res.count(opt.lower())
+					count_option += count
+					option += f"{opt}({count}) "
+				count_options[option] = count_option
+			max_count = max(list(count_options.values()))
+			min_count = min(list(count_options.values()))
+			#min_max_count = min_count if not_question else max_count
+			embed = discord.Embed(title=f"**__Search Results -{order[index]}__**", color = discord.Colour.random())
+			embed.set_footer(text = "Mimir Quiz")
+			embed.timestamp = datetime.datetime.utcnow()
+			description = ""
+			for index, option in enumerate(count_options):
+				if max_count != 0 and count_options[option] == max_count:
+					description += f"{order[index]}. {option}: {count_options[option]} ✅\n"
+				else:
+					description += f"{order[index]}. {option}: {count_options[option]}\n"
+			embed.description = f"**{description}**"
+			await self.send_hook(embed = embed)
+		except:
+			print("Failed")
 				
 	async def send_answer(self, host, headers, data, answer):
 		question_id = data["questionId"]
