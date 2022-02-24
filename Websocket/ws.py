@@ -8,6 +8,7 @@ import aiohttp
 import asyncio
 import time
 from bs4 import BeautifulSoup
+from unidecode import unidecode
 google_question = "https://google.com/search?q="
 question_number = total_question = 0
 from database import db
@@ -93,7 +94,7 @@ class Websocket:
 		res = str(r.text).lower()
 		count_options = {}
 		for choice in choices:
-			option = choice["choice"].strip()
+			option = unidecode(choice["choice"]).strip()
 			count_option = res.count(option.lower())
 			count_options[option] = count_option
 		max_count = max(list(count_options.values()))
@@ -112,36 +113,33 @@ class Websocket:
 		await self.send_hook(embed = embed)
 		
 	async def rating_search_two(self, question_url, choices, index):
-		try:
-			r = requests.get(question_url)
-			#soup = BeautifulSoup(r.text, "html.parser")
-			res = str(r.text).lower()
-			count_options = {}
-			for choice in choices:
-				option = ""
-				count_option = 0
-				options = tuple(choice["choice"].strip().split(" "))
-				for opt in options:
-					count = res.count(opt.lower())
-					count_option += count
-					option += f"{opt}({count}) "
-				count_options[option] = count_option
-			max_count = max(list(count_options.values()))
-			min_count = min(list(count_options.values()))
-			#min_max_count = min_count if not_question else max_count
-			embed = discord.Embed(title=f"**__Search Results -{order[index]}__**", color = discord.Colour.random())
-			embed.set_footer(text = "Mimir Quiz")
-			embed.timestamp = datetime.datetime.utcnow()
-			description = ""
-			for index, option in enumerate(count_options):
-				if max_count != 0 and count_options[option] == max_count:
-					description += f"{order[index]}. {option}: {count_options[option]} ✅\n"
-				else:
-					description += f"{order[index]}. {option}: {count_options[option]}\n"
-			embed.description = f"**{description}**"
-			await self.send_hook(embed = embed)
-		except Exception as e:
-			print(e)
+		r = requests.get(question_url)
+		#soup = BeautifulSoup(r.text, "html.parser")
+		res = str(r.text).lower()
+		count_options = {}
+		for choice in choices:
+			option = ""
+			count_option = 0
+			options = tuple(unidecode(choice["choice"]).strip().split(" "))
+			for opt in options:
+				count = res.count(opt.lower())
+				count_option += count
+				option += f"{opt}({count}) "
+			count_options[option] = count_option
+		max_count = max(list(count_options.values()))
+		min_count = min(list(count_options.values()))
+		#min_max_count = min_count if not_question else max_count
+		embed = discord.Embed(title=f"**__Search Results -{order[index]}__**", color = discord.Colour.random())
+		embed.set_footer(text = "Mimir Quiz")
+		embed.timestamp = datetime.datetime.utcnow()
+		description = ""
+		for index, option in enumerate(count_options):
+			if max_count != 0 and count_options[option] == max_count:
+				description += f"{order[index]}. {option}: {count_options[option]} ✅\n"
+			else:
+				description += f"{order[index]}. {option}: {count_options[option]}\n"
+		embed.description = f"**{description}**"
+		await self.send_hook(embed = embed)
 				
 	async def send_answer(self, host, headers, data, answer):
 		question_id = data["questionId"]
@@ -368,7 +366,7 @@ class Websocket:
 				global google_question, question_number, total_question
 				data = json.loads(msg.data)
 				embed = discord.Embed(color = discord.Colour.random())
-				question = str(data["question"]).strip()
+				question = unidecode(str(data["question"]).strip())
 				question_number = data["number"]
 				total_question = data["total"]
 				response_time = data["secondsToRespond"]
@@ -385,7 +383,7 @@ class Websocket:
 				elif data["questionType"] == "TRIVIA":
 					choices = data["choices"]
 					bing_question = "https://bing.com/search?q=" + raw_question
-					options_list = [choice["choice"] for choice in choices]
+					options_list = [unidecode(choice["choice"]) for choice in choices]
 					options = "+".join(options_list)
 					raw_options = str(options).replace(" ", "+")
 					search_with_all = "https://google.com/search?q=" + raw_question + "+" + raw_options
@@ -395,7 +393,7 @@ class Websocket:
 					embed.title = f"**Question {question_number} out of {total_question} {is_not}**"
 					embed.description = f"**[{question}]({google_question})\n\n[Search with all options]({search_with_all})**"
 					for index, choice in enumerate(choices):
-						embed.add_field(name = f"**Option -{order[index]}**", value = f"**[{choice['choice'].strip()}]({google_question + '+' + str(choice['choice']).strip().replace(' ', '+')})**", inline = False)
+						embed.add_field(name = f"**Option -{order[index]}**", value = f"**[{unidecode(choice['choice']).strip()}]({google_question + '+' + str(unidecode(choice['choice'])).strip().replace(' ', '+')})**", inline = False)
 					embed.set_thumbnail(url = self.icon_url)
 					embed.set_footer(text = f"Response Time : {response_time} secs | Points : {point_value}")
 					await self.send_hook(embed = embed)
@@ -404,7 +402,7 @@ class Websocket:
 					answer_send = False
 					if answer:
 						for index, choice in enumerate(choices):
-							if answer.lower() == str(choice["choice"]).strip().lower():
+							if unidecode(answer).lower() == str(unidecode(choice["choice"])).strip().lower():
 								await self.send_hook(embed = discord.Embed(title = f"**__Option {order[index]}. {answer}__**", color = discord.Colour.random()))
 								answer_send = True
 						if not answer_send: await self.send_hook(embed = discord.Embed(title = f"**__{answer}__**", color = discord.Colour.random()))
