@@ -266,7 +266,7 @@ class Websocket:
 		async with aiohttp.ClientSession() as session:
 			async with session.post(url = url, headers = headers, data = post_data) as response:
 				if response.status != 200:
-					await self.send_hook("**Failed to fetch access token!**")
+					await self.send_hook("**The Token has Expired or Invalid!**")
 					raise commands.CommandError("Get access token error...") # If response status not equal to 200 then raise an exception.
 				r = await response.json()
 				new_token = r["oauth"]["accessToken"]
