@@ -452,7 +452,7 @@ class Websocket:
 					option_found = False
 					for index, choice in enumerate(choices):
 						if choice["choice"].lower().strip() in result.lower():
-							embed.title = f"**__Option {order[index]}. {choice['choice'].strip()}__**"
+							embed.title = f"**__Option {order[index]}. {choice['choice'].strip()}__ (Not Confirm)**"
 							option_found = True
 					if not option_found:
 						embed.title = f"**__Direct Search Result !__**"
