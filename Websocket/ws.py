@@ -408,10 +408,16 @@ class Websocket:
 						if not answer_send: await self.send_hook(embed = discord.Embed(title = f"**__{answer}__**", color = discord.Colour.random()))
 					
 					# Google Search Results 1
-					await self.rating_search_one(google_question, choices, 0)
+					try:
+						await self.rating_search_one(google_question, choices, 0)
+					except Exception as e:
+						print(e)
 					
 					#Google Search Results 2
-					await self.rating_search_two(google_question, choices, 1)
+					try:
+						await self.rating_search_two(google_question, choices, 1)
+					except Exception as e:
+						print(e)
 					
 					#Bing Search Results 3
 					#await self.rating_search_one(search_with_all, choices, 2)
@@ -420,43 +426,49 @@ class Websocket:
 					#await self.rating_search_two(search_with_all, choices, 3)
 					
 					# Print Direct Search Results Text
-					r = requests.get(google_question)
-					soup = BeautifulSoup(r.text , "html.parser")
-					response = soup.find("div" , class_='BNeawe')
-					result = str(response.text)
-					embed = discord.Embed(
-						description = result,
-						color = discord.Colour.random(),
-						timestamp = datetime.datetime.utcnow()
-						)
-					embed.set_footer(text="Search with Google")
-					option_found = False
-					for index, choice in enumerate(choices):
-						if choice["choice"].lower().strip() in result.lower():
-							embed.title = f"**__Option {order[index]}. {choice['choice'].strip()}__**"
-							option_found = True
-					if not option_found:
-						embed.title = f"**__Direct Search Result !__**"
-					await self.send_hook(embed = embed)
+					try:
+						r = requests.get(google_question)
+						soup = BeautifulSoup(r.text , "html.parser")
+						response = soup.find("div" , class_='BNeawe')
+						result = str(response.text)
+						embed = discord.Embed(
+							description = result,
+							color = discord.Colour.random(),
+							timestamp = datetime.datetime.utcnow()
+							)
+						embed.set_footer(text="Search with Google")
+						option_found = False
+						for index, choice in enumerate(choices):
+							if choice["choice"].lower().strip() in result.lower():
+								embed.title = f"**__Option {order[index]}. {choice['choice'].strip()}__**"
+								option_found = True
+						if not option_found:
+							embed.title = f"**__Direct Search Result !__**"
+						await self.send_hook(embed = embed)
+					except Exception as e:
+						print(e)
 					
-					r = requests.get(search_with_all)
-					soup = BeautifulSoup(r.text , "html.parser")
-					response = soup.find("div" , class_='BNeawe')
-					result = str(response.text)
-					embed = discord.Embed(
-						description = result,
-						color = discord.Colour.random(),
-						timestamp = datetime.datetime.utcnow()
-						)
-					embed.set_footer(text="Search with Google")
-					option_found = False
-					for index, choice in enumerate(choices):
-						if choice["choice"].lower().strip() in result.lower():
-							embed.title = f"**__Option {order[index]}. {choice['choice'].strip()}__ (Not Confirm)**"
-							option_found = True
-					if not option_found:
-						embed.title = f"**__Direct Search Result !__**"
-					await self.send_hook(embed = embed)
+					try:
+						r = requests.get(search_with_all)
+						soup = BeautifulSoup(r.text , "html.parser")
+						response = soup.find("div" , class_='BNeawe')
+						result = str(response.text)
+						embed = discord.Embed(
+							description = result,
+							color = discord.Colour.random(),
+							timestamp = datetime.datetime.utcnow()
+							)
+						embed.set_footer(text="Search with Google")
+						option_found = False
+						for index, choice in enumerate(choices):
+							if choice["choice"].lower().strip() in result.lower():
+								embed.title = f"**__Option {order[index]}. {choice['choice'].strip()}__ (Not Confirm)**"
+								option_found = True
+						if not option_found:
+							embed.title = f"**__Direct Search Result !__**"
+						await self.send_hook(embed = embed)
+					except Exception as e:
+						print(e)
 
 			elif event == "QuestionEnd":
 				"""Raised when the question has ended!"""
