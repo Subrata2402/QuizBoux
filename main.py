@@ -123,4 +123,4 @@ async def on_message(message):
         return #await messag 08e.channel.send("**You cannot be used me in private messages.**")
     await client.process_commands(message)
             
-client.run("Nzk5NDY4ODE4Mzc1NjM5MDUw.YAEBWw.OFUuud6gDHl5TYbcie3guwxPMI8")
+client.run("Nzk5NDY4ODE4Mzc1NjM5MDUw.YAEBWw.Qt4OvfOh7YZhH5hPoQzd7iatWGc")
