@@ -79,7 +79,37 @@ class MimirQuiz(commands.Cog, Websocket):
     async def nextquiz(self, ctx, game_num:int = 1):
         """Get next quiz details."""
         if ctx.guild.id != 935980609908658277:
-            return await ctx.send(embed = embed)
+            url = "https://api.mimir-prod.com//games/next?"
+            async with aiohttp.ClientSession() as session:
+                async with session.get(url = url) as response:
+                    if response.status != 200:
+                        return await ctx.send("**Something Unexpected happened while fetching quiz details!**")
+                    r = await response.json()
+                    data = r["data"]["data"]
+                    if len(data) < game_num:
+                        return await ctx.send("**Quiz Not Found!**")
+                    data = data[game_num-1]
+                    icon_url = data.get("previewImageUrl") or data.get("backgroundImageLandscapeUrl")
+                    topic = data["label"]
+                    description = data.get("description")
+                    prize = data["reward"]
+                    time = f'<t:{int(data["scheduled"]/1000)}>'
+                    gameType = data["winCondition"]
+                    value = data.get("entryFee")
+                    embed = discord.Embed(
+                        title = "**__Mimir Upcoming Quiz Details !__**",
+                        description = description,
+                        color = discord.Colour.random(),
+                        )
+                    #timestamp = datetime.datetime.utcnow()
+                    embed.add_field(name = "Quiz Topic :", value = topic, inline = False)
+                    embed.add_field(name = "Prize Money :", value = f"ᛗ{prize}", inline = False)
+                    if value: embed.add_field(name = "Entry Fee :", value = f"ᛗ{value}", inline = False)
+                    embed.add_field(name = "Date & Time :", value = time, inline = False)
+                    embed.set_footer(text = f"Upcoming Quiz No. - {'0' if game_num < 10 else ''}{game_num}")
+                    embed.set_thumbnail(url = icon_url)
+                    #await self.send_hook(embed = embed)
+                    return await ctx.send(embed = embed)
         await self.get_quiz_details(get_type = "send", game_num = game_num)
     
     @commands.command(aliases = ["open"])
