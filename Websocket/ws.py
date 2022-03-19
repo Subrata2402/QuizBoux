@@ -439,9 +439,9 @@ class Websocket:
 						embed.set_footer(text="Search with Google")
 						option_found = False
 						for index, choice in enumerate(choices):
-							if f" {choice["choice"].lower().strip()} " in result.lower():
+							if f' {choice["choice"].lower().strip()} ' in result.lower():
 								embed.title = f"**__Option {order[index]}. {choice['choice'].strip()}__**"
-								embed.description = re.sub(f" {choice["choice"].strip()} ", f" **{choice["choice"]}** ", result, flags = re.IGNORECASE)
+								embed.description = re.sub(f' {choice["choice"].strip()} ', f' **{choice["choice"]}** ', result, flags = re.IGNORECASE)
 								option_found = True
 						if not option_found:
 							embed.title = f"**__Direct Search Result !__**"
@@ -462,9 +462,9 @@ class Websocket:
 						embed.set_footer(text="Search with Google")
 						option_found = False
 						for index, choice in enumerate(choices):
-							if f" {choice["choice"].lower().strip()} " in result.lower():
+							if f' {choice["choice"].lower().strip()} ' in result.lower():
 								embed.title = f"**__Option {order[index]}. {choice['choice'].strip()}__ (Not Confirm)**"
-								embed.description = re.sub(f" {choice["choice"].strip()} ", f" **{choice["choice"]}** ", result, flags = re.IGNORECASE)
+								embed.description = re.sub(f' {choice["choice"].strip()} ', f' **{choice["choice"]}** ', result, flags = re.IGNORECASE)
 								option_found = True
 						if not option_found:
 							embed.title = f"**__Direct Search Result !__**"
