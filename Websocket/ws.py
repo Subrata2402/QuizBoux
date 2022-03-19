@@ -6,7 +6,7 @@ import datetime
 from sseclient import SSEClient
 import aiohttp
 import asyncio
-import time
+import re
 from bs4 import BeautifulSoup
 from unidecode import unidecode
 google_question = "https://google.com/search?q="
@@ -387,7 +387,7 @@ class Websocket:
 					options = "+".join(options_list)
 					raw_options = str(options).replace(" ", "+")
 					search_with_all = "https://google.com/search?q=" + raw_question + "+" + raw_options
-					not_question = True if "not" in question.lower() else False
+					not_question = True if " not " in question.lower() else False
 					is_not = "(Not Question)" if not_question else ""
 					
 					embed.title = f"**Question {question_number} out of {total_question} {is_not}**"
@@ -439,8 +439,9 @@ class Websocket:
 						embed.set_footer(text="Search with Google")
 						option_found = False
 						for index, choice in enumerate(choices):
-							if choice["choice"].lower().strip() in result.lower():
+							if f" {choice["choice"].lower().strip()} " in result.lower():
 								embed.title = f"**__Option {order[index]}. {choice['choice'].strip()}__**"
+								embed.description = re.sub(f" {choice["choice"].strip()} ", f" **{choice["choice"]}** ", result, flags = re.IGNORECASE)
 								option_found = True
 						if not option_found:
 							embed.title = f"**__Direct Search Result !__**"
@@ -461,8 +462,9 @@ class Websocket:
 						embed.set_footer(text="Search with Google")
 						option_found = False
 						for index, choice in enumerate(choices):
-							if choice["choice"].lower().strip() in result.lower():
+							if f" {choice["choice"].lower().strip()} " in result.lower():
 								embed.title = f"**__Option {order[index]}. {choice['choice'].strip()}__ (Not Confirm)**"
+								embed.description = re.sub(f" {choice["choice"].strip()} ", f" **{choice["choice"]}** ", result, flags = re.IGNORECASE)
 								option_found = True
 						if not option_found:
 							embed.title = f"**__Direct Search Result !__**"
