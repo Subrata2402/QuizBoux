@@ -13,6 +13,7 @@ google_question = "https://google.com/search?q="
 question_number = total_question = 0
 from database import db
 order = ["１", "２", "３", "４", "５", "６", "７", "８", "９", "０"]
+ignore_options = ["the", "a", "of", "in",]
 
 class Websocket:
 	
@@ -122,7 +123,7 @@ class Websocket:
 			count_option = 0
 			options = tuple(unidecode(choice["choice"]).strip().split(" "))
 			for opt in options:
-				count = res.count(opt.lower())
+				count = 0 if opt.lower() in ignore_options else res.count(opt.lower())
 				count_option += count
 				option += f"{opt}({count}) "
 			count_options[option] = count_option
