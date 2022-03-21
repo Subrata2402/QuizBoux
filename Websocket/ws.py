@@ -13,7 +13,11 @@ google_question = "https://google.com/search?q="
 question_number = total_question = 0
 from database import db
 order = ["１", "２", "３", "４", "５", "６", "７", "８", "９", "０"]
-ignore_options = ["the", "a", "of", "in", "&"]
+ignore_options = ["the", "a", "of", "in", "&",
+"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z",
+]
+replace_options = {"1": "one", "2": "two", "3": "three", "4": "four", "5": "five",
+					"6": "six", "7": "seven", "8": "eight", "9": "nine", "10": "ten"}
 
 class Websocket:
 	
