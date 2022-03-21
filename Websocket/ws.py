@@ -505,7 +505,7 @@ class Websocket:
 					pA = float("{:.2f}".format(advance_ratio))
 					self.pattern.append(str(ans_num))
 					await self.add_question(question, answer)
-					ans = (self.prize)/(advance_players)
+					ans = 0 if advance_players == 0 else (self.prize)/(advance_players)
 					payout = float("{:.2f}".format(ans))
 					embed = discord.Embed(
 						title = f"**Question {question_number} out of {total_question}**",
@@ -527,7 +527,7 @@ class Websocket:
 				"""Raised this event when Show the winners."""
 				data = json.loads(msg.data)
 				winners = int(data["winnerCount"])
-				ans = (self.prize)/(winners)
+				ans = 0 if winners == 0 else (self.prize)/(winners)
 				payout = float("{:.2f}".format(ans))
 				embed = discord.Embed(title = "**__Game Summary !__**",
 					description = f"**● Payout : ᛗ{payout}\n● Total Winners : {winners}\n● Prize Money : ᛗ{self.prize}**",
