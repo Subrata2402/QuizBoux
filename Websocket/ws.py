@@ -543,7 +543,8 @@ class Websocket:
 				for index, winner in enumerate(winners):
 					description += f"{'0' if index+1 < 10 else ''}{index+1} - {winner.get('user')}\n"
 				embed = discord.Embed(title = "List of Game Winners Name !",
-					description = f"```\n{description}\n```"
+					description = f"```\n{description}\n```",
+					color = discord.Colour.random()
 					)
 				await self.send_hook(embed = embed)
 				
