@@ -100,6 +100,8 @@ class Websocket:
 		count_options = {}
 		for choice in choices:
 			option = unidecode(choice["choice"]).strip()
+			_option = replace_options.get(option)
+			option = _option if _option else option
 			count_option = res.count(option.lower())
 			count_options[option] = count_option
 		max_count = max(list(count_options.values()))
@@ -127,6 +129,8 @@ class Websocket:
 			count_option = 0
 			options = tuple(unidecode(choice["choice"]).strip().split(" "))
 			for opt in options:
+				_option = replace_options.get(opt)
+				opt = _option if _option else opt
 				count = 0 if opt.lower() in ignore_options else res.count(opt.lower())
 				count_option += count
 				option += f"{opt}({count}) "
