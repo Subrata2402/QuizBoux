@@ -23,13 +23,12 @@ class Websocket:
 	
 	def __init__(self, client):
 		self.client = client
-		self.prize = 50 # Default prize money of quiz
+		self.prize = 500 # Default prize money of quiz
 		self.pattern = [] # Store answer pattern of the current quiz
 		self.web_url = "https://discord.com/api/webhooks/938473130568065135/BGawZsFeWa59epspDbywoJNX1t-rQ4hiJroj7A6-vyZ7ZBtOipZlLIWIXaEciR-y8f2I"
 		self.token = None
 		self.ws_is_opened = False
 		self.icon_url = "https://pbs.twimg.com/profile_images/1427270008531562496/xaq5Xlzg_400x400.jpg"
-		self.loop_is_active = False
 		self.game_id = None
 		self.partner_id = None
 		self.user_id = None
@@ -61,12 +60,7 @@ class Websocket:
 		"""Send message with Discord channel Webhook."""
 		async with aiohttp.ClientSession() as session:
 			webhook = discord.Webhook.from_url(self.web_url, adapter=discord.AsyncWebhookAdapter(session))
-			await webhook.send(
-				content = content,
-				embed = embed,
-				username = "Mimir Quiz",
-				avatar_url = self.icon_url
-				)
+			await webhook.send(content = content, embed = embed, username = "Mimir Quiz", avatar_url = self.icon_url)
 				
 	async def get_answer(self, question):
 		"""Take answer from the database if question found in db."""
