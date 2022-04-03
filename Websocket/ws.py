@@ -437,7 +437,7 @@ class Websocket:
 						#min_max_count = min_count if not_question else max_count
 						embed = discord.Embed(title=f"**__Special Searching Results !__**", color = discord.Colour.random())
 						embed.set_footer(text = "Don't see this result if question is not interlink to each other.")
-						embed.timestamp = datetime.datetime.utcnow()
+						#embed.timestamp = datetime.datetime.utcnow()
 						description = ""
 						for index, option in enumerate(count_options):
 							if max_count != 0 and count_options[option] == max_count:
