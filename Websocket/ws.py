@@ -445,7 +445,7 @@ class Websocket:
 							else:
 								description += f"{order[index]}. {option} : {count_options[option]}\n"
 						embed.description = f"**{description}**"
-						await self.send_hook(embed = embed)
+						if max_count != 0: await self.send_hook(embed = embed)
 					except Exception as e:
 						print(e)
 					
