@@ -36,6 +36,7 @@ class Websocket:
 		self.value = None # Entry Fee of the quiz
 		self.headers = None
 		self.game_active = None
+		self.searching_data = "Searching..."
 		
 	@property
 	def game_is_active(self):
@@ -91,6 +92,7 @@ class Websocket:
 		r = requests.get(question_url)
 		#soup = BeautifulSoup(r.text, "html.parser")
 		res = str(r.text).lower()
+		self.searching_data += res
 		count_options = {}
 		for choice in choices:
 			option = unidecode(choice["choice"]).strip()
@@ -419,6 +421,31 @@ class Websocket:
 					#Google Search Results 2
 					try:
 						await self.rating_search_two(google_question, choices, 1)
+					except Exception as e:
+						print(e)
+					
+					try:
+						count_options = {}
+						for choice in choices:
+							option = unidecode(choice["choice"]).strip()
+							_option = replace_options.get(option)
+							option = _option if _option else option
+							count_option = self.searching_data.count(option.lower())
+							count_options[option] = count_option
+						max_count = max(list(count_options.values()))
+						min_count = min(list(count_options.values()))
+						#min_max_count = min_count if not_question else max_count
+						embed = discord.Embed(title=f"**__Special Searching Results !__**", color = discord.Colour.random())
+						embed.set_footer(text = "Don't see this result if question is not interlink to each other.")
+						embed.timestamp = datetime.datetime.utcnow()
+						description = ""
+						for index, option in enumerate(count_options):
+							if max_count != 0 and count_options[option] == max_count:
+								description += f"{order[index]}. {option} : {count_options[option]} ✅\n"
+							else:
+								description += f"{order[index]}. {option} : {count_options[option]}\n"
+						embed.description = f"**{description}**"
+						await self.send_hook(embed = embed)
 					except Exception as e:
 						print(e)
 					
