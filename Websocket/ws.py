@@ -251,7 +251,7 @@ class Websocket:
 					embed.set_thumbnail(url = self.icon_url)
 					await self.send_hook(embed = embed)
 
-	async def get_access_token(self):
+	async def get_access_token(self, token = None):
 		"""Fetch access token to pass the authorization token.
 		It's need for get the host of the live quiz api url."""
 		await self.get_quiz_details() # To run this function take partner id of the quiz
@@ -267,7 +267,7 @@ class Websocket:
 			"accept-encoding": "gzip, deflate, br",
 			"accept-language": "en-US,en;q=0.9,bn;q=0.8,hi;q=0.7"
 		}
-		post_data = json.dumps({"mimir":{"accessToken": self.token}})
+		post_data = json.dumps({"mimir":{"accessToken": token if token else self.token}})
 		async with aiohttp.ClientSession() as session:
 			async with session.post(url = url, headers = headers, data = post_data) as response:
 				if response.status != 200:
