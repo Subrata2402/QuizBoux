@@ -71,6 +71,8 @@ class MimirQuiz(commands.Cog, Websocket):
         if not token: return
         await ctx.message.delete()
         token = token.strip("Bearer").strip()
+        await self.get_quiz_details()
+        await self.get_access_token(token)
         update = {"token": token}
         db.token.update_one({"id": "3250"}, {"$set": update})
         await self.send_hook("**Token Successfully Updated!**")
