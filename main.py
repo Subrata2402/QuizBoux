@@ -21,7 +21,7 @@ class MimirQuiz(commands.Cog, Websocket):
     async def addtoken(self, ctx, *, token = None):
         """Update Token."""
         if not token: return await ctx.reply(ctx.author.mention + ", You didn't enter token.")
-        await ctx.message.delete()
+        
         ws = Websocket(ctx.guild.id)
         web_url = await ws.get_web_url()
         if not web_url: return await ctx.reply(ctx.author.mention + ", You didn't setup any channel for Mimir Quiz.")
@@ -31,7 +31,7 @@ class MimirQuiz(commands.Cog, Websocket):
         update = {"token": token}
         db.mimir_details.update_one({"guild_id": ctx.guild.id}, {"$set": update})
         await ws.send_hook("**Token Successfully Updated!**")
-            
+        await ctx.message.delete()
         
     @commands.command(aliases = ["quiz", "mimir"])
     async def nextquiz(self, ctx, game_num:int = 1):
