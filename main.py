@@ -23,7 +23,7 @@ class MimirQuiz(commands.Cog, Websocket):
         if not token: return await ctx.reply(ctx.author.mention + ", You didn't enter token.")
         ws = Websocket(ctx.guild.id)
         web_url = await ws.get_web_url()
-        if not web_url: return await ctx.reply(ctx.author.mention + ", You didn't setup any channel for Mimir Quiz.")
+        if not web_url: return await ctx.reply(ctx.author.mention + ", Channel not setup for Mimir Quiz.")
         token = token.strip("Bearer").strip()
         await ws.get_quiz_details()
         await ws.get_access_token(token)
@@ -37,12 +37,14 @@ class MimirQuiz(commands.Cog, Websocket):
         """Get next quiz details."""
         ws = Websocket(ctx.guild.id)
         web_url = await ws.get_web_url()
-        if not web_url: return await ctx.reply(ctx.author.mention + ", You didn't setup any channel for Mimir Quiz.")
+        if not web_url: return await ctx.reply(ctx.author.mention + ", Channel not setup for Mimir Quiz.")
         await ws.get_quiz_details(get_type = "send", game_num = game_num)
     
     @commands.command(aliases = ["open"])
     async def start(self, ctx):
         """Start Websocket."""
+        if "Mimir Access" not in [role.name for role in ctx.author.roles]:
+            return await ctx.reply(ctx.author.mention + ", You need `Mimir Access` role to run this command!")
         ws = Websocket(ctx.guild.id)
         web_url = await ws.get_web_url()
         if not web_url: return await ctx.reply(ctx.author.mention + ", You didn't setup any channel for Mimir Quiz.")
@@ -55,6 +57,8 @@ class MimirQuiz(commands.Cog, Websocket):
     @commands.command()
     async def close (self, ctx):
         """Close Websocket."""
+        if "Mimir Access" not in [role.name for role in ctx.author.roles]:
+            return await ctx.reply(ctx.author.mention + ", You need `Mimir Access` role to run this command!")
         ws = Websocket(ctx.guild.id)
         web_url = await ws.get_web_url()
         if not web_url: return await ctx.reply(ctx.author.mention + ", You didn't setup any channel for Mimir Quiz.")
@@ -66,6 +70,8 @@ class MimirQuiz(commands.Cog, Websocket):
     @commands.command()
     async def setup(self, ctx, channel: discord.TextChannel = None):
         """Get how many questions has stored in database."""
+        if not ctx.author.guild_permission.administrator:
+            return await ctx.reply(ctx.author.mention + ", You don't have enough permission to run this command!")
         if not channel: return await ctx.reply(ctx.author.mention + ", You didn't mention any channel.")
         webhook = await channel.create_webhook(name = "Mimir Quiz")
         check = db.mimir_details.find_one({"guild_id": ctx.guild.id})
