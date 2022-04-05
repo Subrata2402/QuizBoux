@@ -61,6 +61,7 @@ class Websocket:
 		    return token
 		token = token.get("token")
 		self.token = token
+		return token
 
 	async def get_web_url(self):
 		web_url = db.mimir_details.find_one({"guild_id": self.guild_id})
@@ -69,6 +70,7 @@ class Websocket:
 		    return web_url
 		web_url = web_url.get("web_url")
 		self.web_url = web_url
+		return web_url
 
 	async def send_hook(self, content = "", embed = None):
 		"""Send message with Discord channel Webhook."""
