@@ -55,13 +55,13 @@ class Websocket:
 
 	async def get_token(self):
 		"""Take Authorization Bearer Token from the database."""
-		token = db.token.find_one({"guild_id": self.guild_id})
+		token = db.mimir_details.find_one({"guild_id": self.guild_id})
 		if not token: return self.token = token
 		token = token.get("token")
 		self.token = token
 
 	async def get_web_url(self):
-		web_url = db.web_url.find_one({"guild_id": self.guild_id})
+		web_url = db.mimir_details.find_one({"guild_id": self.guild_id})
 		if not web_url: return self.web_url = web_url
 		web_url = web_url.get("web_url")
 		self.web_url = web_url
