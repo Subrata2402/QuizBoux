@@ -21,7 +21,6 @@ class MimirQuiz(commands.Cog, Websocket):
     async def addtoken(self, ctx, *, token = None):
         """Update Token."""
         if not token: return await ctx.reply(ctx.author.mention + ", You didn't enter token.")
-        
         ws = Websocket(ctx.guild.id)
         web_url = await ws.get_web_url()
         if not web_url: return await ctx.reply(ctx.author.mention + ", You didn't setup any channel for Mimir Quiz.")
