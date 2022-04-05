@@ -21,7 +21,8 @@ replace_options = {"1": "one", "2": "two", "3": "three", "4": "four", "5": "five
 
 class Websocket:
 	
-	def __init__(self, client):
+	def __init__(self, client, guild_id):
+		self.guild_id = guild_id
 		self.client = client
 		self.prize = 500 # Default prize money of quiz
 		self.pattern = [] # Store answer pattern of the current quiz
@@ -55,7 +56,7 @@ class Websocket:
 
 	async def get_token(self):
 		"""Take Authorization Bearer Token from the database."""
-		token = db.token.find_one({"id": "3250"})["token"]
+		token = db.token.find_one({"guild_id": self.guild_id}).get("token")
 		self.token = token
 
 	async def send_hook(self, content = "", embed = None):
@@ -65,30 +66,7 @@ class Websocket:
 				webhook = discord.Webhook.from_url(web_url, adapter=discord.AsyncWebhookAdapter(session))
 				await webhook.send(content = content, embed = embed, username = "Mimir Quiz", avatar_url = self.icon_url)
 				
-	async def get_answer(self, question):
-		"""Take answer from the database if question found in db."""
-		question = db.question_base.find_one({"question": question})
-		if not question:
-			return None
-		answer = question.get("answer")
-		return answer
 
-	async def update_question(self, question, answer):
-		"""Update answer if question found but answer not found."""
-		question = db.question_base.find_one({"question": question})
-		if question:
-			update = {"answer": answer}
-			db.question_base.update_one({"question": question}, {"$set", update})
-
-	async def add_question(self, question, answer):
-		"""Add Question in the database for the repeated questions."""
-		# check if question is in the database
-		check = db.question_base.find_one({"question": question})
-		if not check:
-			# insert question and answer if question not in databse
-			db.question_base.insert_one({"question": question, "answer": answer})
-			return True
-		return False
 
 	async def rating_search_one(self, question_url, choices, index):
 		r = requests.get(question_url)
@@ -405,14 +383,6 @@ class Websocket:
 					embed.set_footer(text = f"Response Time : {response_time} secs | Points : {point_value}")
 					await self.send_hook(embed = embed)
 					
-					answer = await self.get_answer(question)
-					answer_send = False
-					if answer:
-						for index, choice in enumerate(choices):
-							if unidecode(answer).lower() == str(unidecode(choice["choice"])).strip().lower():
-								await self.send_hook(embed = discord.Embed(title = f"**__Option {order[index]}. {answer}__**", color = discord.Colour.random()))
-								answer_send = True
-						if not answer_send: await self.send_hook(embed = discord.Embed(title = f"**__{answer}__**", color = discord.Colour.random()))
 					
 					# Google Search Results 1
 					try:
@@ -506,7 +476,6 @@ class Websocket:
 					pE = float("{:.2f}".format(total_ratio - advance_ratio))
 					pA = float("{:.2f}".format(advance_ratio))
 					self.pattern.append(str(ans_num))
-					await self.add_question(question, answer)
 					ans = 0 if advance_players == 0 else (self.prize)/(advance_players)
 					payout = float("{:.2f}".format(ans))
 					embed = discord.Embed(
