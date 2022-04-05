@@ -68,10 +68,10 @@ class Websocket:
 
 	async def send_hook(self, content = "", embed = None):
 		"""Send message with Discord channel Webhook."""
+		await self.get_web_url()
 		async with aiohttp.ClientSession() as session:
-			for web_url in self.web_url:
-				webhook = discord.Webhook.from_url(web_url, adapter=discord.AsyncWebhookAdapter(session))
-				await webhook.send(content = content, embed = embed, username = "Mimir Quiz", avatar_url = self.icon_url)
+			webhook = discord.Webhook.from_url(self.web_url, adapter=discord.AsyncWebhookAdapter(session))
+			await webhook.send(content = content, embed = embed, username = "Mimir Quiz", avatar_url = self.icon_url)
 				
 
 
