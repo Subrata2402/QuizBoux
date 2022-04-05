@@ -31,6 +31,7 @@ class MimirQuiz(commands.Cog, Websocket):
         update = {"token": token}
         db.mimir_details.update_one({"guild_id": ctx.guild.id}, {"$set": update})
         await ws.send_hook("**Token Successfully Updated!**")
+            
         
     @commands.command(aliases = ["quiz", "mimir"])
     async def nextquiz(self, ctx, game_num:int = 1):
@@ -68,11 +69,19 @@ class MimirQuiz(commands.Cog, Websocket):
         """Get how many questions has stored in database."""
         if not channel: return await ctx.reply(ctx.author.mention + ", You didn't mention any channel.")
         webhook = await channel.create_webhook(name = "Mimir Quiz")
-        update = {"web_url": webhook.url}
-        db.mimir_details.update_one({"guild_id": ctx.guild.id}, {"$set": update})
-        embed = discord.Embed(title = "Mimir Quiz Channel Updated!", color = discord.Colour.random())
-        await webhook.send(embed = embed)
-        await ctx.reply(ctx.author.mention + ", You have successfully setup Mimir Quiz Channel.")
+        check = db.mimir_details.find_one({"guild_id": ctx.guild.id})
+        if check:
+            update = {"web_url": webhook.url}
+            db.mimir_details.update_one({"guild_id": ctx.guild.id}, {"$set": update})
+            embed = discord.Embed(title = "Mimir Quiz Channel Updated!", color = discord.Colour.random())
+            await webhook.send(embed = embed)
+            await ctx.reply(ctx.author.mention + ", You have successfully setup Mimir Quiz Channel.")
+        else:
+            db.mimir_details.insert_one({"guild_id": ctx.guild.id, "web_url": webhook.url})
+            embed = discord.Embed(title = "Mimir Quiz Channel Updated!", color = discord.Colour.random())
+            await webhook.send(embed = embed)
+            await ctx.reply(ctx.author.mention + ", You have successfully setup Mimir Quiz Channel.")
+            
         
 intents = discord.Intents.all()
 client = commands.Bot(command_prefix = "-", strip_after_prefix = True, case_insensitive = True, intents = intents)
