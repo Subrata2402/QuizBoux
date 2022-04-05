@@ -21,7 +21,7 @@ replace_options = {"1": "one", "2": "two", "3": "three", "4": "four", "5": "five
 
 class Websocket:
 	
-	def __init__(self, client, guild_id):
+	def __init__(self, guild_id, client = None):
 		self.guild_id = guild_id
 		self.client = client
 		self.prize = 500 # Default prize money of quiz
