@@ -77,7 +77,7 @@ class MimirQuiz(commands.Cog, Websocket):
             await webhook.send(embed = embed)
             await ctx.reply(ctx.author.mention + ", You have successfully setup Mimir Quiz Channel.")
         else:
-            db.mimir_details.insert_one({"guild_id": ctx.guild.id, "web_url": webhook.url})
+            db.mimir_details.insert_one({"guild_id": ctx.guild.id, "web_url": webhook.url, "token": None})
             embed = discord.Embed(title = "Mimir Quiz Channel Updated!", color = discord.Colour.random())
             await webhook.send(embed = embed)
             await ctx.reply(ctx.author.mention + ", You have successfully setup Mimir Quiz Channel.")
