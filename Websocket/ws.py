@@ -26,10 +26,9 @@ class Websocket:
 		self.client = client
 		self.prize = 500 # Default prize money of quiz
 		self.pattern = [] # Store answer pattern of the current quiz
-		self.web_url = ["https://discord.com/api/webhooks/938473130568065135/BGawZsFeWa59epspDbywoJNX1t-rQ4hiJroj7A6-vyZ7ZBtOipZlLIWIXaEciR-y8f2I",
-						"https://discord.com/api/webhooks/960107009338933298/Q-bq3nTzhuxWUzCX-Es4OX4Ob1ONk3MfUu8NlAqriNeqCF2_Wi9FZT1TaEygqkc7X2hf"]
 		self.token = None
 		self.ws_is_opened = False
+		self.web_url = None
 		self.icon_url = "https://pbs.twimg.com/profile_images/1427270008531562496/xaq5Xlzg_400x400.jpg"
 		self.game_id = None
 		self.partner_id = None
@@ -56,8 +55,16 @@ class Websocket:
 
 	async def get_token(self):
 		"""Take Authorization Bearer Token from the database."""
-		token = db.token.find_one({"guild_id": self.guild_id}).get("token")
+		token = db.token.find_one({"guild_id": self.guild_id})
+		if not token: return self.token = token
+		token = token.get("token")
 		self.token = token
+
+	async def get_web_url(self):
+		web_url = db.web_url.find_one({"guild_id": self.guild_id})
+		if not web_url: return self.web_url = web_url
+		web_url = web_url.get("web_url")
+		self.web_url = web_url
 
 	async def send_hook(self, content = "", embed = None):
 		"""Send message with Discord channel Webhook."""
