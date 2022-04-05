@@ -16,6 +16,12 @@ class MimirQuiz(commands.Cog, Websocket):
         game = discord.Streaming(name = "with Mimir Quiz!", url = "https://app.mimirquiz.com")
         await self.client.change_presence(activity=game)
         
+    @commands.command()
+    async def invite(self, ctx):
+        embed = discord.Embed(title = "Invite me to your server.",
+            url = f"https://discord.com/api/oauth2/authorize?client_id={self.client.user.id}&permissions=523376&scope=bot",
+            color = discord.Colour.random())
+        await ctx.reply(content = ctx.author.mention, embed = embed)
     
     @commands.command()
     async def addtoken(self, ctx, *, token = None):
