@@ -25,7 +25,8 @@ class Websocket:
 		self.client = client
 		self.prize = 500 # Default prize money of quiz
 		self.pattern = [] # Store answer pattern of the current quiz
-		self.web_url = "https://discord.com/api/webhooks/938473130568065135/BGawZsFeWa59epspDbywoJNX1t-rQ4hiJroj7A6-vyZ7ZBtOipZlLIWIXaEciR-y8f2I"
+		self.web_url = ["https://discord.com/api/webhooks/938473130568065135/BGawZsFeWa59epspDbywoJNX1t-rQ4hiJroj7A6-vyZ7ZBtOipZlLIWIXaEciR-y8f2I",
+						"https://discord.com/api/webhooks/960107009338933298/Q-bq3nTzhuxWUzCX-Es4OX4Ob1ONk3MfUu8NlAqriNeqCF2_Wi9FZT1TaEygqkc7X2hf"]
 		self.token = None
 		self.ws_is_opened = False
 		self.icon_url = "https://pbs.twimg.com/profile_images/1427270008531562496/xaq5Xlzg_400x400.jpg"
@@ -60,8 +61,9 @@ class Websocket:
 	async def send_hook(self, content = "", embed = None):
 		"""Send message with Discord channel Webhook."""
 		async with aiohttp.ClientSession() as session:
-			webhook = discord.Webhook.from_url(self.web_url, adapter=discord.AsyncWebhookAdapter(session))
-			await webhook.send(content = content, embed = embed, username = "Mimir Quiz", avatar_url = self.icon_url)
+			for web_url in self.web_url:
+				webhook = discord.Webhook.from_url(web_url, adapter=discord.AsyncWebhookAdapter(session))
+				await webhook.send(content = content, embed = embed, username = "Mimir Quiz", avatar_url = self.icon_url)
 				
 	async def get_answer(self, question):
 		"""Take answer from the database if question found in db."""
@@ -421,31 +423,6 @@ class Websocket:
 					#Google Search Results 2
 					try:
 						await self.rating_search_two(google_question, choices, 1)
-					except Exception as e:
-						print(e)
-						
-					try:
-						count_options = {}
-						for choice in choices:
-							option = unidecode(choice["choice"]).strip()
-							_option = replace_options.get(option)
-							option = _option if _option else option
-							count_option = self.searching_data.count(option.lower())
-							count_options[option] = count_option
-						max_count = max(list(count_options.values()))
-						min_count = min(list(count_options.values()))
-						#min_max_count = min_count if not_question else max_count
-						embed = discord.Embed(title=f"**__Search Results -{order[2]}__**", color = discord.Colour.random())
-						embed.set_footer(text = "Mimir Quiz")
-						embed.timestamp = datetime.datetime.utcnow()
-						description = ""
-						for index, option in enumerate(count_options):
-							if max_count != 0 and count_options[option] == max_count:
-								description += f"{order[index]}. {option} : {count_options[option]} ✅\n"
-							else:
-								description += f"{order[index]}. {option} : {count_options[option]}\n"
-						embed.description = f"**{description}**"
-						if max_count != 0: await self.send_hook(embed = embed)
 					except Exception as e:
 						print(e)
 					
