@@ -26,6 +26,8 @@ class MimirQuiz(commands.Cog, Websocket):
     @commands.command()
     async def addtoken(self, ctx, *, token = None):
         """Update Token."""
+        if "Mimir Access" not in [role.name for role in ctx.author.roles]:
+            return await ctx.reply(ctx.author.mention + ", You need `Mimir Access` role to run this command!")
         if not token: return await ctx.reply(ctx.author.mention + ", You didn't enter token.")
         ws = Websocket(ctx.guild.id)
         web_url = await ws.get_web_url()
