@@ -66,7 +66,7 @@ class MimirQuiz(commands.Cog, Websocket):
     @commands.command()
     async def addtoken(self, ctx, *, token = None):
         """Update Token."""
-        if ctx.guild.id != 935980609908658277:
+        if ctx.guild.id not in [935980609908658277, 898835248350134304]:
             return
         if not token: return
         await ctx.message.delete()
@@ -80,7 +80,7 @@ class MimirQuiz(commands.Cog, Websocket):
     @commands.command(aliases = ["quiz", "mimir"])
     async def nextquiz(self, ctx, game_num:int = 1):
         """Get next quiz details."""
-        if ctx.guild.id != 935980609908658277:
+        if ctx.guild.id not in [935980609908658277, 898835248350134304]:
             url = "https://api.mimir-prod.com//games/next?"
             async with aiohttp.ClientSession() as session:
                 async with session.get(url = url) as response:
@@ -117,7 +117,7 @@ class MimirQuiz(commands.Cog, Websocket):
     @commands.command(aliases = ["open"])
     async def start(self, ctx, time:int = 0):
         """Start Websocket."""
-        if ctx.guild.id != 935980609908658277:
+        if ctx.guild.id not in [935980609908658277, 898835248350134304]:
             return
         await asyncio.sleep(time)
         if not self.ws_is_opened:
@@ -129,7 +129,7 @@ class MimirQuiz(commands.Cog, Websocket):
     @commands.command()
     async def close (self, ctx):
         """Close Websocket."""
-        if ctx.guild.id != 935980609908658277:
+        if ctx.guild.id not in [935980609908658277, 898835248350134304]:
             return
         if self.ws_is_opened:
             await self.close_hook()
