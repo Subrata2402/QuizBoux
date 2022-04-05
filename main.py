@@ -70,7 +70,7 @@ class MimirQuiz(commands.Cog, Websocket):
     @commands.command()
     async def setup(self, ctx, channel: discord.TextChannel = None):
         """Get how many questions has stored in database."""
-        if not ctx.author.guild_permission.administrator:
+        if not ctx.author.guild_permissions.administrator:
             return await ctx.reply(ctx.author.mention + ", You don't have enough permission to run this command!")
         if not channel: return await ctx.reply(ctx.author.mention + ", You didn't mention any channel.")
         webhook = await channel.create_webhook(name = "Mimir Quiz")
