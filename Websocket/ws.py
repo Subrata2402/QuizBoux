@@ -331,32 +331,32 @@ class Websocket:
 			try:
 				async for event in event_source:
 					self.ws_is_opened = True
-					event = event.event
+					print(event.event)
 					print(event.data)
 					if self.ws_is_opened == False:
 						"""For close socket."""
 						return
 					
-					if event == "GameStatus":
+					if event.event == "GameStatus":
 						"""Game status event when connect socket successfully it shows the current status of the quiz."""
 						await self.send_hook("**Websocket is Connected Successfully!**")
 		
-					elif event == "ViewCountUpdate":
+					elif event.event == "ViewCountUpdate":
 						"""Live users update event."""
 						data = json.loads(event.data)
 						count = data.get("viewCnt")
 						await self.send_hook(embed = discord.Embed(title = f"🔴 Total Lives : {count} Users", color = discord.Colour.random()))
 					
-					elif event == "GameUpdate":
+					elif event.event == "GameUpdate":
 						"""When the Game will update like as rewards."""
 						data = json.loads(event.data)
 						self.prize = data["reward"]
 		
-					elif event == "GameReset":
+					elif event.event == "GameReset":
 						"""When the game was reset."""
 						await self.send_hook(embed = discord.Embed(title = "The Game has Reset!", color = discord.Colour.random()))
 		
-					elif event == "QuestionStart":
+					elif event.event == "QuestionStart":
 						"""Question start event when question coming up on the mobile screen."""
 						global google_question, question_number, total_question
 						data = json.loads(event.data)
@@ -459,12 +459,12 @@ class Websocket:
 							except Exception as e:
 								print(e)
 		
-					elif event == "QuestionEnd":
+					elif event.event == "QuestionEnd":
 						"""Raised when the question has ended!"""
 						embed = discord.Embed(title = "Question has Ended!", color = discord.Colour.random())
 						await self.send_hook(embed = embed)
 		
-					elif event == "QuestionResult":
+					elif event.event == "QuestionResult":
 						"""Raised when show the result of the question."""
 						data = json.loads(event.data)
 						question = str(data["question"]).strip()
@@ -504,7 +504,7 @@ class Websocket:
 							embed.set_thumbnail(url = self.icon_url)
 							await self.send_hook(embed = embed)
 		
-					elif event == "GameWinners":
+					elif event.event == "GameWinners":
 						"""Raised this event when Show the winners."""
 						data = json.loads(event.data)
 						winners = int(data["winnerCount"])
@@ -529,7 +529,7 @@ class Websocket:
 							)
 						await self.send_hook(embed = embed)
 						
-					elif event == "GameEnded":
+					elif event.event == "GameEnded":
 						"""When game has ended, raise this event."""
 						embed = discord.Embed(title = "**__Game has Ended !__**",
 							description = "**Thanks for playing!**", color = discord.Colour.random()
