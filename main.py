@@ -18,6 +18,7 @@ class MimirQuiz(commands.Cog, Websocket):
         
     @commands.command()
     async def invite(self, ctx):
+        """Get an invite link of bot."""
         embed = discord.Embed(title = "Invite me to your server.",
             url = f"https://discord.com/api/oauth2/authorize?client_id={self.client.user.id}&permissions=523376&scope=bot",
             color = discord.Colour.random())
@@ -25,7 +26,7 @@ class MimirQuiz(commands.Cog, Websocket):
     
     @commands.command()
     async def addtoken(self, ctx, *, token = None):
-        """Update Token."""
+        """Add or update Token."""
         if "Mimir Access" not in [role.name for role in ctx.author.roles]:
             return await ctx.reply(ctx.author.mention + ", You need `Mimir Access` role to run this command!")
         if not token: return await ctx.reply(ctx.author.mention + ", You didn't enter token.")
@@ -77,7 +78,7 @@ class MimirQuiz(commands.Cog, Websocket):
         
     @commands.command()
     async def setup(self, ctx, channel: discord.TextChannel = None):
-        """Get how many questions has stored in database."""
+        """Setup mimir quiz channel."""
         if not ctx.author.guild_permissions.administrator:
             return await ctx.reply(ctx.author.mention + ", You don't have enough permission to run this command!")
         if not channel: return await ctx.reply(ctx.author.mention + ", You didn't mention any channel.")
@@ -99,7 +100,6 @@ class MimirQuiz(commands.Cog, Websocket):
 intents = discord.Intents.all()
 client = commands.Bot(command_prefix = "-", strip_after_prefix = True, case_insensitive = True, intents = intents)
 client.add_cog(MimirQuiz(client))
-client.remove_command("help")
 
 @client.event
 async def on_message(message):
