@@ -13,7 +13,7 @@ class MimirQuiz(commands.Cog, Websocket):
     @commands.Cog.listener()
     async def on_ready(self):
         print("Ready!")
-        game = discord.Streaming(name = "with Mimir Quiz!", url = "https://app.mimirquiz.com")
+        game = discord.Streaming(name = f"with Mimir Quiz in {str(len(self.client.guilds))} guilds", url = "https://app.mimirquiz.com")
         await self.client.change_presence(activity=game)
         
     @commands.command()
@@ -104,7 +104,7 @@ client.add_cog(MimirQuiz(client))
 @client.event
 async def on_message(message):
     if not message.guild:
-        return #await messag 08e.channel.send("**You cannot be used me in private messages.**")
+        return #await message.channel.send("**You cannot be used me in private messages.**")
     await client.process_commands(message)
             
 client.run("Nzk5NDY4ODE4Mzc1NjM5MDUw.YAEBWw.Qt4OvfOh7YZhH5hPoQzd7iatWGc")
