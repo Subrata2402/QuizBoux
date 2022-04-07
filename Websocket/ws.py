@@ -583,5 +583,6 @@ class Websocket:
 					)
 				await self.send_hook(embed = embed)
 				self.pattern.clear() # Clear answer pattern.
+				self.searching_data = ""
 				await self.close_hook() # Socket Close automatically when the game was ended.
 				return
