@@ -19,7 +19,7 @@ ignore_options = ["the", "of", "in", "&", "on", "for", "or", "it", "to", "at", "
 replace_options = {"1": "one", "2": "two", "3": "three", "4": "four", "5": "five",
 					"6": "six", "7": "seven", "8": "eight", "9": "nine", "10": "ten"}
 
-class Websocket(object):
+class Websocket:
 	
 	def __init__(self, guild_id, client = None):
 		self.guild_id = guild_id
