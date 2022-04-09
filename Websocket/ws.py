@@ -271,11 +271,6 @@ class Websocket:
 			"Accept-Encoding": "gzip, deflate, br",
 			"Accept-Language": "en-US,en;q=0.9,bn;q=0.8,hi;q=0.7"
 		}
-		try:
-			async for event in aiosseclient(url = url, headers = headers):
-				await self.send_hook(event)
-		except Exception as e:
-			print(e)
 		try: # try to connect sseclient
 			messages = SSEClient(url, headers = headers)
 		except:
