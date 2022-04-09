@@ -273,7 +273,7 @@ class Websocket:
 		}
 		try:
 			async for event in aiosseclient(url = url, headers = headers):
-				await self.send_hook("=====================")
+				await self.send_hook(event)
 		except:
 			pass
 		try: # try to connect sseclient
