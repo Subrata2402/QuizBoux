@@ -4,6 +4,7 @@ import discord
 from discord.ext import commands
 import datetime
 from sseclient import SSEClient
+from aiosseclient import aiosseclient
 import aiohttp
 import asyncio
 import re
@@ -270,6 +271,11 @@ class Websocket:
 			"Accept-Encoding": "gzip, deflate, br",
 			"Accept-Language": "en-US,en;q=0.9,bn;q=0.8,hi;q=0.7"
 		}
+		try:
+			async for event in aiosseclient(url = url, headers = headers):
+				await self.send_hook("=====================")
+		except:
+			pass
 		try: # try to connect sseclient
 			messages = SSEClient(url, headers = headers)
 		except:
