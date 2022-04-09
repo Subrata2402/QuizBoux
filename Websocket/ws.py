@@ -36,7 +36,6 @@ class Websocket:
 		self.user_id = None
 		self.bearer_token = None
 		self.value = None # Entry Fee of the quiz
-		self.headers = None
 		self.game_active = None
 		self.searching_data = "Searching..."
 		
@@ -141,18 +140,6 @@ class Websocket:
 		await self.get_token() # Take token from the database
 		#url = "https://api.mimir-prod.com//games/list?type=both"
 		url = "https://api.mimir-prod.com//games/next?"
-		headers = {
-			"host": "api.mimir-prod.com",
-			"authorization": f"Bearer {self.token}",
-			"user-agent": "Mozilla/5.0 (Linux; Android 10; RMX1827) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.99 Mobile Safari/537.36",
-			"content-type": "application/json",
-			"accept": "*/*",
-			"origin": "https://app.mimirquiz.com",
-			"referer": "https://app.mimirquiz.com/",
-			"accept-encoding": "gzip, deflate, br",
-			"accept-language": "en-US,en;q=0.9,bn;q=0.8,hi;q=0.7"
-		}
-		self.headers = headers
 		async with aiohttp.ClientSession() as session:
 			async with session.get(url = url) as response:
 				if response.status != 200:
