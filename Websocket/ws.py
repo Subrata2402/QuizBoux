@@ -364,7 +364,7 @@ class Websocket:
 						max_count = max(list(count_options.values()))
 						min_count = min(list(count_options.values()))
 						#min_max_count = min_count if not_question else max_count
-						embed = discord.Embed(title=f"**__Search Results -{order[index]}__**", color = discord.Colour.random())
+						embed = discord.Embed(title=f"**__Search Results -{order[2]}__**", color = discord.Colour.random())
 						embed.set_footer(text = "Mimir Quiz")
 						embed.timestamp = datetime.datetime.utcnow()
 						description = ""
