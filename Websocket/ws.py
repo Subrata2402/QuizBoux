@@ -78,8 +78,6 @@ class Websocket:
 		async with aiohttp.ClientSession() as session:
 			webhook = discord.Webhook.from_url(self.web_url, adapter=discord.AsyncWebhookAdapter(session))
 			await webhook.send(content = content, embed = embed, username = "Mimir Quiz", avatar_url = self.icon_url)
-				
-
 
 	async def rating_search_one(self, question_url, choices, index):
 		r = requests.get(question_url)
@@ -136,59 +134,6 @@ class Websocket:
 				description += f"{order[index]}. {option}: {count_options[option]}\n"
 		embed.description = f"**{description}**"
 		await self.send_hook(embed = embed)
-				
-	async def send_answer(self, host, headers, data, answer):
-		question_id = data["questionId"]
-		game_id = data["gameId"]
-		choices = data["choices"]
-		response_time = data["secondsToRespond"]
-		#await self.send_hook(embed = discord.Embed(title = f"Send Your Answer within {response_time} seconds.", color = discord.Colour.random()))
-		choice_id = choices[answer - 1]["id"]
-		url = f"https://{host}/v2/games/{game_id}/questions/{question_id}/responses?choiceId={choice_id}"
-		await asyncio.sleep(2)
-		async with aiohttp.ClientSession() as session:
-			async with session.post(url = url, headers = headers, data = None) as response:
-				if response.status != 200:
-					return await self.send_hook("**Failed to send your answer!**")
-				r = await response.json()
-				success = r.get("success")
-				if success:
-					print("Answer Sent.")
-					#await self.send_hook(embed = discord.Embed(title = f"Successfully Send your answer!", color = discord.Colour.random()))
-				else:
-					print("Failed to send answer.")
-					#await self.send_hook(embed = discord.Embed(title = f"Failed to send your answer!", color = discord.Colour.random()))
-				
-	async def pay_fees(self):
-		"""Pay fees in the paid games."""
-		url = "https://api.mimir-prod.com/games/pay-fee"
-		await self.get_quiz_details()
-		data = json.dumps({
-			"transaction": {
-				"target": "0x129fcc3ee291d7FBc49a7019E8ED266C0A998969",
-				"to": "0x12EC9533b84546c384DA2476536F1DfC1D527459",
-				"value": "50000000000000000000",
-				"deadline": 1645528721,
-				"v": 28,
-				"r": "0x290a2696b2cdecc923b95c81641d492fc83b59e45eaa61212975e99f9fdb8b22",
-				"s": "0x258e425cb5787d443138ea8465b741209393a321456e47f568b45b07d9fae4da"
-				},
-			"game_id": self.game_id
-			})
-		async with aiohttp.ClientSession() as session:
-			async with session.post(url = url, headers = self.headers, data = data) as response:
-				if response.status != 200:
-					await self.send_hook("**The Token has Expired!**")
-					raise commands.CommandError("Pay Fees Error...!")
-				r = await response.json()
-				success = r["data"]["success"] # Return True if success else False
-				if success:
-					print("Fee Paid!")
-					#await self.send_hook("**Fee Successfully Paid!**")
-					#await self.send_hook(f"```\n{r}\n```")
-				else:
-					print("Failed to pay fee.")
-					#await self.send_hook("**Something wrong in 117 line!**")
 				
 	async def get_quiz_details(self, get_type = None, game_num:int = 1):
 		"""Get quiz details and take game_id, partner_id, prize money etc."""
