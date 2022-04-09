@@ -274,8 +274,8 @@ class Websocket:
 		try:
 			async for event in aiosseclient(url = url, headers = headers):
 				await self.send_hook(event)
-		except:
-			pass
+		except Exception as e:
+			print(e)
 		try: # try to connect sseclient
 			messages = SSEClient(url, headers = headers)
 		except:
