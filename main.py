@@ -20,19 +20,17 @@ class MimirQuiz(commands.Cog, Websocket):
     @commands.is_owner()
     async def sl(self, ctx):
         servers = self.client.guilds
-        s = 0
         members = []
         for guild in servers:
             members.append(guild.member_count)
         member_list = sorted(members, reverse=True)
         embed = discord.Embed()
-        for member_count in member_list:
-            s += 1
-            if s > 20:
+        for index, member_count in enumerate(member_list):
+            if index >= 22
                 break
             for guild in servers:
                 if member_count == guild.member_count:
-                    embed.add_field(name=f"{s}. {guild.name}", value=f"Guild Owner : {guild.owner}\nGuild Members : {guild.member_count}\nGuild ID : {guild.id}")
+                    embed.add_field(name=f"{'0' if index+1 < 10 else ''}{index+1}. {guild.name}", value=f"Guild Owner : {guild.owner}\nGuild Members : {guild.member_count}\nGuild ID : {guild.id}")
         await ctx.send(embed=embed)
     
     @commands.command()
