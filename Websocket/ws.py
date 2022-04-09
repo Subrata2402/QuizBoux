@@ -395,15 +395,6 @@ class Websocket:
 					embed.set_footer(text = f"Response Time : {response_time} secs | Points : {point_value}")
 					await self.send_hook(embed = embed)
 					
-					answer = await self.get_answer(question)
-					answer_send = False
-					if answer:
-						for index, choice in enumerate(choices):
-							if unidecode(answer).lower() == str(unidecode(choice["choice"])).strip().lower():
-								await self.send_hook(embed = discord.Embed(title = f"**__Option {order[index]}. {answer}__**", color = discord.Colour.random()))
-								answer_send = True
-						if not answer_send: await self.send_hook(embed = discord.Embed(title = f"**__{answer}__**", color = discord.Colour.random()))
-					
 					# Google Search Results 1
 					try:
 						await self.rating_search_one(google_question, choices, 0)
@@ -521,7 +512,6 @@ class Websocket:
 					pE = float("{:.2f}".format(total_ratio - advance_ratio))
 					pA = float("{:.2f}".format(advance_ratio))
 					self.pattern.append(str(ans_num))
-					await self.add_question(question, answer)
 					ans = 0 if advance_players == 0 else (self.prize)/(advance_players)
 					payout = float("{:.2f}".format(ans))
 					embed = discord.Embed(
