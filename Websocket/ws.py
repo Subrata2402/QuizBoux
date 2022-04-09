@@ -4,7 +4,7 @@ import discord
 from discord.ext import commands
 import datetime
 from sseclient import SSEClient
-from aiosseclient import aiosseclient
+from Websocket.aiosseclient import aiosseclient
 import aiohttp
 import asyncio
 import re
