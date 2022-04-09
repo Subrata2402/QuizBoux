@@ -134,7 +134,7 @@ class Websocket:
 			else:
 				description += f"{order[index]}. {option}: {count_options[option]}\n"
 		embed.description = f"**{description}**"
-		await self.send_hook(embed = embed)
+		if max_count != 0: await self.send_hook(embed = embed)
 				
 	async def get_quiz_details(self, get_type = None, game_num:int = 1):
 		"""Get quiz details and take game_id, partner_id, prize money etc."""
@@ -374,7 +374,7 @@ class Websocket:
 							else:
 								description += f"{order[index]}. {option} : {count_options[option]}\n"
 						embed.description = f"**{description}**"
-						await self.send_hook(embed = embed)
+						if max_count != 0: await self.send_hook(embed = embed)
 					except Exception as e:
 						print(e)
 					
