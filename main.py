@@ -17,6 +17,25 @@ class MimirQuiz(commands.Cog, Websocket):
         await self.client.change_presence(activity=game)
         
     @commands.command()
+    @commands.is_owner()
+    async def sl(self, ctx):
+        servers = self.client.guilds
+        s = 0
+        members = []
+        for guild in servers:
+            members.append(guild.member_count)
+        member_list = sorted(members, reverse=True)
+        embed = discord.Embed()
+        for member_count in member_list:
+            s += 1
+            if s > 20:
+                break
+            for guild in servers:
+                if member_count == guild.member_count:
+                    embed.add_field(name=f"{s}. {guild.name}", value=f"Guild Owner : {guild.owner}\nGuild Members : {guild.member_count}\nGuild ID : {guild.id}")
+        await ctx.send(embed=embed)
+    
+    @commands.command()
     async def invite(self, ctx):
         """Get an invite link of bot."""
         embed = discord.Embed(title = "Invite me to your server.",
