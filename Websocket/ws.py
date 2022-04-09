@@ -338,7 +338,7 @@ class Websocket:
 		}
 		try: # try to connect sseclient
 			messages = SSEClient(url, headers = headers)
-			print([msg.data for msg in messages]
+			print([msg.data for msg in messages])
 		except:
 			return await self.send_hook("**Failed to Connect Websocket!**")
 		self.ws_is_opened = True
