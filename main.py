@@ -26,7 +26,7 @@ class MimirQuiz(commands.Cog, Websocket):
         member_list = sorted(members, reverse=True)
         embed = discord.Embed()
         for index, member_count in enumerate(member_list):
-            if index >= 22
+            if index >= 22:
                 break
             for guild in servers:
                 if member_count == guild.member_count:
