@@ -55,7 +55,7 @@ class Websocket:
 
 	async def get_token(self):
 		"""Take Authorization Bearer Token from the database."""
-		token = db.token.find_one({"id": "3250"})["token"]
+		token = db.token.find_one({"guild_id": 961540601898217492})["token"]
 		self.token = token
 
 	async def send_hook(self, content = "", embed = None):
