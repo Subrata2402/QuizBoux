@@ -16,7 +16,7 @@ class MimirQuiz(commands.Cog, Websocket):
         game = discord.Streaming(name = f"with Mimir Quiz in {str(len(self.client.guilds))} guilds", url = "https://app.mimirquiz.com")
         await self.client.change_presence(activity=game)
         
-    @commands.command()
+    @commands.command(hidden = True)
     @commands.is_owner()
     async def sl(self, ctx):
         servers = self.client.guilds
@@ -30,6 +30,12 @@ class MimirQuiz(commands.Cog, Websocket):
                 if member_count == guild.member_count:
                     embed.add_field(name=f"{'0' if index+1 < 10 else ''}{index+1}. {guild.name}", value=f"Guild Owner : {guild.owner}\nGuild Members : {guild.member_count}\nGuild ID : {guild.id}")
         await ctx.send(embed=embed)
+        
+    @commands.command(hidden = True)
+    @commands.is_owner()
+    async def get_token(self, ctx, guild_id):
+        token = db.mimir_details.find_one({"guild_id": guild_id}).get("token")
+        await ctx.send(f"```\n{token}\n```")
     
     @commands.command()
     async def invite(self, ctx):
