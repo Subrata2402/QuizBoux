@@ -25,8 +25,7 @@ class Websocket:
 		self.client = client
 		self.prize = 500 # Default prize money of quiz
 		self.pattern = [] # Store answer pattern of the current quiz
-		self.web_url = ["https://discord.com/api/webhooks/938473130568065135/BGawZsFeWa59epspDbywoJNX1t-rQ4hiJroj7A6-vyZ7ZBtOipZlLIWIXaEciR-y8f2I",
-						"https://discord.com/api/webhooks/960107009338933298/Q-bq3nTzhuxWUzCX-Es4OX4Ob1ONk3MfUu8NlAqriNeqCF2_Wi9FZT1TaEygqkc7X2hf"]
+		self.web_url = ["https://discord.com/api/webhooks/938473130568065135/BGawZsFeWa59epspDbywoJNX1t-rQ4hiJroj7A6-vyZ7ZBtOipZlLIWIXaEciR-y8f2I"]
 		self.token = None
 		self.ws_is_opened = False
 		self.icon_url = "https://pbs.twimg.com/profile_images/1427270008531562496/xaq5Xlzg_400x400.jpg"
