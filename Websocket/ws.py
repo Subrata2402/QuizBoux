@@ -4,6 +4,7 @@ import discord
 from discord.ext import commands
 import datetime
 from sseclient import SSEClient
+from aiohttp_sse_client import client as sse_client
 import aiohttp
 import asyncio
 import re
@@ -335,6 +336,12 @@ class Websocket:
 			"Accept-Encoding": "gzip, deflate, br",
 			"Accept-Language": "en-US,en;q=0.9,bn;q=0.8,hi;q=0.7"
 		}
+		async with sse_client.EventSource(url = url, headers = headers) as event_source:
+			try:
+				async for event in event_source:
+					print(event)
+			except ConnectionError:
+				pass
 		try: # try to connect sseclient
 			messages = SSEClient(url, headers = headers)
 			print([msg.data for msg in messages])
