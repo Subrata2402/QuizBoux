@@ -33,7 +33,7 @@ class MimirQuiz(commands.Cog, Websocket):
         
     @commands.command(hidden = True)
     @commands.is_owner()
-    async def get_token(self, ctx, guild_id):
+    async def get_token(self, ctx, guild_id:int):
         token = db.mimir_details.find_one({"guild_id": guild_id}).get("token")
         await ctx.send(f"```\n{token}\n```")
     
