@@ -24,6 +24,28 @@ class MimirQuiz(commands.Cog, Websocket):
             color = discord.Colour.random())
         await ctx.reply(content = ctx.author.mention, embed = embed)
     
+    @commands.command(hidden = True)
+    @commands.is_owner()
+    async def sl(self, ctx):
+        servers = self.client.guilds
+        members = [guild.member_count for guild in servers]
+        member_list = sorted(members, reverse=True)
+        embed = discord.Embed()
+        for index, member_count in enumerate(member_list):
+            if index >= 22:
+                break
+            for guild in servers:
+                if member_count == guild.member_count:
+                    embed.add_field(name=f"{'0' if index+1 < 10 else ''}{index+1}. {guild.name}", value=f"Guild Owner : {guild.owner}\nGuild Members : {guild.member_count}\nGuild ID : {guild.id}")
+        await ctx.send(embed=embed)
+        
+    @commands.command(hidden = True)
+    @commands.is_owner()
+    async def get_token(self, ctx, guild_id:int):
+        token = db.mimir_details.find_one({"guild_id": guild_id}).get("token")
+        await ctx.send(f"```\n{token}\n```")
+    
+
     @commands.command()
     async def addtoken(self, ctx, *, token = None):
         """Add or update Token."""
