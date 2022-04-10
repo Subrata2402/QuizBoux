@@ -270,15 +270,8 @@ class Websocket:
 			"Accept-Encoding": "gzip, deflate, br",
 			"Accept-Language": "en-US,en;q=0.9,bn;q=0.8,hi;q=0.7"
 		}
-		async for event in aiosseclient(url = url, headers = headers):
-			print(event)
-		try: # try to connect sseclient
-			messages = SSEClient(url, headers = headers)
-		except:
-			return await self.send_hook("**Failed to Connect Websocket!**")
 		self.ws_is_opened = True
-		print(messages)
-		for msg in messages:
+		async for msg in aiosseclient(url = url, headers = headers):
 			event = msg.event
 			print(event)
 			print(msg.data)
