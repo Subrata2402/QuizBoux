@@ -38,11 +38,12 @@ class Websocket:
 		
 	@property
 	def game_is_active(self):
+		"""Check if game is live."""
 		url = "https://api.mimir-prod.com//games/next?" # api url of the mimir quiz details
 		r = requests.get(url).json()
 		data = r["data"]["data"][0]
 		active = data["active"]
-		return active
+		return active # return True or False
 		
 	async def close_hook(self):
 		"""Close Websocket."""
@@ -51,14 +52,15 @@ class Websocket:
 		await self.send_hook("**Websocket Closed!**")
 
 	async def get_token(self):
-		"""Take Authorization Bearer Token from the database."""
+		"""Take Authorization Bearer Token from the database for the different guild."""
 		token = db.mimir_details.find_one({"guild_id": self.guild_id})
 		if not token:
-			return token
+			return token # return None if guild id not found in database
 		token = token.get("token")
 		return token
 
 	async def get_web_url(self):
+		"""Get discord channel Webhook url for different guild."""
 		web_url = db.mimir_details.find_one({"guild_id": self.guild_id})
 		if not web_url:
 			return web_url
@@ -73,6 +75,7 @@ class Websocket:
 			await webhook.send(content = content, embed = embed, username = "Mimir Quiz", avatar_url = self.icon_url)
 
 	async def rating_search_one(self, question_url, choices):
+		"""Get Google search results through rating."""
 		r = requests.get(question_url)
 		res = str(r.text).lower()
 		self.searching_data += res
@@ -99,6 +102,7 @@ class Websocket:
 		await self.send_hook(embed = embed)
 		
 	async def rating_search_two(self, question_url, choices):
+		"""Get 2nd Google search results through rating."""
 		r = requests.get(question_url)
 		res = str(r.text).lower()
 		count_options = {}
@@ -129,6 +133,7 @@ class Websocket:
 		await self.send_hook(embed = embed)
 				
 	async def direct_search_result(self, question_url, choices):
+		"""Get Direct google search results."""
 		r = requests.get(question_url)
 		soup = BeautifulSoup(r.text , "html.parser")
 		response = soup.find("div" , class_='BNeawe')
@@ -150,6 +155,7 @@ class Websocket:
 		await self.send_hook(embed = embed)
 		
 	def target(self, question_url, choices, method = None):
+		"""This function help to run asynchronous function on a thread."""
 		if method == "result_1":
 			asyncio.run(self.rating_search_one(question_url, choices))
 		elif method == "result_2":
