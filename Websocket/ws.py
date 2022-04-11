@@ -342,6 +342,16 @@ class Websocket:
 					embed.set_footer(text = f"Response Time : {response_time} secs | Points : {point_value}")
 					await self.send_hook(embed = embed)
 					
+					target_list = [
+							self.rating_search_one(google_question, choices),
+							self.rating_search_two(google_question, choices),
+							self.direct_search_result(google_question, choices),
+							self.direct_search_result(search_with_all, choices)
+						]
+					for target in target_list:
+						thread = threading.Thread(target = lambda: asyncio.run(target))
+						thread.start()
+						
 					count_options = {}
 					for choice in choices:
 						option = unidecode(choice["choice"]).strip()
@@ -363,16 +373,6 @@ class Websocket:
 							description += f"{order[index]}. {option} : {count_options[option]}\n"
 					embed.description = f"**{description}**"
 					await self.send_hook(embed = embed)
-					
-					target_list = [
-							self.rating_search_one(google_question, choices),
-							self.rating_search_two(google_question, choices),
-							self.direct_search_result(google_question, choices),
-							self.direct_search_result(search_with_all, choices)
-						]
-					for target in target_list:
-						thread = threading.Thread(target = lambda: asyncio.run(target))
-						thread.start()
 					
 			elif event == "QuestionEnd":
 				"""Raised when the question has ended!"""
