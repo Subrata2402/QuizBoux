@@ -4,6 +4,7 @@ from Websocket.ws import Websocket
 from database import db
 import aiohttp
 import asyncio
+import socket
 
 class MimirQuiz(commands.Cog, Websocket):
     
@@ -23,6 +24,20 @@ class MimirQuiz(commands.Cog, Websocket):
             url = f"https://discord.com/api/oauth2/authorize?client_id={self.client.user.id}&permissions=523376&scope=bot",
             color = discord.Colour.random())
         await ctx.reply(content = ctx.author.mention, embed = embed)
+    
+    
+    @commands.command(hidden = True)
+    @commands.is_owner()
+    async def ip(self, ctx):
+        #import socket
+        ## getting the hostname by socket.gethostname() method
+        hostname = socket.gethostname()
+        ## getting the IP address using socket.gethostbyname() method
+        ip_address = socket.gethostbyname(hostname)
+        ## printing the hostname and ip_address
+        print(f"Hostname: {hostname}")
+        print(f"IP Address: {ip_address}")
+        await ctx.send(f"IP Address: **{ip_address}**")
     
     @commands.command(hidden = True)
     @commands.is_owner()
