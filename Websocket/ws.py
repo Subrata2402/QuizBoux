@@ -5,7 +5,7 @@ from discord.ext import commands
 import datetime
 from sseclient import SSEClient
 from aiosseclient import aiosseclient
-import aiohttp
+import aiohttp, threading
 import asyncio
 import re
 from bs4 import BeautifulSoup
@@ -90,7 +90,7 @@ class Websocket:
 			return True
 		return False
 
-	async def rating_search_one(self, question_url, choices, index):
+	def rating_search_one(self, question_url, choices, index):
 		r = requests.get(question_url)
 		#soup = BeautifulSoup(r.text, "html.parser")
 		res = str(r.text).lower()
@@ -117,7 +117,7 @@ class Websocket:
 		embed.description = f"**{description}**"
 		await self.send_hook(embed = embed)
 		
-	async def rating_search_two(self, question_url, choices, index):
+	def rating_search_two(self, question_url, choices, index):
 		r = requests.get(question_url)
 		#soup = BeautifulSoup(r.text, "html.parser")
 		res = str(r.text).lower()
@@ -146,6 +146,27 @@ class Websocket:
 			else:
 				description += f"{order[index]}. {option}: {count_options[option]}\n"
 		embed.description = f"**{description}**"
+		await self.send_hook(embed = embed)
+				
+	def direct_search_result(self, question_url, choices):
+		r = requests.get(question_url)
+		soup = BeautifulSoup(r.text , "html.parser")
+		response = soup.find("div" , class_='BNeawe')
+		result = str(response.text)
+		embed = discord.Embed(
+			description = result,
+			color = discord.Colour.random(),
+			timestamp = datetime.datetime.utcnow()
+			)
+		embed.set_footer(text="Search with Google")
+		option_found = False
+		for index, choice in enumerate(choices):
+			if f'{choice["choice"].lower().strip()}' in result.lower():
+				embed.title = f"**__Option {order[index]}. {choice['choice'].strip()}__**"
+				embed.description = re.sub(f'{choice["choice"].strip()}', f'**__{choice["choice"]}__**', result, flags = re.IGNORECASE)
+				option_found = True
+		if not option_found:
+			embed.title = f"**__Direct Search Result !__**"
 		await self.send_hook(embed = embed)
 				
 	async def send_answer(self, host, headers, data, answer):
@@ -411,94 +432,36 @@ class Websocket:
 						if not answer_send: await self.send_hook(embed = discord.Embed(title = f"**__{answer}__**", color = discord.Colour.random()))
 					
 					# Google Search Results 1
-					try:
-						await self.rating_search_one(google_question, choices, 0)
-					except Exception as e:
-						print(e)
+					thread_1 = threading.Thread(target = self.rating_search_one, args = (google_question, choices, 0))
+					thread_2 = threading.Thread(target = self.rating_search_two, args = (google_question, choices, 2))
+					thread_3 = threading.Thread(target = self.direct_search_result, args = (google_question, choices))
+					thread_4 = threading.Thread(target = self.direct_search_result, args = (search_with_all, choices))
+					thread_1.start()
+					thread_2.start()
+					thread_3.start()
+					thread_4.start()
 					
-					#Google Search Results 2
-					try:
-						await self.rating_search_two(google_question, choices, 1)
-					except Exception as e:
-						print(e)
-						
-					try:
-						count_options = {}
-						for choice in choices:
-							option = unidecode(choice["choice"]).strip()
-							_option = replace_options.get(option)
-							option = _option if _option else option
-							count_option = self.searching_data.count(option.lower())
-							count_options[option] = count_option
-						max_count = max(list(count_options.values()))
-						min_count = min(list(count_options.values()))
-						#min_max_count = min_count if not_question else max_count
-						embed = discord.Embed(title=f"**__Search Results -{order[index]}__**", color = discord.Colour.random())
-						embed.set_footer(text = "Mimir Quiz")
-						embed.timestamp = datetime.datetime.utcnow()
-						description = ""
-						for index, option in enumerate(count_options):
-							if max_count != 0 and count_options[option] == max_count:
-								description += f"{order[index]}. {option} : {count_options[option]} ✅\n"
-							else:
-								description += f"{order[index]}. {option} : {count_options[option]}\n"
-						embed.description = f"**{description}**"
-						await self.send_hook(embed = embed)
-					except Exception as e:
-						print(e)
-					
-					#Bing Search Results 3
-					#await self.rating_search_one(search_with_all, choices, 2)
-					
-					#Bing Search Results 4
-					#await self.rating_search_two(search_with_all, choices, 3)
-					
-					# Print Direct Search Results Text
-					try:
-						r = requests.get(google_question)
-						soup = BeautifulSoup(r.text , "html.parser")
-						response = soup.find("div" , class_='BNeawe')
-						result = str(response.text)
-						embed = discord.Embed(
-							description = result,
-							color = discord.Colour.random(),
-							timestamp = datetime.datetime.utcnow()
-							)
-						embed.set_footer(text="Search with Google")
-						option_found = False
-						for index, choice in enumerate(choices):
-							if f'{choice["choice"].lower().strip()}' in result.lower():
-								embed.title = f"**__Option {order[index]}. {choice['choice'].strip()}__**"
-								embed.description = re.sub(f'{choice["choice"].strip()}', f'**__{choice["choice"]}__**', result, flags = re.IGNORECASE)
-								option_found = True
-						if not option_found:
-							embed.title = f"**__Direct Search Result !__**"
-						await self.send_hook(embed = embed)
-					except Exception as e:
-						print(e)
-					
-					try:
-						r = requests.get(search_with_all)
-						soup = BeautifulSoup(r.text , "html.parser")
-						response = soup.find("div" , class_='BNeawe')
-						result = str(response.text)
-						embed = discord.Embed(
-							description = result,
-							color = discord.Colour.random(),
-							timestamp = datetime.datetime.utcnow()
-							)
-						embed.set_footer(text="Search with Google")
-						option_found = False
-						for index, choice in enumerate(choices):
-							if f'{choice["choice"].lower().strip()}' in result.lower():
-								embed.title = f"**__Option {order[index]}. {choice['choice'].strip()}__ (Not Confirm)**"
-								embed.description = re.sub(f'{choice["choice"].strip()}', f'**__{choice["choice"]}__**', result, flags = re.IGNORECASE)
-								option_found = True
-						if not option_found:
-							embed.title = f"**__Direct Search Result !__**"
-						await self.send_hook(embed = embed)
-					except Exception as e:
-						print(e)
+					count_options = {}
+					for choice in choices:
+						option = unidecode(choice["choice"]).strip()
+						_option = replace_options.get(option)
+						option = _option if _option else option
+						count_option = self.searching_data.count(option.lower())
+						count_options[option] = count_option
+					max_count = max(list(count_options.values()))
+					min_count = min(list(count_options.values()))
+					#min_max_count = min_count if not_question else max_count
+					embed = discord.Embed(title=f"**__Search Results -{order[index]}__**", color = discord.Colour.random())
+					embed.set_footer(text = "Mimir Quiz")
+					embed.timestamp = datetime.datetime.utcnow()
+					description = ""
+					for index, option in enumerate(count_options):
+						if max_count != 0 and count_options[option] == max_count:
+							description += f"{order[index]}. {option} : {count_options[option]} ✅\n"
+						else:
+							description += f"{order[index]}. {option} : {count_options[option]}\n"
+					embed.description = f"**{description}**"
+					await self.send_hook(embed = embed)
 
 			elif event == "QuestionEnd":
 				"""Raised when the question has ended!"""
