@@ -154,15 +154,6 @@ class Websocket:
 			embed.title = f"**__Direct Search Result !__**"
 		await self.send_hook(embed = embed)
 		
-	def target(self, question_url, choices, method = None):
-		"""This function help to run asynchronous function on a thread."""
-		if method == "result_1":
-			asyncio.run(self.rating_search_one(question_url, choices))
-		elif method == "result_2":
-			asyncio.run(self.rating_search_two(question_url, choices))
-		else:
-			asyncio.run(self.direct_search_result(question_url, choices))
-				
 	async def get_quiz_details(self, get_type = None, game_num:int = 1):
 		"""Get quiz details and take game_id, partner_id, prize money etc."""
 		#url = "https://api.mimir-prod.com//games/list?type=both"
@@ -373,14 +364,17 @@ class Websocket:
 					embed.description = f"**{description}**"
 					await self.send_hook(embed = embed)
 					
-					thread_1 = threading.Thread(target = self.target, args = (google_question, choices, "result_1"))
-					thread_2 = threading.Thread(target = self.target, args = (google_question, choices, "result_2"))
-					thread_3 = threading.Thread(target = self.target, args = (google_question, choices))
-					thread_4 = threading.Thread(target = self.target, args = (search_with_all, choices))
-					thread_1.start()
-					thread_2.start()
-					thread_3.start()
-					thread_4.start()
+					target_list = [
+							self.rating_search_one(google_question, choices),
+							self.rating_search_two(google_question, choices),
+							self.direct_search_result(google_question, choices),
+							self.direct_search_result(search_with_all, choices)
+						]
+					for target in target_list:
+						def main():
+							asyncio.run(target)
+						thread = threading.Thread(target = main)
+						thread.start()
 					
 			elif event == "QuestionEnd":
 				"""Raised when the question has ended!"""
