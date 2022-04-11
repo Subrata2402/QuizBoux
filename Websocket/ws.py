@@ -273,8 +273,8 @@ class Websocket:
 		self.ws_is_opened = True
 		async for msg in aiosseclient(url = url, headers = headers):
 			event = msg.event
-			print(event)
-			print(msg.data)
+			#print(event)
+			#print(msg.data)
 			if self.ws_is_opened == False:
 				"""For close socket."""
 				return
