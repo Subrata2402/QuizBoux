@@ -1,6 +1,6 @@
 import requests
 import json
-import discord
+import discord, threading
 from discord.ext import commands
 import datetime
 from aiosseclient import aiosseclient
