@@ -26,16 +26,13 @@ class Websocket:
 		self.client = client
 		self.prize = 500 # Default prize money of quiz
 		self.pattern = [] # Store answer pattern of the current quiz
-		self.token = None
 		self.ws_is_opened = False
-		self.web_url = None
 		self.icon_url = "https://pbs.twimg.com/profile_images/1427270008531562496/xaq5Xlzg_400x400.jpg"
 		self.game_id = None
 		self.partner_id = None
 		self.user_id = None
 		self.bearer_token = None
 		self.value = None # Entry Fee of the quiz
-		self.headers = None
 		self.game_active = None
 		self.searching_data = "Searching..."
 		
@@ -57,29 +54,25 @@ class Websocket:
 		"""Take Authorization Bearer Token from the database."""
 		token = db.mimir_details.find_one({"guild_id": self.guild_id})
 		if not token:
-		    self.token = token
-		    return token
+			return token
 		token = token.get("token")
-		self.token = token
 		return token
 
 	async def get_web_url(self):
 		web_url = db.mimir_details.find_one({"guild_id": self.guild_id})
 		if not web_url:
-		    self.web_url = web_url
-		    return web_url
+			return web_url
 		web_url = web_url.get("web_url")
-		self.web_url = web_url
 		return web_url
 
 	async def send_hook(self, content = "", embed = None):
 		"""Send message with Discord channel Webhook."""
-		await self.get_web_url()
+		web_url = await self.get_web_url()
 		async with aiohttp.ClientSession() as session:
-			webhook = discord.Webhook.from_url(self.web_url, adapter=discord.AsyncWebhookAdapter(session))
+			webhook = discord.Webhook.from_url(web_url, adapter=discord.AsyncWebhookAdapter(session))
 			await webhook.send(content = content, embed = embed, username = "Mimir Quiz", avatar_url = self.icon_url)
 
-	async def rating_search_one(self, question_url, choices, index):
+	async def rating_search_one(self, question_url, choices):
 		r = requests.get(question_url)
 		res = str(r.text).lower()
 		self.searching_data += res
@@ -93,7 +86,7 @@ class Websocket:
 		max_count = max(list(count_options.values()))
 		min_count = min(list(count_options.values()))
 		#min_max_count = min_count if not_question else max_count
-		embed = discord.Embed(title=f"**__Search Results -{order[index]}__**", color = discord.Colour.random())
+		embed = discord.Embed(title=f"**__Search Results -{order[0]}__**", color = discord.Colour.random())
 		embed.set_footer(text = "Mimir Quiz")
 		embed.timestamp = datetime.datetime.utcnow()
 		description = ""
@@ -105,7 +98,7 @@ class Websocket:
 		embed.description = f"**{description}**"
 		await self.send_hook(embed = embed)
 		
-	async def rating_search_two(self, question_url, choices, index):
+	async def rating_search_two(self, question_url, choices):
 		r = requests.get(question_url)
 		res = str(r.text).lower()
 		count_options = {}
@@ -123,7 +116,7 @@ class Websocket:
 		max_count = max(list(count_options.values()))
 		min_count = min(list(count_options.values()))
 		#min_max_count = min_count if not_question else max_count
-		embed = discord.Embed(title=f"**__Search Results -{order[index]}__**", color = discord.Colour.random())
+		embed = discord.Embed(title=f"**__Search Results -{order[1]}__**", color = discord.Colour.random())
 		embed.set_footer(text = "Mimir Quiz")
 		embed.timestamp = datetime.datetime.utcnow()
 		description = ""
@@ -135,23 +128,39 @@ class Websocket:
 		embed.description = f"**{description}**"
 		await self.send_hook(embed = embed)
 				
+	async def direct_search_result(self, question_url, choices):
+		r = requests.get(question_url)
+		soup = BeautifulSoup(r.text , "html.parser")
+		response = soup.find("div" , class_='BNeawe')
+		result = str(response.text)
+		embed = discord.Embed(
+			description = result,
+			color = discord.Colour.random(),
+			timestamp = datetime.datetime.utcnow()
+			)
+		embed.set_footer(text="Search with Google")
+		option_found = False
+		for index, choice in enumerate(choices):
+			if f'{choice["choice"].lower().strip()}' in result.lower():
+				embed.title = f"**__Option {order[index]}. {choice['choice'].strip()}__**"
+				embed.description = re.sub(f'{choice["choice"].strip()}', f'**__{choice["choice"]}__**', result, flags = re.IGNORECASE)
+				option_found = True
+		if not option_found:
+			embed.title = f"**__Direct Search Result !__**"
+		await self.send_hook(embed = embed)
+		
+	def target(self, question_url, choices, method = None):
+		if method == "result_1":
+			asyncio.run(self.rating_search_one(question_url, choices))
+		elif method == "result_2":
+			asyncio.run(self.rating_search_two(question_url, choices))
+		else:
+			asyncio.run(self.direct_search_result(question_url, choices))
+				
 	async def get_quiz_details(self, get_type = None, game_num:int = 1):
 		"""Get quiz details and take game_id, partner_id, prize money etc."""
-		await self.get_token() # Take token from the database
 		#url = "https://api.mimir-prod.com//games/list?type=both"
 		url = "https://api.mimir-prod.com//games/next?"
-		headers = {
-			"host": "api.mimir-prod.com",
-			"authorization": f"Bearer {self.token}",
-			"user-agent": "Mozilla/5.0 (Linux; Android 10; RMX1827) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.99 Mobile Safari/537.36",
-			"content-type": "application/json",
-			"accept": "*/*",
-			"origin": "https://app.mimirquiz.com",
-			"referer": "https://app.mimirquiz.com/",
-			"accept-encoding": "gzip, deflate, br",
-			"accept-language": "en-US,en;q=0.9,bn;q=0.8,hi;q=0.7"
-		}
-		self.headers = headers
 		async with aiohttp.ClientSession() as session:
 			async with session.get(url = url) as response:
 				if response.status != 200:
@@ -191,6 +200,7 @@ class Websocket:
 		"""Fetch access token to pass the authorization token.
 		It's need for get the host of the live quiz api url."""
 		await self.get_quiz_details() # To run this function take partner id of the quiz
+		self_token = await self.get_token()
 		#if self.value: await self.pay_fees()
 		url = f"https://apic.us.theq.live/v2/oauth/token?partnerCode={self.partner_id}" # Get access token api url
 		headers = {
@@ -203,7 +213,7 @@ class Websocket:
 			"accept-encoding": "gzip, deflate, br",
 			"accept-language": "en-US,en;q=0.9,bn;q=0.8,hi;q=0.7"
 		}
-		post_data = json.dumps({"mimir":{"accessToken": token if token else self.token}})
+		post_data = json.dumps({"mimir":{"accessToken": token if token else self_token}})
 		async with aiohttp.ClientSession() as session:
 			async with session.post(url = url, headers = headers, data = post_data) as response:
 				if response.status != 200:
@@ -372,59 +382,15 @@ class Websocket:
 					except Exception as e:
 						print(e)
 					
-					#Bing Search Results 3
-					#await self.rating_search_one(search_with_all, choices, 2)
+					thread_1 = threading.Thread(target = self.target, args = (google_question, choices, "result_1"))
+					thread_2 = threading.Thread(target = self.target, args = (google_question, choices, "result_2"))
+					thread_3 = threading.Thread(target = self.target, args = (google_question, choices))
+					thread_4 = threading.Thread(target = self.target, args = (search_with_all, choices))
+					thread_1.start()
+					thread_2.start()
+					thread_3.start()
+					thread_4.start()
 					
-					#Bing Search Results 4
-					#await self.rating_search_two(search_with_all, choices, 3)
-					
-					# Print Direct Search Results Text
-					try:
-						r = requests.get(google_question)
-						soup = BeautifulSoup(r.text , "html.parser")
-						response = soup.find("div" , class_='BNeawe')
-						result = str(response.text)
-						embed = discord.Embed(
-							description = result,
-							color = discord.Colour.random(),
-							timestamp = datetime.datetime.utcnow()
-							)
-						embed.set_footer(text="Search with Google")
-						option_found = False
-						for index, choice in enumerate(choices):
-							if f'{choice["choice"].lower().strip()}' in result.lower():
-								embed.title = f"**__Option {order[index]}. {choice['choice'].strip()}__**"
-								embed.description = re.sub(f'{choice["choice"].strip()}', f'**__{choice["choice"]}__**', result, flags = re.IGNORECASE)
-								option_found = True
-						if not option_found:
-							embed.title = f"**__Direct Search Result !__**"
-						await self.send_hook(embed = embed)
-					except Exception as e:
-						print(e)
-					
-					try:
-						r = requests.get(search_with_all)
-						soup = BeautifulSoup(r.text , "html.parser")
-						response = soup.find("div" , class_='BNeawe')
-						result = str(response.text)
-						embed = discord.Embed(
-							description = result,
-							color = discord.Colour.random(),
-							timestamp = datetime.datetime.utcnow()
-							)
-						embed.set_footer(text="Search with Google")
-						option_found = False
-						for index, choice in enumerate(choices):
-							if f'{choice["choice"].lower().strip()}' in result.lower():
-								embed.title = f"**__Option {order[index]}. {choice['choice'].strip()}__ (Not Confirm)**"
-								embed.description = re.sub(f'{choice["choice"].strip()}', f'**__{choice["choice"]}__**', result, flags = re.IGNORECASE)
-								option_found = True
-						if not option_found:
-							embed.title = f"**__Direct Search Result !__**"
-						await self.send_hook(embed = embed)
-					except Exception as e:
-						print(e)
-
 			elif event == "QuestionEnd":
 				"""Raised when the question has ended!"""
 				embed = discord.Embed(title = "Question has Ended!", color = discord.Colour.random())
