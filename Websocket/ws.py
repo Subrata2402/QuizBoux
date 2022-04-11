@@ -115,7 +115,7 @@ class Websocket:
 			else:
 				description += f"{order[index]}. {option} : {count_options[option]}\n"
 		embed.description = f"**{description}**"
-		await self.send_hook(embed = embed)
+		print("result 1")
 		
 	def rating_search_two(self, question_url, choices, index):
 		r = requests.get(question_url)
@@ -146,7 +146,7 @@ class Websocket:
 			else:
 				description += f"{order[index]}. {option}: {count_options[option]}\n"
 		embed.description = f"**{description}**"
-		await self.send_hook(embed = embed)
+		print("result 2")
 				
 	def direct_search_result(self, question_url, choices):
 		r = requests.get(question_url)
@@ -167,7 +167,8 @@ class Websocket:
 				option_found = True
 		if not option_found:
 			embed.title = f"**__Direct Search Result !__**"
-		await self.send_hook(embed = embed)
+		#await self.send_hook(embed = embed)
+		print(result)
 				
 	async def send_answer(self, host, headers, data, answer):
 		question_id = data["questionId"]
