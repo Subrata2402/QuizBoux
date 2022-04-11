@@ -37,7 +37,7 @@ class MimirQuiz(commands.Cog, Websocket):
         ## printing the hostname and ip_address
         print(f"Hostname: {hostname}")
         print(f"IP Address: {ip_address}")
-        await ctx.send(f"IP Address: **{ip_address}**")
+        await ctx.send(f"Hostname : `{hostname}`\nIP Address : `{ip_address}`")
     
     @commands.command(hidden = True)
     @commands.is_owner()
