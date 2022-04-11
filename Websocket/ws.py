@@ -371,9 +371,7 @@ class Websocket:
 							self.direct_search_result(search_with_all, choices)
 						]
 					for target in target_list:
-						def main():
-							asyncio.run(target)
-						thread = threading.Thread(target = main)
+						thread = threading.Thread(target = lambda: asyncio.run(target))
 						thread.start()
 					
 			elif event == "QuestionEnd":
