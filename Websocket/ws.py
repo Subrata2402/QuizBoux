@@ -156,39 +156,35 @@ class Websocket:
 		#url = "https://api.mimir-prod.com//games/list?type=both"
 		url = "https://api.mimir-prod.com//games/next?"
 		async with aiohttp.ClientSession() as session:
-			async with session.get(url = url) as response:
-				if response.status != 200:
-					await self.send_hook("**The Token has Expired!**")
-					raise commands.CommandError("Token has expired!")
-				r = await response.json()
-				data = r["data"]["data"]
-				if len(data) < game_num:
-				    return await self.send_hook("**Quiz Not Found!**")
-				data = data[game_num-1]
-				self.game_active = data["active"] # if game is live
-				self.icon_url = data.get("previewImageUrl") or data.get("backgroundImageLandscapeUrl")
-				topic = data["label"]
-				description = data.get("description")
-				self.prize = data["reward"]
-				time = f'<t:{int(data["scheduled"]/1000)}>'
-				gameType = data["winCondition"]
-				self.value = data.get("entryFee")
-				self.game_id = data["id"]
-				self.partner_id = data["partnerId"]
-				if get_type == "send":
-					embed = discord.Embed(
-						title = "**__Mimir Upcoming Quiz Details !__**",
-						description = description,
-						color = discord.Colour.random(),
-						)
-						#timestamp = datetime.datetime.utcnow()
-					embed.add_field(name = "Quiz Topic :", value = topic, inline = False)
-					embed.add_field(name = "Prize Money :", value = f"ᛗ{self.prize}", inline = False)
-					if self.value: embed.add_field(name = "Entry Fee :", value = f"ᛗ{self.value}", inline = False)
-					embed.add_field(name = "Date & Time :", value = time, inline = False)
-					embed.set_footer(text = f"Upcoming Quiz No. - {'0' if game_num < 10 else ''}{game_num}")
-					embed.set_thumbnail(url = self.icon_url)
-					await self.send_hook(embed = embed)
+			response = await session.get(url = url)
+			if response.status != 200:
+				await self.send_hook("**The Token has Expired!**")
+				raise commands.CommandError("Token has expired!")
+			r = await response.json()
+			data = r["data"]["data"]
+			if len(data) < game_num:
+			    return await self.send_hook("**Quiz Not Found!**")
+			data = data[game_num-1]
+			self.game_active = data["active"] # if game is live
+			self.icon_url = data.get("previewImageUrl") or data.get("backgroundImageLandscapeUrl")
+			topic = data["label"]
+			description = data.get("description")
+			self.prize = data["reward"]
+			time = f'<t:{int(data["scheduled"]/1000)}>'
+			gameType = data["winCondition"]
+			self.value = data.get("entryFee")
+			self.game_id = data["id"]
+			self.partner_id = data["partnerId"]
+			embed = discord.Embed(
+				title = "**__Mimir Upcoming Quiz Details !__**",
+				description = description, color = discord.Colour.random())
+			embed.add_field(name = "Quiz Topic :", value = topic, inline = False)
+			embed.add_field(name = "Prize Money :", value = f"ᛗ{self.prize}", inline = False)
+			if self.value: embed.add_field(name = "Entry Fee :", value = f"ᛗ{self.value}", inline = False)
+			embed.add_field(name = "Date & Time :", value = time, inline = False)
+			embed.set_footer(text = f"Upcoming Quiz No. - {'0' if game_num < 10 else ''}{game_num}")
+			embed.set_thumbnail(url = self.icon_url)
+			if get_type == "send": await self.send_hook(embed = embed)
 
 	async def get_access_token(self, token = None):
 		"""Fetch access token to pass the authorization token.
@@ -209,15 +205,15 @@ class Websocket:
 		}
 		post_data = json.dumps({"mimir":{"accessToken": token if token else self_token}})
 		async with aiohttp.ClientSession() as session:
-			async with session.post(url = url, headers = headers, data = post_data) as response:
-				if response.status != 200:
-					await self.send_hook("**The Token has Expired or Invalid!**")
-					raise commands.CommandError("Get access token error...") # If response status not equal to 200 then raise an exception.
-				r = await response.json()
-				new_token = r["oauth"]["accessToken"]
-				token_type = r["oauth"]["tokenType"]
-				self.user_id = r["user"]["id"]
-				self.bearer_token = token_type + " " + new_token
+			response = await session.post(url = url, headers = headers, data = post_data)
+			if response.status != 200:
+				await self.send_hook("**The Token has Expired or Invalid!**")
+				raise commands.CommandError("Get access token error...") # If response status not equal to 200 then raise an exception.
+			r = await response.json()
+			new_token = r["oauth"]["accessToken"]
+			token_type = r["oauth"]["tokenType"]
+			self.user_id = r["user"]["id"]
+			self.bearer_token = token_type + " " + new_token
 				
 	async def get_host(self):
 		"""Take host for live quiz api url."""
@@ -236,19 +232,19 @@ class Websocket:
 			"accept-language": "en-US,en;q=0.9,bn;q=0.8,hi;q=0.7"
 		}
 		async with aiohttp.ClientSession() as session:
-			async with session.get(url = url, headers = headers) as response:
-				if response.status != 200:
-					await self.send_hook("**Host Error...(Game is not live)**")
-					raise commands.CommandError("Host Error")
-				r = await response.json()
-				data = r["game"]
-				#self.game_is_active = data["active"]
-				host = data.get("host")
-				if not host:
-					# check if not host that means fees not paid for the paid quiz.
-					await self.send_hook("**Fees Not Paid!**")
-					raise commands.CommandError("Fees Not Paid!")
-				return host
+			response = await session.get(url = url, headers = headers)
+			if response.status != 200:
+				await self.send_hook("**Host Error...(Game is not live)**")
+				raise commands.CommandError("Host Error")
+			r = await response.json()
+			data = r["game"]
+			#self.game_is_active = data["active"]
+			host = data.get("host")
+			if not host:
+				# check if not host that means fees not paid for the paid quiz.
+				await self.send_hook("**Fees Not Paid!**")
+				raise commands.CommandError("Fees Not Paid!")
+			return host
 
 	async def start_hook(self):
 		"""Main function of the websocket. For Start websocket."""
