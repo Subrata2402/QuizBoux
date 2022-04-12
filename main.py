@@ -169,7 +169,7 @@ class MimirQuiz(commands.Cog, Websocket):
             f"{ctx.prefix}invite    :: Get bot invite link.\n" \
             f"```", color = discord.Colour.random())
         embed.set_author(name = "| Mimir Quiz Help Commands !", icon_url = self.client.user.avatar_url)
-        embed.set_footer(text = "Requested by : " + ctx.author, icon_url = ctx.author.avatar_url)
+        embed.set_footer(text = f"Requested by : {ctx.author}", icon_url = ctx.author.avatar_url)
         await ctx.send(embed = embed)
         
 intents = discord.Intents.all()
