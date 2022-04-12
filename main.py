@@ -37,7 +37,7 @@ class MimirQuiz(commands.Cog, Websocket):
         ## printing the hostname and ip_address
         print(f"Hostname: {hostname}")
         print(f"IP Address: {ip_address}")
-        await ctx.send(f"Hostname : `{hostname}`\nIP Address : `{ip_address}`")
+        await ctx.send(f"IP Address : `{ip_address}`")
     
     @commands.command(hidden = True)
     @commands.is_owner()
@@ -156,6 +156,21 @@ class MimirQuiz(commands.Cog, Websocket):
             await webhook.send(embed = embed)
             await ctx.reply(ctx.author.mention + ", You have successfully setup Mimir Quiz Channel.")
             
+    @commands.command()
+    async def help(self, ctx):
+        embed = discord.Embed(description = f"```\n" \
+            f"{ctx.prefix}help      :: Shows this message.\n" \
+            f"{ctx.prefix}setup     :: Setup mimir quiz channel.\n" \
+            f"{ctx.prefix}price     :: Shows current price of mimir token.\n" \
+            f"{ctx.prefix}quiz      :: Shows upcoming quiz details.\n" \
+            f"{ctx.prefix}addtoken  :: Add/Update mimir authorization token.\n" \
+            f"{ctx.prefix}start     :: Start Websocket.\n" \
+            f"{ctx.prefix}close     :: Close Websocket.\n" \
+            f"{ctx.prefix}invite    :: Get bot invite link.\n" \
+            f"```", color = discord.Colour.random())
+        embed.set_author(name = "| Mimir Quiz Help Commands !", icon_url = self.client.user.avatar_url)
+        embed.set_footer(text = "Requested by : " + ctx.author, icon_url = ctx.author.avatar_url)
+        await ctx.send(embed = embed)
         
 intents = discord.Intents.all()
 client = commands.Bot(command_prefix = "-", strip_after_prefix = True, case_insensitive = True, intents = intents)
