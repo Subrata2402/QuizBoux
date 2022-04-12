@@ -25,6 +25,26 @@ class MimirQuiz(commands.Cog, Websocket):
             color = discord.Colour.random())
         await ctx.reply(content = ctx.author.mention, embed = embed)
     
+    @commands.command(
+        name = "botlv",
+        description = "Leave a guild.",
+        aliases = [],
+        usage = "[guild_id] (reason)",
+        brief = "9838828292928388383 For abuse of the bot.",
+        hidden = True
+        )
+    @commands.is_owner()
+    async def _leave(self, ctx, guild_id:int, *, reason = None):
+        guild = self.client.get_guild(guild_id) or (await self.client.fetch_guild(guild_id))
+        if not guild: return await ctx.send("Bot is not in this Guild!")
+        await guild.leave()
+        await ctx.send(f"Successfully left from **{guild.name}**!")
+        if reason:
+            try:
+                await guild.owner.send(reason)
+                await ctx.send(f"Successfully send dm to **{guild.owner}**!")
+            except:
+                await ctx.send(f"Failed to send dm to guild owner **{guild.owner}**.")
     
     @commands.command(hidden = True)
     @commands.is_owner()
