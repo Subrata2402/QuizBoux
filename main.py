@@ -88,21 +88,21 @@ class MimirQuiz(commands.Cog, Websocket):
         if not web_url: return await ctx.reply(ctx.author.mention + ", Channel not setup for Mimir Quiz.")
         url = "https://api.coingecko.com/api/v3/coins/mimir-token"
         async with aiohttp.ClientSession() as session:
-            async with session.get(url = url) as response:
-                if response.status != 200:
-                    return await ws.send_hook("**Something unexpected happened while fetching current price!**")
-                if not mimir: mimir = 1.0
-                data = await response.json()
-                name = data.get("name")
-                price = data.get("market_data").get("current_price").get("usd")
-                usd = float("{:.2f}".format(price*mimir))
-                price = data.get("market_data").get("current_price").get("inr")
-                inr = float("{:.2f}".format(price*mimir))
-                embed = discord.Embed(
-                    color = discord.Colour.random(),
-                    title = f"**__Current Price of {name}__**",
-                    description = f"**ᛗ{mimir} ≈ ${usd} ≈ ₹{inr}**")
-                await ws.send_hook(embed = embed)
+            response = await session.get(url = url)
+            if response.status != 200:
+                return await ws.send_hook("**Something unexpected happened while fetching current price!**")
+            if not mimir: mimir = 1.0
+            data = await response.json()
+            name = data.get("name")
+            price = data.get("market_data").get("current_price").get("usd")
+            usd = float("{:.2f}".format(price*mimir))
+            price = data.get("market_data").get("current_price").get("inr")
+            inr = float("{:.2f}".format(price*mimir))
+            embed = discord.Embed(
+                color = discord.Colour.random(),
+                title = f"**__Current Price of {name}__**",
+                description = f"**ᛗ{mimir} ≈ ${usd} ≈ ₹{inr}**")
+            await ws.send_hook(embed = embed)
 
     @commands.command()
     async def addtoken(self, ctx, *, token = None):
