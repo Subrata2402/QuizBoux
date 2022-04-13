@@ -1,10 +1,7 @@
-import discord
+import discord, aiohttp, asyncio, socket
 from discord.ext import commands
 from Websocket.ws import Websocket
 from database import db
-import aiohttp
-import asyncio
-import socket
 
 class MimirQuiz(commands.Cog, Websocket):
     
