@@ -197,7 +197,7 @@ client.add_cog(MimirQuiz(client))
 @client.event
 async def on_message(message):
     if not message.guild:
-    	embed = discord.Embed(description = f"**You cannot be used me in private messages. For invite me [Click Here](https://discord.com/api/oauth2/authorize?client_id={client.user.id}&permissions=523376&scope=bot).**")
+        embed = discord.Embed(description = f"**You cannot be used me in private messages. For invite me [Click Here](https://discord.com/api/oauth2/authorize?client_id={client.user.id}&permissions=523376&scope=bot).**")
         return await message.channel.send(embed = embed)
     await client.process_commands(message)
             
