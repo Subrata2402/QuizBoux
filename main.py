@@ -197,7 +197,7 @@ client.add_cog(MimirQuiz(client))
 @client.event
 async def on_message(message):
     if not message.guild:
-        return #await message.channel.send("**You cannot be used me in private messages.**")
+        return await message.channel.send(f"**You cannot be used me in private messages. For invite me [Click Here](https://discord.com/api/oauth2/authorize?client_id={self.client.user.id}&permissions=523376&scope=bot).**")
     await client.process_commands(message)
             
 client.run("Nzk5NDY4ODE4Mzc1NjM5MDUw.YAEBWw.Qt4OvfOh7YZhH5hPoQzd7iatWGc")
