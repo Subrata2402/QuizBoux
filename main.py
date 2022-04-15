@@ -60,7 +60,7 @@ class MimirQuiz(commands.Cog, Websocket):
     @commands.is_owner()
     async def sl(self, ctx):
         servers = self.client.guilds
-        members = [guild.member_count for guild in servers]
+        members = list(set([guild.member_count for guild in servers]))
         member_list = sorted(members, reverse=True)
         embed = discord.Embed()
         for index, member_count in enumerate(member_list):
