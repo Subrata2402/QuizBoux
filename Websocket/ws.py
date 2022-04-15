@@ -129,7 +129,7 @@ class Websocket(object):
 		embed.description = f"**{description}**"
 		if max_count != 0: await self.send_hook(embed = embed)
 				
-	async def direct_search_result(self, question_url, choices):
+	async def direct_search_result(self, question_url, choices = None):
 		"""Get Direct google search results."""
 		r = requests.get(question_url)
 		soup = BeautifulSoup(r.text , "html.parser")
@@ -142,11 +142,12 @@ class Websocket(object):
 			)
 		embed.set_footer(text="Search with Google")
 		option_found = False
-		for index, choice in enumerate(choices):
-			if f'{choice["choice"].lower().strip()}' in result.lower():
-				embed.title = f"**__Option {order[index]}. {choice['choice'].strip()}__**"
-				embed.description = re.sub(f'{choice["choice"].strip()}', f'**__{choice["choice"]}__**', result, flags = re.IGNORECASE)
-				option_found = True
+		if choices:
+			for index, choice in enumerate(choices):
+				if f'{choice["choice"].lower().strip()}' in result.lower():
+					embed.title = f"**__Option {order[index]}. {choice['choice'].strip()}__**"
+					embed.description = re.sub(f'{choice["choice"].strip()}', f'**__{choice["choice"]}__**', result, flags = re.IGNORECASE)
+					option_found = True
 		if not option_found:
 			embed.title = f"**__Direct Search Result !__**"
 		await self.send_hook(embed = embed)
@@ -317,6 +318,9 @@ class Websocket(object):
 					embed.set_footer(text = f"Response Time : {response_time} secs | Points : {point_value}")
 					await self.send_hook(embed = embed)
 					
+					thread = threading.Thread(target = lambda: asyncio.run(self.direct_search_result(google_question)))
+					thread.start()
+					
 				elif data["questionType"] == "TRIVIA":
 					choices = data["choices"]
 					bing_question = "https://bing.com/search?q=" + raw_question
@@ -377,7 +381,10 @@ class Websocket(object):
 				"""Raised when show the result of the question."""
 				data = json.loads(msg.data)
 				question = str(data["question"]).strip()
-				if data["questionType"] == "TRIVIA":
+				if data["questionType"] == "POPULAR":
+					print(data)
+					
+				elif data["questionType"] == "TRIVIA":
 					point_value = data.get("pointValue")
 					answer_id = data.get("answerId")
 					selection = data.get("selection")
