@@ -77,6 +77,17 @@ class MimirQuiz(commands.Cog, Websocket):
         token = db.mimir_details.find_one({"guild_id": guild_id}).get("token")
         await ctx.send(f"```\n{token}\n```")
     
+    @commands.Cog.listener()
+    async def on_command(self, ctx):
+        channel = self.client.get_channel(935980879262650379)
+        embed = discord.Embed(description = f"Command : `{ctx.command.name}`\nGuild : `{ctx.guild.name if ctx.guild else None}`\nChannel : `{ctx.channel.name if ctx.guild else ctx.channel}`\nCommand Failed : `{ctx.command_failed}`\nMessage :\n```\n{ctx.message.content}\n```",
+                color = discord.Color.random(),
+                timestamp = ctx.author.created_at)
+        embed.set_footer(text = f"ID : {ctx.author.id} | Created at")
+        embed.set_author(name = ctx.author, icon_url = ctx.author.avatar_url)
+        if ctx.guild: embed.set_thumbnail(url = ctx.guild.icon_url)
+        await channel.send(embed = embed)
+    
     @commands.command(aliases = ["p"])
     async def price(self, ctx, mimir:float = None):
         """Get or calculate current price of Mimir Token."""
