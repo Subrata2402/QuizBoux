@@ -169,7 +169,7 @@ class MimirQuiz(commands.Cog, Websocket):
         """Setup mimir quiz channel."""
         if not ctx.author.guild_permissions.administrator:
             return await ctx.reply(ctx.author.mention + ", You don't have enough permission to run this command!")
-        if not channel: return await ctx.reply(ctx.author.mention + ", You didn't mention any channel.")
+        if not channel: channel = ctx.channel
         webhook = await channel.create_webhook(name = "Mimir Quiz")
         check = db.mimir_details.find_one({"guild_id": ctx.guild.id})
         if check:
