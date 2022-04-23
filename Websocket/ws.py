@@ -242,7 +242,6 @@ class Websocket(object):
 			"accept-encoding": "gzip, deflate, br",
 			"accept-language": "en-US,en;q=0.9,bn;q=0.8,hi;q=0.7"
 		}
-		await self.set_hook(True)
 		async with aiohttp.ClientSession() as session:
 			response = await session.get(url = url, headers = headers)
 			if response.status != 200:
@@ -282,7 +281,7 @@ class Websocket(object):
 			"Accept-Encoding": "gzip, deflate, br",
 			"Accept-Language": "en-US,en;q=0.9,bn;q=0.8,hi;q=0.7"
 		}
-		self.ws_is_opened = True
+		await self.set_hook(True)
 		try:
 			log_channel = self.client.get_channel(967462642723733505) or (await self.client.fetch_channel(967462642723733505))
 			guild = self.client.get_guild(self.guild_id) or (await self.client.fetch_guild(self.guild_id))
