@@ -281,6 +281,7 @@ class Websocket(object):
 			"Accept-Language": "en-US,en;q=0.9,bn;q=0.8,hi;q=0.7"
 		}
 		self.ws_is_opened = True
+		print(self.ws_is_opened)
 		async for msg in aiosseclient(url = url, headers = headers):
 			event = msg.event
 			#print(event)
