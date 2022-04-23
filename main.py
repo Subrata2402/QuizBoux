@@ -14,6 +14,33 @@ class MimirQuiz(commands.Cog, Websocket):
         game = discord.Streaming(name = f"with Mimir Quiz in {str(len(self.client.guilds))} guilds", url = "https://app.mimirquiz.com")
         await self.client.change_presence(activity=game)
         
+    @commands.Cog.listener()
+    async def on_command_error(self, ctx, error):
+        if hasattr(ctx.command, "on_error"):
+            return
+
+        error = getattr(error, "original", error)
+
+        if isinstance(error, commands.CommandOnCooldown):
+            retry_after = int(error.retry_after)
+            minutes, seconds = divmod(retry_after, 60)
+            hours, minutes = divmod(minutes, 60)
+            if hours + minutes == 0:
+                wait_time = f"**{'0' if seconds < 10 else ''}{seconds}** second{'s' if seconds != 1 else ''}"
+            elif hours == 0:
+                wait_time = f"**{'0' if minutes < 10 else ''}{minutes}** minute{'s' if minutes != 1 else ''} **{'0' if seconds < 10 else ''}{seconds}** second{'s' if seconds != 1 else ''}"
+            elif minutes == 0:
+                wait_time = f"**{'0' if hours < 10 else ''}{hours}** hour{'s' if hours != 1 else ''} **{'0' if seconds < 10 else ''}{seconds}** second{'s' if seconds != 1 else ''}"
+            else:
+                wait_time = f"**{'0' if hours < 10 else ''}{hours}** hour{'s' if hours != 1 else ''} **{'0' if minutes < 10 else ''}{minutes}** minute{'s' if minutes != 1 else ''} and **{'0' if seconds < 10 else ''}{seconds}** second{'s' if seconds != 1 else ''}"
+            embed = discord.Embed(
+                title=f"{warning} | Command on Cooldown",
+                description=f"This command is on cooldown, please retry after {wait_time}.",
+                color=discord.Colour.random(),
+            )
+            return await ctx.reply(ctx.author.mention + ", This command is on cooldown, please retry after ```{}```!".format(wait_time))
+
+    
     @commands.command()
     @commands.cooldown(1, 10, commands.BucketType.user)
     async def invite(self, ctx):
