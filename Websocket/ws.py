@@ -51,9 +51,10 @@ class Websocket(object):
 		active = data["active"]
 		return active # return True or False
 		
-	async def close_hook(self):
+	
+	async def set_hook(self, opened):
 		"""Close Websocket."""
-		self.ws_is_opened = False
+		self.ws_is_opened = opened
 		print("Websocket Closed!")
 		await self.send_hook("**Websocket Closed!**")
 
@@ -241,7 +242,7 @@ class Websocket(object):
 			"accept-encoding": "gzip, deflate, br",
 			"accept-language": "en-US,en;q=0.9,bn;q=0.8,hi;q=0.7"
 		}
-		self.ws_is_opened = True
+		await self.set_hook(True)
 		async with aiohttp.ClientSession() as session:
 			response = await session.get(url = url, headers = headers)
 			if response.status != 200:
@@ -469,5 +470,5 @@ class Websocket(object):
 				await self.send_hook(embed = embed)
 				self.pattern.clear() # Clear answer pattern.
 				self.searching_data = "" # clear all data
-				await self.close_hook() # Socket Close automatically when the game was ended.
+				await self.set_hook(False) # Socket Close automatically when the game was ended.
 				return
