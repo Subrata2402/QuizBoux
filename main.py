@@ -168,21 +168,6 @@ class MimirQuiz(commands.Cog, Websocket):
         else:
             await ws.send_hook("**Websocket Already Opened!**")
          
-    @commands.command(aliases = ["opn"])
-    @commands.cooldown(1, 10, commands.BucketType.guild)
-    async def st(self, ctx):
-        """Start Websocket."""
-        if "Mimir Access" not in [role.name for role in ctx.author.roles]:
-            return await ctx.reply(ctx.author.mention + ", You need `Mimir Access` role to run this command!")
-        super().__init__(guild_id = ctx.guild.id, client = self.client)
-        web_url = await self.get_web_url()
-        if not web_url: return await ctx.reply(ctx.author.mention + ", You didn't setup any channel for Mimir Quiz.")
-        if not self.ws_is_opened:
-            await self.send_hook("**Websocket Opened!**")
-            await self.start_hook()
-        else:
-            await self.send_hook("**Websocket Already Opened!**")
-    
     @commands.command()
     @commands.cooldown(1, 10, commands.BucketType.guild)
     async def close (self, ctx):
