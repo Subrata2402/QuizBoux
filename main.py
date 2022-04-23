@@ -15,6 +15,7 @@ class MimirQuiz(commands.Cog, Websocket):
         await self.client.change_presence(activity=game)
         
     @commands.command()
+    @commands.cooldown(1, 10, commands.BucketType.user)
     async def invite(self, ctx):
         """Get an invite link of bot."""
         embed = discord.Embed(title = "Invite me to your server.",
@@ -89,6 +90,7 @@ class MimirQuiz(commands.Cog, Websocket):
         await channel.send(embed = embed)
     
     @commands.command(aliases = ["p"])
+    @commands.cooldown(1, 10, commands.BucketType.user)
     async def price(self, ctx, mimir:float = None):
         """Get or calculate current price of Mimir Token."""
         ws = Websocket(ctx.guild.id)
@@ -113,6 +115,7 @@ class MimirQuiz(commands.Cog, Websocket):
             await ws.send_hook(embed = embed)
 
     @commands.command()
+    @commands.cooldown(1, 10, commands.BucketType.guild)
     async def addtoken(self, ctx, *, token = None):
         """Add or update Token."""
         if "Mimir Access" not in [role.name for role in ctx.author.roles]:
@@ -130,6 +133,7 @@ class MimirQuiz(commands.Cog, Websocket):
         await ctx.message.delete()
         
     @commands.command(aliases = ["quiz", "mimir"])
+    @commands.cooldown(1, 10, commands.BucketType.user)
     async def nextquiz(self, ctx, game_num:int = 1):
         """Get next quiz details."""
         ws = Websocket(ctx.guild.id)
@@ -138,6 +142,7 @@ class MimirQuiz(commands.Cog, Websocket):
         await ws.get_quiz_details(get_type = "send", game_num = game_num)
     
     @commands.command(aliases = ["open"])
+    @commands.cooldown(1, 10, commands.BucketType.guild)
     async def start(self, ctx):
         """Start Websocket."""
         if "Mimir Access" not in [role.name for role in ctx.author.roles]:
@@ -152,6 +157,7 @@ class MimirQuiz(commands.Cog, Websocket):
             await ws.send_hook("**Websocket Already Opened!**")
          
     @commands.command()
+    @commands.cooldown(1, 10, commands.BucketType.guild)
     async def close (self, ctx):
         """Close Websocket."""
         if "Mimir Access" not in [role.name for role in ctx.author.roles]:
@@ -165,6 +171,7 @@ class MimirQuiz(commands.Cog, Websocket):
             await ws.send_hook("**Websocket Already Closed!**")
         
     @commands.command()
+    @commands.cooldown(1, 10, commands.BucketType.guild)
     async def setup(self, ctx, channel: discord.TextChannel = None):
         """Setup mimir quiz channel."""
         if not ctx.author.guild_permissions.administrator:
@@ -185,6 +192,7 @@ class MimirQuiz(commands.Cog, Websocket):
             await ctx.reply(ctx.author.mention + ", You have successfully setup Mimir Quiz Channel.")
             
     @commands.command()
+    @commands.cooldown(1, 10, commands.BucketType.user)
     async def help(self, ctx):
         embed = discord.Embed(color = discord.Colour.random())
         embed.add_field(name = f"{ctx.prefix}help", value = "Shows this message.", inline = False)
