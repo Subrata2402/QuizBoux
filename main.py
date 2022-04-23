@@ -159,7 +159,7 @@ class MimirQuiz(commands.Cog, Websocket):
         """Start Websocket."""
         if "Mimir Access" not in [role.name for role in ctx.author.roles]:
             return await ctx.reply(ctx.author.mention + ", You need `Mimir Access` role to run this command!")
-        ws = Websocket(ctx.guild.id)
+        ws = Websocket(guild_id = ctx.guild.id, client = self.client)
         web_url = await ws.get_web_url()
         if not web_url: return await ctx.reply(ctx.author.mention + ", You didn't setup any channel for Mimir Quiz.")
         if not ws.ws_is_opened:
@@ -174,7 +174,7 @@ class MimirQuiz(commands.Cog, Websocket):
         """Close Websocket."""
         if "Mimir Access" not in [role.name for role in ctx.author.roles]:
             return await ctx.reply(ctx.author.mention + ", You need `Mimir Access` role to run this command!")
-        ws = Websocket(ctx.guild.id)
+        ws = Websocket(guild_id = ctx.guild.id, client = self.client)
         web_url = await ws.get_web_url()
         if not web_url: return await ctx.reply(ctx.author.mention + ", You didn't setup any channel for Mimir Quiz.")
         if ws.ws_is_opened:
