@@ -1,10 +1,7 @@
 asyncio
 requests
 discord
-sseclient
-pytz
 bs4
 pymongo
 dnspython
 unidecode
-aiohttp-sse-client
