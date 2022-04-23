@@ -22,8 +22,8 @@ class MimirQuiz(commands.Cog, Websocket):
 
         if isinstance(error, commands.CommandOnCooldown):
             seconds = float("{:.2f}".format(error.retry_after))
-            wait_time = f"**{'0' if seconds < 10 else ''}{seconds}** second{'s' if seconds != 1 else ''}"
-            description = ctx.author.mention + ", This command is on cooldown, please retry after ```" + wait_time + "```!"
+            wait_time = f"```**{'0' if seconds < 10 else ''}{seconds}** second{'s' if seconds != 1 else ''}```"
+            description = ctx.author.mention + ", This command is on cooldown, please retry after " + wait_time + "!"
             return await ctx.reply(description)
     
     @commands.command()
