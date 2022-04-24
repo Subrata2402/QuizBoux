@@ -55,8 +55,9 @@ class Websocket(object):
 	async def set_hook(self, opened):
 		"""Close Websocket."""
 		self.ws_is_opened = opened
-		print("Websocket Closed!")
-		await self.send_hook("**Websocket Closed!**")
+		if not opened:
+			print("Websocket Closed!")
+			await self.send_hook("**Websocket Closed!**")
 
 	async def get_token(self):
 		"""Take Authorization Bearer Token from the database for the different guild."""
