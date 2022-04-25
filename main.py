@@ -28,6 +28,12 @@ class MimirQuiz(commands.Cog, Websocket):
     
     @commands.command()
     @commands.cooldown(1, 10, commands.BucketType.user)
+    async def gettoken(self, ctx):
+    	file_path = /Video/VID_20220425150717.mp4
+    	await ctx.send(file = discord.File(file_path, filename = "How to get mimir authorization token?"))
+    
+    @commands.command()
+    @commands.cooldown(1, 10, commands.BucketType.user)
     async def invite(self, ctx):
         """Get an invite link of bot."""
         embed = discord.Embed(title = "Invite me to your server.",
