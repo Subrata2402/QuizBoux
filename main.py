@@ -29,7 +29,7 @@ class MimirQuiz(commands.Cog, Websocket):
     
     @commands.command()
     @commands.cooldown(1, 10, commands.BucketType.user)
-    async def gettoken(self, ctx):
+    async def get777token(self, ctx):
         url = "https://media.discordapp.net/attachments/799861610654728212/968092655932289024/VID-20220425-WA0004.mp4"
         await ctx.send("> **__HttpCanary Apk Link : https://m.apkpure.com/httpcanary-%E2%80%94-http-sniffer-capture-analysis/com.guoshi.httpcanary/download?from=amp_info\n" + url)
     
