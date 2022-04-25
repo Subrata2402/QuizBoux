@@ -29,7 +29,7 @@ class MimirQuiz(commands.Cog, Websocket):
     
     @commands.command()
     @commands.cooldown(1, 10, commands.BucketType.user)
-    async def gettokenmethod(self, ctx):
+    async def getvideo(self, ctx):
         url = "https://media.discordapp.net/attachments/799861610654728212/968092655932289024/VID-20220425-WA0004.mp4"
         with open("Video/VID-20220425-WA0004.mp4", "rb") as f:
             file = discord.File(f, filename = "How to get Mimir Quiz Authorization Token?", spoiler = False)
@@ -221,6 +221,7 @@ class MimirQuiz(commands.Cog, Websocket):
         embed.add_field(name = f"{ctx.prefix}price (amount)", value = "Shows current price of mimir token.", inline = False)
         embed.add_field(name = f"{ctx.prefix}nextquiz (number)", value = "Shows upcoming quiz details.", inline = False)
         embed.add_field(name = f"{ctx.prefix}addtoken [token]", value = "Add/Update mimir authorization token.", inline = False)
+        embed.add_field(name = f"{ctx.prefix}getvideo", value = "Get a video where you can find how to get authorization token of mimir.", inline = False)
         embed.add_field(name = f"{ctx.prefix}start", value = "Start Websocket.", inline = False)
         embed.add_field(name = f"{ctx.prefix}close", value = "Close Websocket.", inline = False)
         embed.add_field(name = f"{ctx.prefix}invite", value = "Get bot invite link.", inline = False)
