@@ -32,10 +32,8 @@ class MimirQuiz(commands.Cog, Websocket):
     async def gettokenmethod(self, ctx):
         url = "https://media.discordapp.net/attachments/799861610654728212/968092655932289024/VID-20220425-WA0004.mp4"
         with open("Video/VID-20220425-WA0004.mp4", "rb") as f:
-            file = discord.File(f, filename = "How to get Mimir Quiz Authorization Token?")
-            await ctx.send(file = file)
-        #await ctx.send(url)
-        #await ctx.send("> **__HttpCanary Apk Link :** https://m.apkpure.com/httpcanary-%E2%80%94-http-sniffer-capture-analysis/com.guoshi.httpcanary/download?from=amp_info")
+            file = discord.File(f, filename = "How to get Mimir Quiz Authorization Token?", spoiler = True)
+            await ctx.send(file = file, content = "> **__HttpCanary Apk Link :** https://m.apkpure.com/httpcanary-%E2%80%94-http-sniffer-capture-analysis/com.guoshi.httpcanary/download?from=amp_info")
     
     @commands.command()
     @commands.cooldown(1, 10, commands.BucketType.user)
