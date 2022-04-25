@@ -415,7 +415,7 @@ class Websocket(object):
 						await asyncio.sleep(1)
 						if max_count != 0: await self.send_hook(embed = embed)
 					else:
-						thread = threading.Thread(target = lambda: asyncio.run(self.odd_one_out_search_result(search_with_all)))
+						thread = threading.Thread(target = lambda: asyncio.run(self.odd_one_out_search_result(search_with_all, choices)))
 						thread.start()
 					
 			elif event == "QuestionEnd":
