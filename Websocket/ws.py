@@ -40,6 +40,7 @@ class Websocket(object):
 		self.bearer_token = None
 		self.value = None # Entry Fee of the quiz
 		self.game_active = None
+		self.topic = None
 		self.searching_data = "Searching..."
 		
 	@property
@@ -81,6 +82,30 @@ class Websocket(object):
 		async with aiohttp.ClientSession() as session:
 			webhook = discord.Webhook.from_url(web_url, adapter=discord.AsyncWebhookAdapter(session))
 			await webhook.send(content = content, embed = embed, username = "Mimir Quiz", avatar_url = self.icon_url)
+
+	async def odd_one_out_search_result(self, question_url, choices):
+		"""Get Google search results through rating."""
+		r = requests.get(question_url)
+		res = str(r.text).lower()
+		count_options = {}
+		for choice in choices:
+			option = unidecode(choice["choice"]).strip()
+			count_option = res.count(option.lower())
+			count_options[option] = count_option
+		max_count = max(list(count_options.values()))
+		min_count = min(list(count_options.values()))
+		#min_max_count = min_count if not_question else max_count
+		embed = discord.Embed(title=f"**__Search Results -{order[0]}__**", color = discord.Colour.random())
+		embed.set_footer(text = "Mimir Quiz")
+		embed.timestamp = datetime.datetime.utcnow()
+		description = ""
+		for index, option in enumerate(count_options):
+			if count_options[option] == min_count:
+				description += f"{order[index]}. {option} : {count_options[option]} ✅\n"
+			else:
+				description += f"{order[index]}. {option} : {count_options[option]}\n"
+		embed.description = f"**{description}**"
+		await self.send_hook(embed = embed)
 
 	async def rating_search_one(self, question_url, choices):
 		"""Get Google search results through rating."""
@@ -179,7 +204,7 @@ class Websocket(object):
 			data = data[game_num-1]
 			self.game_active = data["active"] # if game is live
 			self.icon_url = data.get("previewImageUrl") or data.get("backgroundImageLandscapeUrl")
-			topic = data["label"]
+			self.topic = data["label"]
 			description = data.get("description")
 			self.prize = data["reward"]
 			time = f'<t:{int(data["scheduled"]/1000)}>'
@@ -190,7 +215,7 @@ class Websocket(object):
 			embed = discord.Embed(
 				title = "**__Mimir Upcoming Quiz Details !__**",
 				description = description, color = discord.Colour.random())
-			embed.add_field(name = "Quiz Topic :", value = topic, inline = False)
+			embed.add_field(name = "Quiz Topic :", value = self.topic, inline = False)
 			embed.add_field(name = "Prize Money :", value = f"ᛗ{self.prize}", inline = False)
 			if self.value: embed.add_field(name = "Entry Fee :", value = f"ᛗ{self.value}", inline = False)
 			embed.add_field(name = "Date & Time :", value = time, inline = False)
@@ -342,7 +367,7 @@ class Websocket(object):
 					choices = data["choices"]
 					bing_question = "https://bing.com/search?q=" + raw_question
 					options_list = [unidecode(choice["choice"]) for choice in choices]
-					options = "+".join(options_list)
+					options = "+or+".join(options_list)
 					raw_options = str(options).replace(" ", "+")
 					search_with_all = "https://google.com/search?q=" + raw_question + "+" + raw_options
 					not_question = True if " not " in question.lower() else False
@@ -356,38 +381,42 @@ class Websocket(object):
 					embed.set_footer(text = f"Response Time : {response_time} secs | Points : {point_value}")
 					await self.send_hook(embed = embed)
 					
-					target_list = [
-							self.rating_search_one(google_question, choices),
-							self.rating_search_two(google_question, choices),
-							self.direct_search_result(google_question, choices),
-							self.direct_search_result(search_with_all, choices)
-						]
-					for target in target_list:
-						thread = threading.Thread(target = lambda: asyncio.run(target))
+					if self.topic.upper() != "ODD ONE OUT":
+						target_list = [
+								self.rating_search_one(google_question, choices),
+								self.rating_search_two(google_question, choices),
+								self.direct_search_result(google_question, choices),
+								self.direct_search_result(search_with_all, choices)
+							]
+						for target in target_list:
+							thread = threading.Thread(target = lambda: asyncio.run(target))
+							thread.start()
+							
+						count_options = {}
+						for choice in choices:
+							option = unidecode(choice["choice"]).strip()
+							_option = replace_options.get(option)
+							option = _option if _option else option
+							count_option = self.searching_data.count(option.lower())
+							count_options[option] = count_option
+						max_count = max(list(count_options.values()))
+						min_count = min(list(count_options.values()))
+						#min_max_count = min_count if not_question else max_count
+						embed = discord.Embed(title=f"**__Search Results -{order[2]}__**", color = discord.Colour.random())
+						embed.set_footer(text = "Mimir Quiz")
+						embed.timestamp = datetime.datetime.utcnow()
+						description = ""
+						for index, option in enumerate(count_options):
+							if max_count != 0 and count_options[option] == max_count:
+								description += f"{order[index]}. {option} : {count_options[option]} ✅\n"
+							else:
+								description += f"{order[index]}. {option} : {count_options[option]}\n"
+						embed.description = f"**{description}**"
+						await asyncio.sleep(1)
+						if max_count != 0: await self.send_hook(embed = embed)
+					else:
+						thread = threading.Thread(target = lambda: asyncio.run(self.odd_one_out_search_result(search_with_all)))
 						thread.start()
-						
-					count_options = {}
-					for choice in choices:
-						option = unidecode(choice["choice"]).strip()
-						_option = replace_options.get(option)
-						option = _option if _option else option
-						count_option = self.searching_data.count(option.lower())
-						count_options[option] = count_option
-					max_count = max(list(count_options.values()))
-					min_count = min(list(count_options.values()))
-					#min_max_count = min_count if not_question else max_count
-					embed = discord.Embed(title=f"**__Search Results -{order[2]}__**", color = discord.Colour.random())
-					embed.set_footer(text = "Mimir Quiz")
-					embed.timestamp = datetime.datetime.utcnow()
-					description = ""
-					for index, option in enumerate(count_options):
-						if max_count != 0 and count_options[option] == max_count:
-							description += f"{order[index]}. {option} : {count_options[option]} ✅\n"
-						else:
-							description += f"{order[index]}. {option} : {count_options[option]}\n"
-					embed.description = f"**{description}**"
-					await asyncio.sleep(1)
-					if max_count != 0: await self.send_hook(embed = embed)
 					
 			elif event == "QuestionEnd":
 				"""Raised when the question has ended!"""
