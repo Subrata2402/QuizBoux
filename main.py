@@ -25,6 +25,7 @@ class MimirQuiz(commands.Cog, Websocket):
             wait_time = f"```{'0' if seconds < 10 else ''}{seconds} second{'s' if seconds != 1 else ''}```"
             description = ctx.author.mention + ", This command is on cooldown, please retry after " + wait_time + "!"
             return await ctx.reply(description)
+        print(error)
     
     @commands.command()
     @commands.cooldown(1, 10, commands.BucketType.user)
