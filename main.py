@@ -29,8 +29,9 @@ class MimirQuiz(commands.Cog, Websocket):
     @commands.command()
     @commands.cooldown(1, 10, commands.BucketType.user)
     async def gettoken(self, ctx):
-    	file_path = /Video/VID_20220425150717.mp4
-    	await ctx.send(file = discord.File(file_path, filename = "How to get mimir authorization token?"))
+        with open("/Video/VID_20220425150717.mp4", "rb") as f:
+            file = discord.File(f, filename = "How to get Mimir Quiz Authorization Token?")
+            await ctx.send(file = file)
     
     @commands.command()
     @commands.cooldown(1, 10, commands.BucketType.user)
