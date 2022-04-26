@@ -32,7 +32,7 @@ class MimirQuiz(commands.Cog, Websocket):
     async def getvideo(self, ctx):
         url = "https://media.discordapp.net/attachments/799861610654728212/968092655932289024/VID-20220425-WA0004.mp4"
         with open("Video/VID-20220425-WA0004.mp4", "rb") as f:
-            file = discord.File(f, filename = "How to get Mimir Quiz Authorization Token.mp4", spoiler = False)
+            file = discord.File(f, filename = "How-to-get-Mimir-Quiz-Authorization-Token.mp4", spoiler = False)
             await ctx.send(file = file, content = "> **__HttpCanary Apk Download Link :__** https://m.apkpure.com/httpcanary-%E2%80%94-http-sniffer-capture-analysis/com.guoshi.httpcanary/download?from=amp_info")
     
     @commands.command()
