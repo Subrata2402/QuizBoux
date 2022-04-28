@@ -14,7 +14,7 @@ ignore_options = ["the", "of", "in", "&", "on", "for", "or", "it", "to", "at", "
 "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z",
 "name", "does", "do", "is", "am", "are", "have", "has", "been", "did", "was", "not", "least", "never", "don't", "haven't", "didn't", "wasn't", "except", "wouldn't", "itsn't",
 "were", "had", "will", "would", "shall", "can", "should", "could", "may", "might", "need", "come", "comes", "means",
-"what", "who", "which", "whom", "why", "how", "when", "where", "=",
+"what", "who", "which", "whom", "why", "how", "when", "where", "=", "de",
 "of", "on", "these", "that", "this", "those", "there", "their", "at", "between", "from", "since", "for",
 "they", "and", "the", "a", "an", "with", "as", "by", "in", "to", "into", "also", "but",
 "i", "my", "me", "we", "our", "you", "your", "he", "his", "him", "himself", "them", "themselves", "it", "its", "myself", "she", "her", "yourselves",
