@@ -65,7 +65,7 @@ class MimirQuiz(commands.Cog, Websocket):
         #await ctx.message.delete()
         
     @commands.command()
-    async def translate(self, *, text):
+    async def translate(self, ctx, *, text):
         translate_text = await translate(ctx.guild.id, text)
         await ctx.send("```\n" + translate_text + "\n```")
         
