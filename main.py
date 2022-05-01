@@ -61,8 +61,14 @@ class MimirQuiz(commands.Cog, Websocket):
             return await ctx.reply(ctx.author.mention + ", This is not a valid language. Available languages : \n```\n{languages}\n```")
         update = {"language": language}
         db.mimir_details.update_one({"guild_id": ctx.guild.id}, {"$set": update})
-        await ws.send_hook("**Language Successfully Updated!**")
+        await ws.send_hook("Language Successfully Updated to {}!".format(language))
         #await ctx.message.delete()
+        
+    @commands.command()
+    async def translate(self, *, text):
+        translate_text = await translate(ctx.guild.id, text)
+        await ctx.send("```\n" + translate_text + "\n```")
+        
     
     @commands.command(
         name = "botlv",
