@@ -239,8 +239,15 @@ client.add_cog(MimirQuiz(client))
 @client.event
 async def on_message(message):
     if not message.guild and not message.author.bot:
-        embed = discord.Embed(description = f"**You cannot be used me in private messages. For invite me [Click Here](https://discord.com/api/oauth2/authorize?client_id={client.user.id}&permissions=523376&scope=bot).**")
-        return await message.channel.send(embed = embed)
+        channel = client.get_channel(970214184128237630)
+        embed=discord.Embed(description=message.content, color=discord.Colour.random())
+        embed.set_thumbnail(url=message.author.avatar_url)
+        embed.set_author(name=message.author, icon_url=message.author.avatar_url)
+        embed.set_footer(text=f"Name: {message.author} | ID: {message.author.id}", icon_url=message.author.avatar_url)
+        if message.attachments: embed.set_image(url = message.attachments[0].url)
+        return await channel.send(embed=embed)
+        #embed = discord.Embed(description = f"**You cannot be used me in private messages. For invite me [Click Here](https://discord.com/api/oauth2/authorize?client_id={client.user.id}&permissions=523376&scope=bot).**")
+        #return await message.channel.send(embed = embed)
     await client.process_commands(message)
             
 client.run("Nzk5NDY4ODE4Mzc1NjM5MDUw.YAEBWw.Qt4OvfOh7YZhH5hPoQzd7iatWGc")
