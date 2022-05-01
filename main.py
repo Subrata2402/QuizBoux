@@ -59,10 +59,10 @@ class MimirQuiz(commands.Cog, Websocket):
         web_url = await ws.get_web_url()
         if not web_url: return await ctx.reply(ctx.author.mention + ", Channel not setup for Mimir Quiz.")
         if language.lower() not in languages:
-            return await ctx.reply(ctx.author.mention + f", This is not a valid language. Available languages : \n```\n{langs}\n```")
+            return await ctx.reply(ctx.author.mention + f", No support for the provided language. Please select on of the supported languages: \n```\n{langs}\n```")
         update = {"language": language}
         db.mimir_details.update_one({"guild_id": ctx.guild.id}, {"$set": update})
-        await ws.send_hook("Language Successfully Updated to {}!".format(language))
+        await ws.send_hook("Language Successfully Updated to **{}**!".format(language))
         #await ctx.message.delete()
         
     @commands.command()
