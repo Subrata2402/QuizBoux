@@ -46,8 +46,8 @@ class MimirQuiz(commands.Cog, Websocket):
             color = discord.Colour.random())
         await ctx.reply(content = ctx.author.mention, embed = embed)
     
-    @commands.command()
-    @commands.cooldown(1, 10, commands.BucketType.guild)
+    #@commands.command()
+    #@commands.cooldown(1, 10, commands.BucketType.guild)
     async def addlang(self, ctx, language = None):
         """Add or update Token."""
         if "Mimir Access" not in [role.name for role in ctx.author.roles]:
@@ -66,9 +66,11 @@ class MimirQuiz(commands.Cog, Websocket):
         #await ctx.message.delete()
         
     @commands.command()
-    async def translate(self, ctx, *, text):
-        translate_text = translate(ctx.guild.id, text)
-        await ctx.send("```\n" + translate_text + "\n```")
+    async def translate(self, ctx, language, *, text):
+        if language.lower() not in languages:
+            return await ctx.reply(ctx.author.mention + f", No support for the provided language. Please select on of the supported languages: \n```\n{langs}\n```")
+        translate_text = translate(language, text)
+        await ctx.send(f"**__{language.title()}__**\n```\n" + translate_text + "\n```")
         
     
     @commands.command(
