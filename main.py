@@ -48,7 +48,7 @@ class MimirQuiz(commands.Cog, Websocket):
     
     @commands.command()
     @commands.cooldown(1, 10, commands.BucketType.guild)
-    async def lang(self, ctx, lang = None):
+    async def addlang(self, ctx, language = None):
         """Add or update Token."""
         if "Mimir Access" not in [role.name for role in ctx.author.roles]:
             return await ctx.reply(ctx.author.mention + ", You need `Mimir Access` role to run this command!")
@@ -56,9 +56,10 @@ class MimirQuiz(commands.Cog, Websocket):
         ws = Websocket(ctx.guild.id)
         web_url = await ws.get_web_url()
         if not web_url: return await ctx.reply(ctx.author.mention + ", Channel not setup for Mimir Quiz.")
-        if lang.lower() not in languages:
-            return await ctx.reply(ctx.author.mention + ", This is not a valid language.")
-        update = {"lang": lang}
+        if language.lower() not in languages:
+        	languages = ", ".[key for key in languages]
+            return await ctx.reply(ctx.author.mention + ", This is not a valid language. Available languages : \n```\n{languages}\n```")
+        update = {"language": language}
         db.mimir_details.update_one({"guild_id": ctx.guild.id}, {"$set": update})
         await ws.send_hook("**Language Successfully Updated!**")
         #await ctx.message.delete()
