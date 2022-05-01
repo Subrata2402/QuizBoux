@@ -52,7 +52,9 @@ class MimirQuiz(commands.Cog, Websocket):
         """Add or update Token."""
         if "Mimir Access" not in [role.name for role in ctx.author.roles]:
             return await ctx.reply(ctx.author.mention + ", You need `Mimir Access` role to run this command!")
-        if not token: return await ctx.reply(ctx.author.mention + ", You didn't enter any language.")
+        if not language:
+        	langs = ", ".join([key for key in languages])
+            return await ctx.reply(ctx.author.mention + f", You didn't enter any language. Available languages : \n```\n{langs}\n```")
         ws = Websocket(ctx.guild.id)
         web_url = await ws.get_web_url()
         if not web_url: return await ctx.reply(ctx.author.mention + ", Channel not setup for Mimir Quiz.")
