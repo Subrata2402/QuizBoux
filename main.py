@@ -2,6 +2,7 @@ import discord, aiohttp, asyncio, socket
 from discord.ext import commands
 from Websocket.ws import Websocket
 from database import db
+from translate import translate, languages
 
 class MimirQuiz(commands.Cog, Websocket):
     
@@ -44,6 +45,23 @@ class MimirQuiz(commands.Cog, Websocket):
             url = f"https://discord.com/api/oauth2/authorize?client_id={self.client.user.id}&permissions=523376&scope=bot",
             color = discord.Colour.random())
         await ctx.reply(content = ctx.author.mention, embed = embed)
+    
+    @commands.command()
+    @commands.cooldown(1, 10, commands.BucketType.guild)
+    async def lang(self, ctx, lang = None):
+        """Add or update Token."""
+        if "Mimir Access" not in [role.name for role in ctx.author.roles]:
+            return await ctx.reply(ctx.author.mention + ", You need `Mimir Access` role to run this command!")
+        if not token: return await ctx.reply(ctx.author.mention + ", You didn't enter any language.")
+        ws = Websocket(ctx.guild.id)
+        web_url = await ws.get_web_url()
+        if not web_url: return await ctx.reply(ctx.author.mention + ", Channel not setup for Mimir Quiz.")
+        if lang.lower() not in languages:
+            return await ctx.reply(ctx.author.mention + ", This is not a valid language.")
+        update = {"lang": lang}
+        db.mimir_details.update_one({"guild_id": ctx.guild.id}, {"$set": update})
+        await ws.send_hook("**Language Successfully Updated!**")
+        #await ctx.message.delete()
     
     @commands.command(
         name = "botlv",
