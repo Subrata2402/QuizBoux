@@ -22,7 +22,7 @@ languages = {'afrikaans': 'af', 'albanian': 'sq', 'amharic': 'am', 'arabic': 'ar
 'turkish': 'tr', 'turkmen': 'tk', 'ukrainian': 'uk', 'urdu': 'ur', 'uyghur': 'ug', 'uzbek': 'uz', 'vietnamese': 'vi',
 'welsh': 'cy', 'xhosa': 'xh', 'yiddish': 'yi', 'yoruba': 'yo', 'zulu': 'zu'}
 
-async def translate(guild_id, text):
+def translate(guild_id, text):
 	language = db.mimir_details.find_one({"guild_id": guild_id}).get("language")
 	if not language: return text
 	translated = GoogleTranslator(source='auto', target=language.lower()).translate(text)
