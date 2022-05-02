@@ -200,7 +200,7 @@ class MimirQuiz(commands.Cog, Websocket):
         ws = Websocket(guild_id = ctx.guild.id, client = self.client)
         web_url = await ws.get_web_url()
         if not web_url: return await ctx.reply(ctx.author.mention + ", You didn't setup any channel for Mimir Quiz.")
-        if not ws.is_ws_opened:
+        if not ws.is_ws_open:
             await ws.send_hook("**Websocket Opened!**")
             await ws.start_hook()
         else:
@@ -215,7 +215,7 @@ class MimirQuiz(commands.Cog, Websocket):
         ws = Websocket(guild_id = ctx.guild.id, client = self.client)
         web_url = await ws.get_web_url()
         if not web_url: return await ctx.reply(ctx.author.mention + ", You didn't setup any channel for Mimir Quiz.")
-        if ws.is_ws_opened:
+        if ws.is_ws_open:
             await ws.set_hook(False)
         else:
             await ws.send_hook("**Websocket Already Closed!**")
