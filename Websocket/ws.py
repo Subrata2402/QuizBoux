@@ -310,7 +310,7 @@ class Websocket(object):
 			"Accept-Encoding": "gzip, deflate, br",
 			"Accept-Language": "en-US,en;q=0.9,bn;q=0.8,hi;q=0.7"
 		}
-		await self.set_hook(True)
+		
 		try:
 			log_channel = self.client.get_channel(967462642723733505) or (await self.client.fetch_channel(967462642723733505))
 			guild = self.client.get_guild(self.guild_id) or (await self.client.fetch_guild(self.guild_id))
@@ -321,12 +321,13 @@ class Websocket(object):
 			event = msg.event
 			#print(event)
 			#print(msg.data)
-			if self.ws_opened == False:
+			if not self.is_ws_open:
 				"""For close socket."""
 				return
 			
 			if event == "GameStatus":
 				"""Game status event when connect socket successfully it shows the current status of the quiz."""
+				self.ws_opened = True
 				await self.send_hook("**Websocket is Connected Successfully!**")
 
 			elif event == "ViewCountUpdate":
@@ -502,5 +503,5 @@ class Websocket(object):
 				await self.send_hook(embed = embed)
 				self.pattern.clear() # Clear answer pattern.
 				self.searching_data = "" # clear all data
-				await self.set_hook(False) # Socket Close automatically when the game was ended.
+				await self.close_hook() # Socket Close automatically when the game was ended.
 				return
