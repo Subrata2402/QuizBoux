@@ -32,7 +32,7 @@ class Websocket(object):
 		self.client = client
 		self.prize = 500 # Default prize money of quiz
 		self.pattern = [] # Store answer pattern of the current quiz
-		self.ws_is_opened = False
+		self.ws_opened = False
 		self.icon_url = "https://pbs.twimg.com/profile_images/1427270008531562496/xaq5Xlzg_400x400.jpg"
 		self.game_id = None
 		self.partner_id = None
@@ -52,13 +52,16 @@ class Websocket(object):
 		active = data["active"]
 		return active # return True or False
 		
+	@property
+	def is_ws_open(self):
+		"""Check either ws is open or close"""
+		return self.ws_opened
 	
-	async def set_hook(self, opened):
+	async def close_hook(self):
 		"""Close Websocket."""
-		self.ws_is_opened = opened
-		if not opened:
-			print("Websocket Closed!")
-			await self.send_hook("**Websocket Closed!**")
+		self.ws_opened = False
+		print("Websocket Closed!")
+		await self.send_hook("**Websocket Closed!**")
 
 	async def get_token(self):
 		"""Take Authorization Bearer Token from the database for the different guild."""
@@ -318,7 +321,7 @@ class Websocket(object):
 			event = msg.event
 			#print(event)
 			#print(msg.data)
-			if self.ws_is_opened == False:
+			if self.ws_opened == False:
 				"""For close socket."""
 				return
 			
