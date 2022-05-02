@@ -310,7 +310,7 @@ class Websocket(object):
 			"Accept-Encoding": "gzip, deflate, br",
 			"Accept-Language": "en-US,en;q=0.9,bn;q=0.8,hi;q=0.7"
 		}
-		
+		self.ws_opened = True
 		try:
 			log_channel = self.client.get_channel(967462642723733505) or (await self.client.fetch_channel(967462642723733505))
 			guild = self.client.get_guild(self.guild_id) or (await self.client.fetch_guild(self.guild_id))
@@ -327,7 +327,6 @@ class Websocket(object):
 			
 			if event == "GameStatus":
 				"""Game status event when connect socket successfully it shows the current status of the quiz."""
-				self.ws_opened = True
 				await self.send_hook("**Websocket is Connected Successfully!**")
 
 			elif event == "ViewCountUpdate":
