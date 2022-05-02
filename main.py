@@ -216,7 +216,7 @@ class MimirQuiz(commands.Cog, Websocket):
         web_url = await ws.get_web_url()
         if not web_url: return await ctx.reply(ctx.author.mention + ", You didn't setup any channel for Mimir Quiz.")
         if ws.is_ws_open:
-            await ws.set_hook(False)
+            await ws.close_hook()
         else:
             await ws.send_hook("**Websocket Already Closed!**")
         
