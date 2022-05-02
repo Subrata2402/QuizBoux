@@ -68,7 +68,7 @@ class MimirQuiz(commands.Cog, Websocket):
     @commands.command()
     async def translate(self, ctx, language, *, text):
         if language.lower() not in languages:
-        	langs = ", ".join([key for key in languages])
+            langs = ", ".join([key for key in languages])
             return await ctx.reply(ctx.author.mention + f", No support for the provided language. Please select on of the supported languages: \n```\n{langs}\n```")
         translate_text = translate(language, text)
         await ctx.send(f"**__Translate in {language.title()}__**\n```\n" + translate_text + "\n```")
