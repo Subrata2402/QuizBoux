@@ -77,6 +77,10 @@ class Websocket(object):
 		if not web_url:
 			return web_url
 		web_url = web_url.get("web_url")
+		async with aiohttp.ClientSession() as session:
+			response = await session.get(web_url)
+			if response.status != 200:
+				return None
 		return web_url
 
 	async def send_hook(self, content = "", embed = None):
