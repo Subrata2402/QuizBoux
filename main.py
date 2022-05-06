@@ -163,5 +163,21 @@ async def on_message(message):
         #embed = discord.Embed(description = f"**You cannot be used me in private messages. For invite me [Click Here](https://discord.com/api/oauth2/authorize?client_id={client.user.id}&permissions=523376&scope=bot).**")
         #return await message.channel.send(embed = embed)
     await client.process_commands(message)
+
+extensions = ["Trivia.Display.display", "Trivia.Mimir.mimir"]
+
+if __name__ == "__main__":
+    failed_ext = ""
+    for extension in extensions:
+        try:
+            client.load_extension(extension)
+        except Exception as e:
+            failed_ext += f"{extension}, "
+            print(f"Error loading {extension}", file=sys.stderr)
+            traceback.print_exc()
+    if failed_ext != "":
+        print("Loaded Failed :", failed_ext)
+    else:
+        print("Loaded Successful!")
             
 client.run("Nzk5NDY4ODE4Mzc1NjM5MDUw.YAEBWw.Qt4OvfOh7YZhH5hPoQzd7iatWGc")
