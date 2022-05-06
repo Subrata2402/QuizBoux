@@ -127,9 +127,14 @@ class MainClass(commands.Cog, Websocket):
         if ctx.guild: embed.set_thumbnail(url = ctx.guild.icon_url)
         await channel.send(embed = embed)
     
-    @commands.command()
+    @commands.group(case_insensitive = True, invoke_without_command = True)
     @commands.cooldown(1, 10, commands.BucketType.user)
     async def help(self, ctx):
+        embed = discord.Embed(title = self.client.user.name + ""
+    
+    
+    @help.command()
+    async def mimir(self, ctx):
         embed = discord.Embed(color = discord.Colour.random())
         embed.add_field(name = f"{ctx.prefix}help", value = "Shows this message.", inline = False)
         embed.add_field(name = f"{ctx.prefix}setup [channel]", value = "Setup mimir quiz channel.", inline = False)
