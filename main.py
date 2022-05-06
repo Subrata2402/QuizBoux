@@ -138,7 +138,7 @@ class MainClass(commands.Cog, Websocket):
         embed.add_field(name = f"{ctx.prefix}addtoken [token]", value = "Add/Update mimir authorization token.", inline = False)
         embed.add_field(name = f"{ctx.prefix}login [username] [password]", value = "Login to Display for start websocket. Before login please read the note carefully.\n**__Note :__** Please don't use main account id and password for the chances of account ban. If account will get ban then we are not responsible for this.", inline = False)
         embed.add_field(name = f"{ctx.prefix}getvideo", value = "Get a video where you can find how to get authorization token of mimir.", inline = False)
-        embed.add_field(name = f"{ctx.prefix}start [mimir/display]", value = "Start Websocket of Mimir/Display. Before start the display websocket please read the note carefully.\n**__Note", inline = False)
+        embed.add_field(name = f"{ctx.prefix}start [mimir/display]", value = "Start Websocket of Mimir/Display. Before start the display websocket please read the note carefully.\n**__Note :__** Start the websocket 30 seconds before coming the question or whe", inline = False)
         embed.add_field(name = f"{ctx.prefix}close [mimir/display]", value = "Close Websocket of Mimir/Display.", inline = False)
         embed.add_field(name = f"{ctx.prefix}invite", value = "Get bot invite link.", inline = False)
         embed.set_thumbnail(url = self.client.user.avatar_url)
