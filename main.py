@@ -127,23 +127,18 @@ class MainClass(commands.Cog, Websocket):
         if ctx.guild: embed.set_thumbnail(url = ctx.guild.icon_url)
         await channel.send(embed = embed)
     
-    @commands.group(case_insensitive = True, invoke_without_command = True)
+    @commands.command()
     @commands.cooldown(1, 10, commands.BucketType.user)
     async def help(self, ctx):
-        embed = discord.Embed(title = self.client.user.name + ""
-    
-    
-    @help.command()
-    async def mimir(self, ctx):
         embed = discord.Embed(color = discord.Colour.random())
         embed.add_field(name = f"{ctx.prefix}help", value = "Shows this message.", inline = False)
-        embed.add_field(name = f"{ctx.prefix}setup [channel]", value = "Setup mimir quiz channel.", inline = False)
+        embed.add_field(name = f"{ctx.prefix}setup [mimir/display] [channel]", value = "Setup channel for Mimir/Display.", inline = False)
         embed.add_field(name = f"{ctx.prefix}price (amount)", value = "Shows current price of mimir token.", inline = False)
         embed.add_field(name = f"{ctx.prefix}nextquiz (number)", value = "Shows upcoming quiz details.", inline = False)
         embed.add_field(name = f"{ctx.prefix}addtoken [token]", value = "Add/Update mimir authorization token.", inline = False)
         embed.add_field(name = f"{ctx.prefix}getvideo", value = "Get a video where you can find how to get authorization token of mimir.", inline = False)
-        embed.add_field(name = f"{ctx.prefix}start", value = "Start Websocket.", inline = False)
-        embed.add_field(name = f"{ctx.prefix}close", value = "Close Websocket.", inline = False)
+        embed.add_field(name = f"{ctx.prefix}start [mimir/display]", value = "Start Websocket of Mimir/Display. Before start the display websocket please read display notes.", inline = False)
+        embed.add_field(name = f"{ctx.prefix}close [mimir/display]", value = "Close Websocket of Mimir/Display.", inline = False)
         embed.add_field(name = f"{ctx.prefix}invite", value = "Get bot invite link.", inline = False)
         embed.set_thumbnail(url = self.client.user.avatar_url)
         embed.set_author(name = "| Mimir Quiz Help Commands !", icon_url = self.client.user.avatar_url)
