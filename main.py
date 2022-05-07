@@ -13,7 +13,7 @@ class MainClass(commands.Cog, Websocket):
     @commands.Cog.listener()
     async def on_ready(self):
         print("Ready!")
-        game = discord.Streaming(name = f"with Mimir Quiz in {str(len(self.client.guilds))} guilds", url = "https://app.mimirquiz.com")
+        game = discord.Streaming(name = f"with {str(len(self.client.guilds))} guilds | {str(len(self.client.users))} users", url = "https://app.mimirquiz.com")
         await self.client.change_presence(activity=game)
         
     @commands.Cog.listener()
