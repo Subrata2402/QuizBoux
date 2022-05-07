@@ -132,7 +132,7 @@ class MainClass(commands.Cog, Websocket):
     @commands.cooldown(1, 10, commands.BucketType.user)
     async def donate(self, ctx):
         embed = discord.Embed(color = discord.Colour.random())
-        embed.description = "PayPal : "
+        embed.description = "PayPal : https://paypal.me/sakhman\nFor Paytm or others upi apps "
     
     @commands.command()
     @commands.cooldown(1, 10, commands.BucketType.user)
