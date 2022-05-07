@@ -187,6 +187,6 @@ if __name__ == "__main__":
     if failed_ext != "":
         print("Loaded Failed :", failed_ext)
     else:
-        print("Loaded Successful!")
+        print("Extensions Loaded Successful!")
             
 client.run("Nzk5NDY4ODE4Mzc1NjM5MDUw.YAEBWw.Qt4OvfOh7YZhH5hPoQzd7iatWGc")
