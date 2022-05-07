@@ -126,6 +126,13 @@ class MainClass(commands.Cog, Websocket):
         embed.set_author(name = ctx.author, icon_url = ctx.author.avatar_url)
         if ctx.guild: embed.set_thumbnail(url = ctx.guild.icon_url)
         await channel.send(embed = embed)
+        
+    
+    @commands.command()
+    @commands.cooldown(1, 10, commands.BucketType.user)
+    async def donate(self, ctx):
+        embed = discord.Embed(color = discord.Colour.random())
+        embed.description = "PayPal : "
     
     @commands.command()
     @commands.cooldown(1, 10, commands.BucketType.user)
