@@ -141,6 +141,7 @@ class MainClass(commands.Cog, Websocket):
         embed.add_field(name = f"{ctx.prefix}start [mimir/display]", value = "Start Websocket of Mimir/Display. Before start the display websocket please read the note carefully.\n**__Note :__** The websocket will before 30 seconds of the question coming or when question will come, start the websocket. If started before long time  the question coming, close it and start again.", inline = False)
         embed.add_field(name = f"{ctx.prefix}close [mimir/display]", value = "Close Websocket of Mimir/Display.", inline = False)
         embed.add_field(name = f"{ctx.prefix}invite", value = "Get bot invite link.", inline = False)
+        embed.add_field(name = f"{ctx.prefix}donate", value = "Please donate us to show your support.", inline = False)
         embed.set_thumbnail(url = self.client.user.avatar_url)
         embed.set_author(name = f"| {self.client.user.name} Help Commands !", icon_url = self.client.user.avatar_url)
         embed.set_footer(text = f"Requested by : {ctx.author}", icon_url = ctx.author.avatar_url)
