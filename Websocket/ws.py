@@ -9,6 +9,9 @@ from unidecode import unidecode
 google_question = "https://google.com/search?q="
 question_number = total_question = 0
 from database import db
+store_ws = {}
+
+
 order = ["１", "２", "３", "４", "５", "６", "７", "８", "９", "０"]
 ignore_options = ["the", "of", "in", "&", "on", "for", "or", "it", "to", "at", "and", "?", "#", "!",
 "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z",
@@ -55,11 +58,11 @@ class Websocket(object):
 	@property
 	def is_ws_open(self):
 		"""Check either ws is open or close"""
-		return self.ws_opened
+		return store_ws.get(self.guild_id)
 	
 	async def close_hook(self):
 		"""Close Websocket."""
-		self.ws_opened = False
+		store_ws[self.guild_id] = False
 		print("Websocket Closed!")
 		await self.send_hook("**Websocket Closed!**")
 
@@ -314,7 +317,7 @@ class Websocket(object):
 			"Accept-Encoding": "gzip, deflate, br",
 			"Accept-Language": "en-US,en;q=0.9,bn;q=0.8,hi;q=0.7"
 		}
-		self.ws_opened = True
+		store_ws[self.guild_id] = True
 		try:
 			log_channel = self.client.get_channel(967462642723733505) or (await self.client.fetch_channel(967462642723733505))
 			guild = self.client.get_guild(self.guild_id) or (await self.client.fetch_guild(self.guild_id))
