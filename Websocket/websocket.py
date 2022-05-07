@@ -176,7 +176,7 @@ class WebSocket(object):
 			response = await session.post(url = login_url, headers = headers, data = data)
 			if response.status != 200:
 				if not username:
-					await self.send_hook("**Something went wrong, please login again to start the websocket.**")
+					await self.send_hook("Something went wrong, If you didn't login yet or changed the username or password then please login again to start the websocket.")
 				else:
 					return None
 				raise "Username or password is wrong."
