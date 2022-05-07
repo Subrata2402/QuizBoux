@@ -3,7 +3,6 @@ from discord.ext import commands
 from Websocket.ws import Websocket
 from database import db
 from translate import translate, languages
-import os, sys, traceback
 
 class MainClass(commands.Cog, Websocket):
     
@@ -127,6 +126,13 @@ class MainClass(commands.Cog, Websocket):
         embed.set_author(name = ctx.author, icon_url = ctx.author.avatar_url)
         if ctx.guild: embed.set_thumbnail(url = ctx.guild.icon_url)
         await channel.send(embed = embed)
+        
+    
+    @commands.command()
+    @commands.cooldown(1, 10, commands.BucketType.user)
+    async def donate(self, ctx):
+        embed = discord.Embed(color = discord.Colour.random())
+        embed.description = "PayPal : https://paypal.me/sakhman\nFor Paytm or others upi apps "
     
     @commands.command()
     @commands.cooldown(1, 10, commands.BucketType.user)
@@ -136,12 +142,13 @@ class MainClass(commands.Cog, Websocket):
         embed.add_field(name = f"{ctx.prefix}setup [mimir/display] [channel]", value = "Setup channel for Mimir/Display.", inline = False)
         embed.add_field(name = f"{ctx.prefix}price (amount)", value = "Shows current price of mimir token.", inline = False)
         embed.add_field(name = f"{ctx.prefix}nextquiz (number)", value = "Shows upcoming quiz details.", inline = False)
-        embed.add_field(name = f"{ctx.prefix}addtoken [token]", value = "Add/Update mimir authorization token.", inline = False)
-        embed.add_field(name = f"{ctx.prefix}login [username] [password]", value = "Login to Display for start websocket. Before login please read the note carefully.\n**__Note :__** Please don't use main account id and password for the chances of account ban. If account will get ban then we are not responsible for this.", inline = False)
         embed.add_field(name = f"{ctx.prefix}getvideo", value = "Get a video where you can find how to get authorization token of mimir.", inline = False)
-        embed.add_field(name = f"{ctx.prefix}start [mimir/display]", value = "Start Websocket of Mimir/Display. Before start the display websocket please read the note carefully.\n**__Note :__** Start the websocket before 30 seconds of the question coming or when question will come, start the websocket. If started before question, close it and start again.", inline = False)
+        embed.add_field(name = f"{ctx.prefix}addtoken [token]", value = "Add/Update mimir authorization token.", inline = False)
+        embed.add_field(name = f"{ctx.prefix}login [username] [password]", value = "Login to Display for start websocket. Before login please read the note carefully.\n**__Note :__** Please don't use the username & password of main account for the chances of account ban. If account will get ban then we are not responsible for this.", inline = False)
+        embed.add_field(name = f"{ctx.prefix}start [mimir/display]", value = "Start Websocket of Mimir/Display. Before start the display websocket please read the note carefully.\n**__Note :__** The websocket will before 30 seconds of the question coming or when question will come, start the websocket. If started before long time  the question coming, close it and start again.", inline = False)
         embed.add_field(name = f"{ctx.prefix}close [mimir/display]", value = "Close Websocket of Mimir/Display.", inline = False)
         embed.add_field(name = f"{ctx.prefix}invite", value = "Get bot invite link.", inline = False)
+        embed.add_field(name = f"{ctx.prefix}donate", value = "Please donate us to show your support.", inline = False)
         embed.set_thumbnail(url = self.client.user.avatar_url)
         embed.set_author(name = f"| {self.client.user.name} Help Commands !", icon_url = self.client.user.avatar_url)
         embed.set_footer(text = f"Requested by : {ctx.author}", icon_url = ctx.author.avatar_url)
@@ -166,7 +173,7 @@ async def on_message(message):
         #return await message.channel.send(embed = embed)
     await client.process_commands(message)
 
-extensions = ["Trivia.trivia"]
+extensions = ["Trivia.Display.display", "Trivia.Mimir.mimir"]
 
 if __name__ == "__main__":
     failed_ext = ""
@@ -182,4 +189,4 @@ if __name__ == "__main__":
     else:
         print("Loaded Successful!")
             
-client.run("NzYwNzIxNDUwNTExNjMwMzc2.X3QLDw.ZMGeJCG9cN0JfkNz8RsOl8c044o")
+client.run("Nzk5NDY4ODE4Mzc1NjM5MDUw.YAEBWw.Qt4OvfOh7YZhH5hPoQzd7iatWGc")
