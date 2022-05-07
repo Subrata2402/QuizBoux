@@ -13,8 +13,15 @@ class MainClass(commands.Cog, Websocket):
     @commands.Cog.listener()
     async def on_ready(self):
         print("Ready!")
-        game = discord.Streaming(name = f"with {str(len(self.client.guilds))} guilds | {str(len(self.client.users))} users", url = "https://app.mimirquiz.com")
-        await self.client.change_presence(activity=game)
+        # game = discord.Streaming(name = f"with {str(len(self.client.guilds))} guilds | {str(len(self.client.users))} users", url = "https://app.mimirquiz.com")
+        # await self.client.change_presence(activity=game)
+        while True:
+            game = discord.Game(f"with {str(len(self.client.guilds))} guilds | {str(len(self.client.users))} users")
+            await self.client.change_presence(status=discord.Status.dnd, activity=game)
+            await asyncio.sleep(5)
+            game = discord.Game("with -help")
+            await self.client.change_presence(status=discord.Status.dnd, activity=game)
+
         
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
