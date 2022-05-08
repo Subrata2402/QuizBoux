@@ -202,7 +202,10 @@ class WebSocket(object):
 		correct_answer_ids = [] # Store correct answer id of a question
 		show_winners = False # check winner shows or not
 		answer_pattern = [] # Store answer number of each question
-		self.ws = await websockets.connect(socket_url, subprotocols = [sub_protocol], extra_headers = headers)
+		try:
+			self.ws = await websockets.connect(socket_url, subprotocols = [sub_protocol], extra_headers = headers)
+		except Exception as e:
+			return await self.send_hook("```\nSomething went wrong while connecting to the websocket, please try again after some times.\n```")
 		storingWs[self.guild_id] = self.ws # store Websocket for each guild
 		async for message in self.ws:
 			message_data = json.loads(message)
