@@ -192,4 +192,4 @@ if __name__ == "__main__":
     else:
         print("Extensions Loaded Successful!")
             
-client.run("NzYwNzIxNDUwNTExNjMwMzc2.X3QLDw.ZMGeJCG9cN0JfkNz8RsOl8c044o")
+client.run("Nzk5NDY4ODE4Mzc1NjM5MDUw.YAEBWw.L5411_ltMGYE1Hcioe-nudFmaq0")
