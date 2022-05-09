@@ -21,7 +21,8 @@ class MainClass(commands.Cog, Websocket):
             await asyncio.sleep(5)
             game = discord.Game("with -help")
             await self.client.change_presence(status=discord.Status.dnd, activity=game)
-
+            await asyncio.sleep(5)
+            
         
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
