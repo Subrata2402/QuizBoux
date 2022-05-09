@@ -19,7 +19,7 @@ class MainClass(commands.Cog, Websocket):
             game = discord.Game(f"with {str(len(self.client.guilds))} guilds | {str(len(self.client.users))} users")
             await self.client.change_presence(status=discord.Status.dnd, activity=game)
             await asyncio.sleep(5)
-            game = discord.Game("with -help")
+            game = discord.Game("with Mimir & Display | -help")
             await self.client.change_presence(status=discord.Status.dnd, activity=game)
             await asyncio.sleep(5)
             
@@ -146,7 +146,7 @@ class MainClass(commands.Cog, Websocket):
         embed.add_field(name = f"{ctx.prefix}help", value = "Shows this message.", inline = False)
         embed.add_field(name = f"{ctx.prefix}setup [mimir/display] [channel]", value = "Setup channel for Mimir/Display.", inline = False)
         embed.add_field(name = f"{ctx.prefix}price (amount)", value = "Shows current price of mimir token.", inline = False)
-        embed.add_field(name = f"{ctx.prefix}nextquiz (number)", value = "Shows upcoming quiz details.", inline = False)
+        embed.add_field(name = f"{ctx.prefix}nextquiz (number)", value = "Shows upcoming mimir quiz details.", inline = False)
         embed.add_field(name = f"{ctx.prefix}addtoken [token]", value = "Add/Update mimir authorization token.", inline = False)
         embed.add_field(name = f"{ctx.prefix}login [username] [password]", value = "Login to Display for start websocket. Before login please read the note carefully.\n\n**__Note :__** Please don't use username and password of main account for the chances of account ban. If account will get ban then we are not responsible for this.", inline = False)
         embed.add_field(name = f"{ctx.prefix}getvideo", value = "Get a video where you can find how to get authorization token of mimir.", inline = False)
