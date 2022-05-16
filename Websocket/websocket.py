@@ -203,7 +203,7 @@ class WebSocket(object):
 		show_winners = False # check winner shows or not
 		answer_pattern = [] # Store answer number of each question
 		try:
-			self.ws = await websockets.connect(socket_url, subprotocols = [sub_protocol], extra_headers = headers)
+			self.ws = await websockets.connect(socket_url, subprotocols = [sub_protocol], extra_headers = headers, ping_interval = 15)
 		except Exception as e:
 			return await self.send_hook("```\nSomething went wrong while connecting to the websocket, please try again after some times.\n```")
 		storingWs[self.guild_id] = self.ws # store Websocket for each guild
