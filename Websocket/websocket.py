@@ -217,7 +217,8 @@ class WebSocket(object):
 			if message_data.get("type") == "games_list":
 				"""Get games list and take game id from it then send game id to ws for subscribe the current game."""
 				game_id = message_data["data"][0]["id"]
-				if not send_data:
+				survey_type = message_data["data"][0]["survey_type"]
+				if not send_data and survey_type == 1:
 					await self.ws.send(json.dumps({"action": "subscribe", "data": {"game_id": game_id}}))
 					send_data, connect = True, True
 					await self.send_hook("**Websocket Successfully Conncted!**")
