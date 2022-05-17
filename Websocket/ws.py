@@ -25,7 +25,7 @@ ignore_options = ["the", "of", "in", "&", "on", "for", "or", "it", "to", "at", "
 ]
 replace_options = {"1": "one", "2": "two", "3": "three", "4": "four", "5": "five",
 "6": "six", "7": "seven", "8": "eight", "9": "nine", "10": "ten"}
-negative_words = {" not ", " least ", " never ", " incorrect ", " incorrectly ", " none ", " cannot ", " can't ", " didn't "}
+negative_words = {" not ", "least", "never", "incorrect", "incorrectly", "none", "cannot", "can't", "didn't"}
 
 
 class Websocket(object):
@@ -391,7 +391,7 @@ class Websocket(object):
 					embed.set_footer(text = f"Response Time : {response_time} secs | Points : {point_value}")
 					await self.send_hook(embed = embed)
 					
-					if self.topic.upper() != "ODD ONE OUT":
+					if self.topic.upper() != "ODD ONE OUT" and "TRUE OR FALSE" not in question.upper():
 						target_list = [
 								self.rating_search_one(google_question, choices),
 								self.rating_search_two(google_question, choices),
@@ -424,7 +424,7 @@ class Websocket(object):
 						embed.description = f"**{description}**"
 						await asyncio.sleep(1)
 						if max_count != 0: await self.send_hook(embed = embed)
-					else:
+					elif "TRUE OR FALSE" not in question.upper():
 						thread = threading.Thread(target = lambda: asyncio.run(self.odd_one_out_search_result(search_with_all, choices)))
 						thread.start()
 					
