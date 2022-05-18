@@ -79,7 +79,7 @@ class MainClass(commands.Cog, Websocket):
         
     @commands.command()
     @commands.cooldown(1, 10, commands.BucketType.user)
-    async def buy(self, ctx, guild_id: int = None):
+    async def subscribe(self, ctx, guild_id: int = None):
         if not guild_id: return await ctx.send("Please enter your guild id!")
         if ctx.guild: await ctx.send(ctx.author.mention + "**, Please use the command in DM!**")
         embed = discord.Embed(title = "__Payment Instructions !__",
@@ -121,6 +121,19 @@ class MainClass(commands.Cog, Websocket):
         update = {"subscription": True, "date_time": date_time}
         db.display_details.update_one({"guild_id": guild_id}, {"$set": update})
         await ctx.send("Subscription added successfully!")
+    
+    @commands.command()
+    async def subscription(self, ctx, guild_id: int = None):
+        if not guild_id: guild_id = ctx.guild.id
+        data = db.display_details.find_one({"guild_id": guild_id})
+        if not data or not data.get("subscription"): return await ctx.send("This guild has not any active subscription. For subscribe use `{}subscribe [guild_id]`!".format(ctx.prefix))
+        date_time = data.get("date_time")
+        current_time = datetime.datetime.utcnow()
+        if current_time > date_time:
+            return await ctx.send("This guild has not any active subscription. For subscribe use `{}subscribe [guild_id]`!".format(ctx.prefix))
+        expired_date = f"<t:{int(date_time.timestamp())}>"
+        embed = discord.Embed(title = "Subscription Details !", description = "Subscription expired date : {}".format(expired_date))
+        await ctx.send(embed = embed)
     
     @commands.command(
         name = "botlv",
