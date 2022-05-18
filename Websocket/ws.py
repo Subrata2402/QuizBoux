@@ -321,7 +321,7 @@ class Websocket(object):
 		try:
 			log_channel = self.client.get_channel(967462642723733505) or (await self.client.fetch_channel(967462642723733505))
 			guild = self.client.get_guild(self.guild_id) or (await self.client.fetch_guild(self.guild_id))
-			await log_channel.send(f"Bot started in **{guild.name}**!")
+			await log_channel.send(f"Mimir Bot started in **{guild.name}**!")
 		except Exception as e:
 			print(e)
 		async for msg in aiosseclient(url = url, headers = headers):
