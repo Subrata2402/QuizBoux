@@ -81,8 +81,14 @@ class MainClass(commands.Cog, Websocket):
     @commands.is_owner()
     async def addpremium(self, ctx, guild_id: int = None, days: int = None):
         if not guild_id: return await ctx.send("Guild I'd is not provided!")
-        time = int(datetime.datetime.utcnow().timestamp())
-        premium = db.display_details.find_one({"guild_id": guild_id})
+        check = db.display_details.find_one({"guild_id": guild_id})
+        if not check: return await ctx.send("Guild does not find in the database.")
+        current_time = datetime.datetime.utcnow()
+        change_time = datetime.timedelta(days = days)
+        date_time = current_time + change_time
+        update = {"subscription": True, "date_time": date_time}
+        db.display_details.update_one({"guild_id": guild_id}, {"$set": update})
+        await ctx.send("Subscription added successfully!")
     
     @commands.command(
         name = "botlv",
