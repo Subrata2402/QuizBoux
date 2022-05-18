@@ -92,6 +92,28 @@ class Websocket(object):
 		async with aiohttp.ClientSession() as session:
 			webhook = discord.Webhook.from_url(web_url, adapter=discord.AsyncWebhookAdapter(session))
 			await webhook.send(content = content, embed = embed, username = "Mimir Quiz", avatar_url = self.icon_url)
+	
+	async def api_search_result(self, question, options, not_question) -> None:
+		"""Get Google search results through the api."""
+		url = 'https://jhatboyrahul.herokuapp.com/api/getResults'
+		headers = {"Authorization": "RainBhai12"}
+		payload = {'question': question, 'answer': options}
+		response = requests.post(url, headers=headers, json=payload).json()
+		count_options = dict(zip(options, response["data"]))
+		max_count, min_count = max(response['data']), min(response["data"])
+		min_max_count = min_count if not_question else max_count
+		embed = discord.Embed(title=f"__Search Results -{order[1]}__", color = discord.Colour.random())
+		embed.set_footer(text = "Mimir Quiz")
+		embed.timestamp = datetime.utcnow()
+		description = ""
+		for index, option in enumerate(count_options):
+			if max_count != 0 and count_options[option] == min_max_count:
+				description += f"{order[index]}. {option} : {count_options[option]} ✅\n"
+			else:
+				description += f"{order[index]}. {option} : {count_options[option]}\n"
+		embed.description = description
+		await self.send_hook(embed = embed)
+
 
 	async def odd_one_out_search_result(self, question_url, choices):
 		"""Get Google search results through rating."""
@@ -376,7 +398,7 @@ class Websocket(object):
 				elif data["questionType"] == "TRIVIA":
 					choices = data["choices"]
 					bing_question = "https://bing.com/search?q=" + raw_question
-					options_list = [unidecode(choice["choice"]) for choice in choices]
+					options_list = [unidecode(choice["choice"].strip()) for choice in choices]
 					options = "+or+".join(options_list)
 					raw_options = str(options).replace(" ", "+")
 					search_with_all = "https://google.com/search?q=" + raw_question + "+" + raw_options
@@ -394,9 +416,10 @@ class Websocket(object):
 					if self.topic.upper() != "ODD ONE OUT" and "TRUE OR FALSE" not in question.upper():
 						target_list = [
 								self.rating_search_one(google_question, choices),
-								self.rating_search_two(google_question, choices),
+								self.api_search_result(question, options_list, not_question),
 								self.direct_search_result(google_question, choices),
 							]
+								#self.rating_search_two(google_question, choices),
 								#self.direct_search_result(search_with_all, choices)
 						for target in target_list:
 							thread = threading.Thread(target = lambda: asyncio.run(target))
