@@ -125,6 +125,7 @@ class MainClass(commands.Cog, Websocket):
     
     @commands.command()
     @commands.is_owner()
+    @commands.guild_only()
     async def subscription(self, ctx, guild_id: int = None):
         if "Display Access" not in [role.name for role in ctx.author.roles]:
             return await ctx.reply(ctx.author.mention + ", You need `Display Access` role to run this command!")
@@ -201,6 +202,7 @@ class MainClass(commands.Cog, Websocket):
         await channel.send(embed = embed)
     
     @commands.command()
+    @commands.guild_only()
     @commands.cooldown(1, 10, commands.BucketType.user)
     async def help(self, ctx):
         embed = discord.Embed(color = discord.Colour.random())
@@ -233,7 +235,7 @@ async def on_message(message):
         embed.set_author(name=message.author, icon_url=message.author.avatar_url)
         embed.set_footer(text=f"Name: {message.author} | ID: {message.author.id}", icon_url=message.author.avatar_url)
         if message.attachments: embed.set_image(url = message.attachments[0].url)
-        return await channel.send(embed=embed)
+        await channel.send(embed=embed)
         #embed = discord.Embed(description = f"**You cannot be used me in private messages. For invite me [Click Here](https://discord.com/api/oauth2/authorize?client_id={client.user.id}&permissions=523376&scope=bot).**")
         #return await message.channel.send(embed = embed)
     await client.process_commands(message)
