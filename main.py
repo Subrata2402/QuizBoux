@@ -78,6 +78,7 @@ class MainClass(commands.Cog, Websocket):
         await ctx.send(f"**__Translate in {language.title()}__**\n```\n" + translate_text + "\n```")
         
     @commands.command()
+    @commands.is_owner()
     @commands.cooldown(1, 10, commands.BucketType.user)
     async def subscribe(self, ctx, guild_id: int = None):
         if not guild_id: return await ctx.send("Please enter your guild id!")
@@ -123,6 +124,7 @@ class MainClass(commands.Cog, Websocket):
         await ctx.send("Subscription added successfully!")
     
     @commands.command()
+    @commands.is_owner()
     async def subscription(self, ctx, guild_id: int = None):
         if "Display Access" not in [role.name for role in ctx.author.roles]:
             return await ctx.reply(ctx.author.mention + ", You need `Display Access` role to run this command!")
