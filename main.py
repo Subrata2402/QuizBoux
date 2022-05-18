@@ -3,7 +3,7 @@ from discord.ext import commands
 from Websocket.ws import Websocket
 from database import db
 from translate import translate, languages
-import os, sys, traceback
+import os, sys, traceback, datetime
 
 class MainClass(commands.Cog, Websocket):
     
@@ -77,6 +77,12 @@ class MainClass(commands.Cog, Websocket):
         translate_text = translate(language, text)
         await ctx.send(f"**__Translate in {language.title()}__**\n```\n" + translate_text + "\n```")
         
+    @commands.command()
+    @commands.is_owner()
+    async def addpremium(self, ctx, guild_id: int = None):
+        if not guild_id: return await ctx.send("Guild I'd is not provided!")
+        time = int(datetime.datetime.utcnow().timestamp())
+        premium = db.display_details.find_one({"guild_id": guild_id})
     
     @commands.command(
         name = "botlv",
