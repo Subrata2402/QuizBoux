@@ -124,6 +124,8 @@ class MainClass(commands.Cog, Websocket):
     
     @commands.command()
     async def subscription(self, ctx, guild_id: int = None):
+        if "Display Access" not in [role.name for role in ctx.author.roles]:
+            return await ctx.reply(ctx.author.mention + ", You need `Display Access` role to run this command!")
         if not guild_id: guild_id = ctx.guild.id
         data = db.display_details.find_one({"guild_id": guild_id})
         if not data or not data.get("subscription"): return await ctx.send("This guild has not any active subscription. For subscribe use `{}subscribe [guild_id]`!".format(ctx.prefix))
