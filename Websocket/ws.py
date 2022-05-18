@@ -416,10 +416,10 @@ class Websocket(object):
 					if self.topic.upper() != "ODD ONE OUT" and "TRUE OR FALSE" not in question.upper():
 						target_list = [
 								self.rating_search_one(google_question, choices),
-								self.api_search_result(question, options_list, not_question),
+								self.rating_search_two(google_question, choices),
 								self.direct_search_result(google_question, choices),
 							]
-								#self.rating_search_two(google_question, choices),
+								#self.api_search_result(question, options_list, not_question),
 								#self.direct_search_result(search_with_all, choices)
 						for target in target_list:
 							thread = threading.Thread(target = lambda: asyncio.run(target))
