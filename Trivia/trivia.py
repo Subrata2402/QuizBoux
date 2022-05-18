@@ -23,6 +23,7 @@ class MimirQuiz(commands.Cog, Websocket):
             await ctx.send(file = file, embed = embed)
     
     @commands.command(aliases = ["p"])
+    @commands.guild_only()
     @commands.cooldown(1, 10, commands.BucketType.user)
     async def price(self, ctx, mimir:float = None):
         """Get or calculate current price of Mimir Token."""
@@ -48,6 +49,7 @@ class MimirQuiz(commands.Cog, Websocket):
             await ws.send_hook(embed = embed)
 
     @commands.command()
+    @commands.guild_only()
     @commands.cooldown(1, 10, commands.BucketType.guild)
     async def addtoken(self, ctx, *, token = None):
         """Add or update Token."""
@@ -67,6 +69,7 @@ class MimirQuiz(commands.Cog, Websocket):
         
     @commands.command(aliases = ["quiz", "mimir"])
     @commands.cooldown(1, 10, commands.BucketType.user)
+    @commands.guild_only()
     async def nextquiz(self, ctx, game_num:int = 1):
         """Get next quiz details."""
         ws = Websocket(ctx.guild.id)
@@ -75,6 +78,7 @@ class MimirQuiz(commands.Cog, Websocket):
         await ws.get_quiz_details(get_type = "send", game_num = game_num)
     
     @commands.command()
+    @commands.guild_only()
     async def login(self, ctx, username = None, password = None):
         """Login to Display."""
         if "Display Access" not in [role.name for role in ctx.author.roles]:
@@ -93,6 +97,7 @@ class MimirQuiz(commands.Cog, Websocket):
     
     @commands.command(aliases = ["open"])
     @commands.cooldown(1, 10, commands.BucketType.guild)
+    @commands.guild_only()
     async def start(self, ctx, trivia = "mimir"):
         """Start Websocket."""
         if trivia.lower() == "mimir":
@@ -122,6 +127,7 @@ class MimirQuiz(commands.Cog, Websocket):
             await ctx.reply(ctx.author.mention + ', Please mention between `Display` or `Mimir`!')
          
     @commands.command()
+    @commands.guild_only()
     @commands.cooldown(1, 10, commands.BucketType.guild)
     async def close (self, ctx, trivia = "mimir"):
         """Close Websocket."""
@@ -146,6 +152,7 @@ class MimirQuiz(commands.Cog, Websocket):
             await ctx.reply(ctx.author.mention + ', Please mention between `Display` or `Mimir`!')
         
     @commands.command()
+    @commands.guild_only()
     @commands.cooldown(1, 10, commands.BucketType.guild)
     async def setup(self, ctx, trivia = "mimir", channel: discord.TextChannel = None):
         """Setup mimir quiz channel."""
