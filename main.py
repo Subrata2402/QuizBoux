@@ -137,7 +137,7 @@ class MainClass(commands.Cog, Websocket):
         if current_time > date_time:
             return await ctx.send("This guild has not any active subscription. For subscribe use `{}subscribe [guild_id]`!".format(ctx.prefix))
         expired_date = f"<t:{int(date_time.timestamp())}>"
-        embed = discord.Embed(title = "Subscription Details !", description = "Subscription expired date : {}".format(expired_date))
+        embed = discord.Embed(title = "__Subscription Details !__", description = "Subscription expired date : {}".format(expired_date))
         await ctx.send(embed = embed)
     
     @commands.command(
