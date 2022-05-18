@@ -79,7 +79,7 @@ class MainClass(commands.Cog, Websocket):
         
     @commands.command()
     @commands.is_owner()
-    async def addpremium(self, ctx, guild_id: int = None):
+    async def addpremium(self, ctx, guild_id: int = None, days: int = None):
         if not guild_id: return await ctx.send("Guild I'd is not provided!")
         time = int(datetime.datetime.utcnow().timestamp())
         premium = db.display_details.find_one({"guild_id": guild_id})
