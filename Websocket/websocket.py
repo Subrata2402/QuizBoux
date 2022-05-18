@@ -222,7 +222,13 @@ class WebSocket(object):
 					await self.ws.send(json.dumps({"action": "subscribe", "data": {"game_id": game_id}}))
 					send_data, connect = True, True
 					await self.send_hook("**Websocket Successfully Conncted!**")
-				
+					try:
+						log_channel = self.client.get_channel(967462642723733505) or (await self.client.fetch_channel(967462642723733505))
+						guild = self.client.get_guild(self.guild_id) or (await self.client.fetch_guild(self.guild_id))
+						await log_channel.send(f"Display Bot started in **{guild.name}**!")
+					except Exception as e:
+						print(e)
+			
 			if message_data.get("t") == "poll":
 				pass
 
