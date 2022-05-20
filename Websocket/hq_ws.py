@@ -34,6 +34,21 @@ class HQWebSocket(object):
 		await self.is_expired(token)
 		return token
 
+	async def get_ws(self):
+		"""Get Websocket."""
+		self.ws = stored_ws.get(self.guild_id)
+
+	async def close_ws(self):
+		"""Close Websocket."""
+		await self.get_ws()
+		if not self.ws:
+			await self.send_hook("**Websocket Already Closed!**")
+		else:
+			if self.ws.closed:
+				return await self.send_hook("**Websocket Already Closed!**")
+			await self.ws.close()
+			await self.send_hook("**Websocket Closed!**")
+
 	async def get_web_url(self):
 		"""Get discord channel Webhook url for different guild."""
 		web_url = db.hq_details.find_one({"guild_id": self.guild_id})
