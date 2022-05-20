@@ -19,7 +19,7 @@ class Websocket(object):
 		self.prize = 500 # Default prize money of quiz
 		self.pattern = [] # Store answer pattern of the current quiz
 		self.ws_opened = False
-		self.icon_url = self.client.user.avatar_url
+		self.icon_url = "https://pbs.twimg.com/profile_images/1427270008531562496/xaq5Xlzg_400x400.jpg"
 		self.game_id = None
 		self.partner_id = None
 		self.user_id = None
