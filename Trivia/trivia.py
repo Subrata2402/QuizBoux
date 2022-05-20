@@ -142,6 +142,18 @@ class MimirQuiz(commands.Cog, Websocket):
                     return await ws.send_hook("Websocket Already Opened!")
             await ws.send_hook("Websocket Opened!")
             await ws.connect_ws()
+        elif trivia.lower() == "hq":
+            if "HQ Access" not in [role.name for role in ctx.author.roles]:
+                return await ctx.reply(ctx.author.mention + ", You need `HQ Access` role to run this command!")
+            ws = HQWebSocket(guild_id = ctx.guild.id, client = self.client)
+            web_url = await ws.get_web_url()
+            if not web_url: return await ctx.reply(ctx.author.mention + ", You didn't setup any channel for Display Trivia.")
+            await ws.get_ws()
+            if ws.ws:
+                if ws.ws.open:
+                    return await ws.send_hook("Websocket Already Opened!")
+            await ws.send_hook("Websocket Opened!")
+            await ws.connect_ws()
         else:
             await ctx.reply(ctx.author.mention + ', Please mention between `Display` or `Mimir`!')
          
@@ -164,6 +176,13 @@ class MimirQuiz(commands.Cog, Websocket):
             if "Display Access" not in [role.name for role in ctx.author.roles]:
                 return await ctx.reply(ctx.author.mention + ", You need `Display Access` role to run this command!")
             ws = DisplayWebSocket(guild_id = ctx.guild.id, client = self.client)
+            web_url = await ws.get_web_url()
+            if not web_url: return await ctx.reply(ctx.author.mention + ", You didn't setup any channel for Display Trivia.")
+            await ws.close_ws()
+        elif trivia.lower() == "hq":
+            if "HQ Access" not in [role.name for role in ctx.author.roles]:
+                return await ctx.reply(ctx.author.mention + ", You need `HQ Access` role to run this command!")
+            ws = HQWebSocket(guild_id = ctx.guild.id, client = self.client)
             web_url = await ws.get_web_url()
             if not web_url: return await ctx.reply(ctx.author.mention + ", You didn't setup any channel for Display Trivia.")
             await ws.close_ws()
