@@ -12,7 +12,7 @@ class HQWebSocket(object):
 		self.game_is_live = False
 		self.demo_ws = "wss://hqecho.herokuapp.com"
 		self.host = "https://api-quiz.hype.space"
-		self.icon_url = ""
+		self.icon_url = "https://media.discordapp.net/attachments/799861610654728212/977325044097228870/49112C0D-6021-4333-9E6D-5E385EEE77E1-modified.png"
 		self.embed = discord.Embed(color = discord.Colour.random())
 		self.socket_url = None
 	
