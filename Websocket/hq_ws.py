@@ -10,6 +10,7 @@ class HQWebSocket(object):
 		self.guild_id = guild_id
 		self.client = client
 		self.game_is_live = False
+		self.demo_ws = "wss://hqecho.herokuapp.com"
 		self.host = "https://api-quiz.hype.space"
 		self.icon_url = ""
 		self.embed = discord.Embed(color = discord.Colour.random())
