@@ -4,7 +4,7 @@ from database import db
 from translate import translate, languages
 import os, sys, traceback, datetime
 
-class MainClass(commands.Cog, Websocket):
+class MainClass(commands.Cog):
     
     def __init__(self, client):
         self.client = client
