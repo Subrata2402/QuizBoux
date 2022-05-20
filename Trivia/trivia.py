@@ -5,7 +5,7 @@ from Websocket.display_ws import DisplayWebSocket
 from Websocket.hq_ws import HQWebSocket
 from database import db
 
-class MimirQuiz(commands.Cog, Websocket):
+class TriviaClass(commands.Cog):
     
     def __init__(self, client):
         self.client = client
@@ -234,4 +234,4 @@ class MimirQuiz(commands.Cog, Websocket):
             await ctx.reply(ctx.author.mention + ', Please mention between `Display` or `Mimir` or `HQ`!')
 
 def setup(client):
-    client.add_cog(MimirQuiz(client))
+    client.add_cog(TriviaClass(client))
