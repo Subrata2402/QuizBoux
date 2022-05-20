@@ -188,7 +188,7 @@ class MimirQuiz(commands.Cog, Websocket):
                 db.mimir_details.insert_one({"guild_id": ctx.guild.id, "web_url": webhook.url, "token": "eyJraWQiOiJYS1wvRlBZOFlcL1lJejV1VHJSSEdhOTZ6VHp0M1lWTlwvR25UQ0JrMitlbXNNPSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiI1ZTliNTY5YS0wNDIzLTQ4ODMtOTAyZS05YTQxYjM4YjJhYzQiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiaXNzIjoiaHR0cHM6XC9cL2NvZ25pdG8taWRwLnVzLWVhc3QtMS5hbWF6b25hd3MuY29tXC91cy1lYXN0LTFfME93Q2RwclNoIiwiY29nbml0bzp1c2VybmFtZSI6ImJlcm5mcmllZDMyNTBtZXllckBnbWFpbC5jb20iLCJvcmlnaW5fanRpIjoiMGVkYjIyZjQtNDBmMC00MjUwLWI0NzMtMzE3MzUwMzRiNWNkIiwiYXVkIjoiMnN1MG1qY3JqcXN2amlwZTYyYThnY281NDYiLCJldmVudF9pZCI6ImI2MDQ2OTcyLWFjMDYtNDJkYS04MzYyLTYzYWM2ZjNkNWFiMCIsInRva2VuX3VzZSI6ImlkIiwiYXV0aF90aW1lIjoxNjUwMDQzNzkyLCJleHAiOjE2NTAwNDczOTIsImlhdCI6MTY1MDA0Mzc5MiwianRpIjoiMTFjMDFhMTgtYTQyMS00MjVmLTk4N2ItNGY5ZDliZGJjZDk5IiwiZW1haWwiOiJiZXJuZnJpZWQzMjUwbWV5ZXJAZ21haWwuY29tIn0.P6DjqvX_BqT60wliNRFg38RjE7AIU4yyCYv3eh8ShmlN7jO5THvuQp8h5hfa7Oss49xNytPZE7Dk74tEcNgI7QLTKI5_-xDZUGLCvGDenfCtiAK6TKYMgzOWjOVzS3LiCXNLAVjgKTBmq5iOehQPz1XN7Wvxq7cn7xMgnD1XXtJ4i5-jjI4DSpC6gnDSIEUfqpfm3pGv14R_HrIM5-6arWaZuxyPWBywh7fDmh1F5Z47dBd9gDFNR2LKFM1fFcn8-EVtl83FazRUJUO1l_KIio8Z1Awki0O-KvAfX0xGY7HkrFqZd_CdJY93eKHWR0qZZj-fdcq1BVtqyPsp76VlFQ:0xFCCd91Ca80bbf04da2Af2AA9E5569fdA28843D2E"})
             embed = discord.Embed(title = "Mimir Quiz Channel Updated!", color = discord.Colour.random())
             await webhook.send(embed = embed)
-            await ctx.reply(ctx.author.mention + ", You have successfully setup Mimir Quiz Channel.")
+            if channel != ctx.channel: await ctx.reply(ctx.author.mention + ", You have successfully setup Mimir Quiz Channel.")
         elif trivia.lower() == "display":
             webhook = await channel.create_webhook(name = "Display Trivia")
             check = db.display_details.find_one({"guild_id": ctx.guild.id})
@@ -199,7 +199,7 @@ class MimirQuiz(commands.Cog, Websocket):
                 db.display_details.insert_one({"guild_id": ctx.guild.id, "web_url": webhook.url, "username": None, "password": None,"subscription": False})
             embed = discord.Embed(title = "Display Trivia Channel Updated!", color = discord.Colour.random())
             await webhook.send(embed = embed)
-            await ctx.reply(ctx.author.mention + ", You have successfully setup Display Trivia Channel.")
+            if channel != ctx.channel: await ctx.reply(ctx.author.mention + ", You have successfully setup Display Trivia Channel.")
         elif trivia.lower() == "hq":
             webhook = await channel.create_webhook(name = "HQ Trivia")
             check = db.hq_details.find_one({"guild_id": ctx.guild.id})
@@ -210,7 +210,7 @@ class MimirQuiz(commands.Cog, Websocket):
                 db.hq_details.insert_one({"guild_id": ctx.guild.id, "web_url": webhook.url, "username": None, "password": None,"subscription": False})
             embed = discord.Embed(title = "HQ Trivia Channel Updated!", color = discord.Colour.random())
             await webhook.send(embed = embed)
-            await ctx.reply(ctx.author.mention + ", You have successfully setup HQ Trivia Channel.")
+            if channel != ctx.channel: await ctx.reply(ctx.author.mention + ", You have successfully setup HQ Trivia Channel.")
         else:
             await ctx.reply(ctx.author.mention + ', Please mention between `Display` or `Mimir` or `HQ`!')
 
