@@ -27,7 +27,7 @@ class MimirQuiz(commands.Cog, Websocket):
     @commands.cooldown(1, 10, commands.BucketType.user)
     async def price(self, ctx, mimir:float = None):
         """Get or calculate current price of Mimir Token."""
-        ws = Websocket(ctx.guild.id)
+        ws = Websocket(guild_id = ctx.guild.id, client = self.client)
         web_url = await ws.get_web_url()
         if not web_url: return await ctx.reply(ctx.author.mention + ", Channel not setup for Mimir Quiz.")
         url = "https://api.coingecko.com/api/v3/coins/mimir-token"
@@ -56,7 +56,7 @@ class MimirQuiz(commands.Cog, Websocket):
         if "Mimir Access" not in [role.name for role in ctx.author.roles]:
             return await ctx.reply(ctx.author.mention + ", You need `Mimir Access` role to run this command!")
         if not token: return await ctx.reply(ctx.author.mention + ", You didn't enter token.")
-        ws = Websocket(ctx.guild.id)
+        ws = Websocket(guild_id = ctx.guild.id, client = self.client)
         web_url = await ws.get_web_url()
         if not web_url: return await ctx.reply(ctx.author.mention + ", Channel not setup for Mimir Quiz.")
         token = token.strip("Bearer").strip()
@@ -72,7 +72,7 @@ class MimirQuiz(commands.Cog, Websocket):
     @commands.guild_only()
     async def nextquiz(self, ctx, game_num:int = 1):
         """Get next quiz details."""
-        ws = Websocket(ctx.guild.id)
+        ws = Websocket(guild_id = ctx.guild.id, client = self.client)
         web_url = await ws.get_web_url()
         if not web_url: return await ctx.reply(ctx.author.mention + ", Channel not setup for Mimir Quiz.")
         await ws.get_quiz_details(get_type = "send", game_num = game_num)
