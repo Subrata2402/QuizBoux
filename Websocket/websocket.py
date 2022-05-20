@@ -29,7 +29,7 @@ class WebSocket(object):
 	def __init__(self, guild_id = None, client = None):
 		self.guild_id = guild_id
 		self.client = client
-		self.icon_url = "https://media.discordapp.net/attachments/840293855555092541/969343263276404836/Screenshot_2022-04-29-02-15-17-18.jpg"
+		self.icon_url = self.client.user.avatar_url
 		self.prize_pool = 500 # default prize pool of the quiz
 		self.ws = None
 
