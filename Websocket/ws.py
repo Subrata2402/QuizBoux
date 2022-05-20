@@ -235,7 +235,7 @@ class Websocket(object):
 			    return await self.send_hook("Quiz Not Found!")
 			data = data[game_num-1]
 			self.game_active = data["active"] # if game is live
-			self.icon_url = data.get("previewImageUrl") or data.get("backgroundImageLandscapeUrl")
+			icon_url = data.get("previewImageUrl") or data.get("backgroundImageLandscapeUrl")
 			self.topic = data["label"]
 			description = data.get("description")
 			self.prize = data["reward"]
@@ -252,7 +252,7 @@ class Websocket(object):
 			if self.value: embed.add_field(name = "Entry Fee :", value = f"ᛗ{self.value}", inline = False)
 			embed.add_field(name = "Date & Time :", value = time, inline = False)
 			embed.set_footer(text = f"Upcoming Quiz No. - {'0' if game_num < 10 else ''}{game_num}")
-			embed.set_thumbnail(url = self.icon_url)
+			embed.set_thumbnail(url = icon_url)
 			if get_type == "send": await self.send_hook(embed = embed)
 
 	async def get_access_token(self, token = None):
