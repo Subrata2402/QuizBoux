@@ -6,7 +6,6 @@ from aiosseclient import aiosseclient
 import aiohttp, asyncio, re
 from bs4 import BeautifulSoup
 from unidecode import unidecode
-google_question = "https://google.com/search?q="
 question_number = total_question = 0
 from database import db
 from config import *
