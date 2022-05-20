@@ -1,7 +1,8 @@
 import discord, aiohttp, asyncio, socket
 from discord.ext import commands
-from Websocket.ws import Websocket
-from Websocket.websocket import WebSocket
+from Websocket.mimir_ws import MimirWebSocket
+from Websocket.display_ws import DisplayWebSocket
+from Websocket.hq_ws import HQWebSocket
 from database import db
 
 class MimirQuiz(commands.Cog, Websocket):
@@ -11,7 +12,7 @@ class MimirQuiz(commands.Cog, Websocket):
     
     @commands.Cog.listener()
     async def on_ready(self):
-        print("Mimir Cog is Ready!")
+        print("Trivia Cog is Ready!")
     
     @commands.command()
     @commands.cooldown(1, 10, commands.BucketType.user)
@@ -56,7 +57,7 @@ class MimirQuiz(commands.Cog, Websocket):
         if "Mimir Access" not in [role.name for role in ctx.author.roles]:
             return await ctx.reply(ctx.author.mention + ", You need `Mimir Access` role to run this command!")
         if not token: return await ctx.reply(ctx.author.mention + ", You didn't enter token.")
-        ws = Websocket(guild_id = ctx.guild.id, client = self.client)
+        ws = MimirWebSocket(guild_id = ctx.guild.id, client = self.client)
         web_url = await ws.get_web_url()
         if not web_url: return await ctx.reply(ctx.author.mention + ", Channel not setup for Mimir Quiz.")
         token = token.strip("Bearer").strip()
@@ -72,7 +73,7 @@ class MimirQuiz(commands.Cog, Websocket):
     @commands.guild_only()
     async def nextquiz(self, ctx, game_num:int = 1):
         """Get next quiz details."""
-        ws = Websocket(guild_id = ctx.guild.id, client = self.client)
+        ws = MimirWebSocket(guild_id = ctx.guild.id, client = self.client)
         web_url = await ws.get_web_url()
         if not web_url: return await ctx.reply(ctx.author.mention + ", Channel not setup for Mimir Quiz.")
         await ws.get_quiz_details(get_type = "send", game_num = game_num)
@@ -85,7 +86,7 @@ class MimirQuiz(commands.Cog, Websocket):
             return await ctx.reply(ctx.author.mention + ", You need `Display Access` role to run this command!")
         if not username or not password:
             return await ctx.reply(ctx.author.mention + ", You didn't mention username or password.\n```\n{}{} [username] [password]\n```".format(ctx.prefix, ctx.command.name))
-        ws = WebSocket(guild_id = ctx.guild.id, client = self.client)
+        ws = DisplayWebSocket(guild_id = ctx.guild.id, client = self.client)
         web_url = await ws.get_web_url()
         if not web_url: return await ctx.reply(ctx.author.mention + ", Channel not setup for Display Trivia.")
         response = await ws.get_sub_protocol(username, password)
@@ -103,7 +104,7 @@ class MimirQuiz(commands.Cog, Websocket):
         if trivia.lower() == "mimir":
             if "Mimir Access" not in [role.name for role in ctx.author.roles]:
                 return await ctx.reply(ctx.author.mention + ", You need `Mimir Access` role to run this command!")
-            ws = Websocket(guild_id = ctx.guild.id, client = self.client)
+            ws = MimirWebSocket(guild_id = ctx.guild.id, client = self.client)
             web_url = await ws.get_web_url()
             if not web_url: return await ctx.reply(ctx.author.mention + ", You didn't setup any channel for Mimir Quiz.")
             if not ws.is_ws_open:
@@ -114,7 +115,7 @@ class MimirQuiz(commands.Cog, Websocket):
         elif trivia.lower() == "display":
             if "Display Access" not in [role.name for role in ctx.author.roles]:
                 return await ctx.reply(ctx.author.mention + ", You need `Display Access` role to run this command!")
-            ws = WebSocket(guild_id = ctx.guild.id, client = self.client)
+            ws = DisplayWebSocket(guild_id = ctx.guild.id, client = self.client)
             web_url = await ws.get_web_url()
             if not web_url: return await ctx.reply(ctx.author.mention + ", You didn't setup any channel for Display Trivia.")
             await ws.get_ws()
@@ -134,7 +135,7 @@ class MimirQuiz(commands.Cog, Websocket):
         if trivia.lower() == "mimir":
             if "Mimir Access" not in [role.name for role in ctx.author.roles]:
                 return await ctx.reply(ctx.author.mention + ", You need `Mimir Access` role to run this command!")
-            ws = Websocket(guild_id = ctx.guild.id, client = self.client)
+            ws = MimirWebSocket(guild_id = ctx.guild.id, client = self.client)
             web_url = await ws.get_web_url()
             if not web_url: return await ctx.reply(ctx.author.mention + ", You didn't setup any channel for Mimir Quiz.")
             if ws.is_ws_open:
@@ -144,7 +145,7 @@ class MimirQuiz(commands.Cog, Websocket):
         elif trivia.lower() == "display":
             if "Display Access" not in [role.name for role in ctx.author.roles]:
                 return await ctx.reply(ctx.author.mention + ", You need `Display Access` role to run this command!")
-            ws = WebSocket(guild_id = ctx.guild.id, client = self.client)
+            ws = DisplayWebSocket(guild_id = ctx.guild.id, client = self.client)
             web_url = await ws.get_web_url()
             if not web_url: return await ctx.reply(ctx.author.mention + ", You didn't setup any channel for Display Trivia.")
             await ws.close_ws()
