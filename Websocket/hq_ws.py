@@ -2,6 +2,7 @@ import websockets, aiohttp
 import discord, datetime
 from discord import commands
 from database import db
+stored_ws = []
 
 class HQWebSocket(object):
 	
@@ -9,18 +10,28 @@ class HQWebSocket(object):
 		self.guild_id = guild_id
 		self.client = client
 		self.game_is_live = False
-		self.api_url = "https://api-quiz.hype.space/shows/now"
+		self.host = "https://api-quiz.hype.space"
 		self.icon_url = ""
 		self.embed = discord.Embed(color = discord.Colour.random())
 		self.socket_url = None
 	
+	async def is_expired(self, token):
+		"""Check either token is expired or not."""
+		headers = {"Authorization": "Bearer " + token}
+		async with aiohttp.ClientSession() as session:
+			response = await session.get(self.host + "/users/me", headers = headers)
+			if response.status != 200:
+				await self.send_hook("The token has expired!")
+				raise TokenExpired("The token has expired")
 
 	async def get_token(self):
 		"""Take Authorization Bearer Token from the database for the different guild."""
 		token = db.hq_details.find_one({"guild_id": self.guild_id})
 		if not token:
-			return token # return None if guild id not found in database
+			await self.send_hook("Please add HQ token to continue this process.")
+			raise TokenNotFound("Token Not Found") # raise an exception if guild id not found in database
 		token = token.get("token")
+		await self.is_expired(token)
 		return token
 
 	async def get_web_url(self):
@@ -45,7 +56,7 @@ class HQWebSocket(object):
 	async def get_show_details(self, send_hook = None):
 		"""Get show details of HQ Trivia."""
 		async with aiohttp.ClientSession() as session:
-			response = await session.get(self.api_url)
+			response = await session.get(self.host + "/shows/now")
 			if response.status != 200:
 				await self.send_hook("Something went wrong while fetching show details!")
 				raise ShowNotFound("Show details not found")
