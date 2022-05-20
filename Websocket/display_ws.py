@@ -9,7 +9,7 @@ storingWs = {}
 total_question = 0
 
 
-class WebSocket(object):
+class DisplayWebSocket(object):
 	
 	def __init__(self, guild_id = None, client = None):
 		self.guild_id = guild_id
