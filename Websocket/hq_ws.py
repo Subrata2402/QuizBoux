@@ -1,5 +1,5 @@
 import websockets, aiohttp
-import discord
+import discord, datetime
 from discord import commands
 from database import db
 
@@ -11,6 +11,7 @@ class HQWebSocket(object):
 		self.game_is_live = False
 		self.api_url = "https://api-quiz.hype.space/shows/now"
 		self.icon_url = ""
+		self.embed = discord.Embed(color = discord.Colour.random())
 	
 
 	async def get_token(self):
@@ -40,5 +41,21 @@ class HQWebSocket(object):
 			webhook = discord.Webhook.from_url(web_url, adapter=discord.AsyncWebhookAdapter(session))
 			await webhook.send(content = content, embed = embed, username = self.client.user.name, avatar_url = self.client.user.avatar_url)
 			
-	async def get_show_details(self):
-		
+	async def get_show_details(self, send_hook = None):
+		"""Get show details of HQ Trivia."""
+		async with aiohttp.ClientSession() as session:
+			response = await session.get(self.api_url)
+			if response.status != 200:
+				return await self.send_hook("Something went wrong while fetching show details!")
+				raise ShowNotFound("Show details not found")
+			response_data = await response.json()
+			time = response_data["nextShowTime"].timestamp()
+			self.prize = response_data["nextShowPrize"]
+			if send_hook:
+				self.embed.title = "__Next Show Details !__"
+				self.embed.description = f"Date : <t:{int(time)}>\nPrize Money : ${prize}"
+				self.embed.set_thumbnail(url = self.icon_url)
+				self.embed.set_footer(text = "HQ Trivia")
+				self.timestamp = datetime.datetime.utcnow()
+				await self.send_hook(embed = self.embed)
+			
