@@ -2,7 +2,7 @@ import websockets, aiohttp
 import discord, datetime
 from discord.ext import commands
 from database import db
-stored_ws = []
+stored_ws = {}
 
 class HQWebSocket(object):
 	
