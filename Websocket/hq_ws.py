@@ -101,7 +101,7 @@ class HQWebSocket(object):
 			"Authorization": f"Bearer {token}",
 			"x-hq-client": "iPhone8,2"
 		}
-		self.ws = await websockets.connect(url = self.socket_url, extra_headers = headers, ping_interval = 15)
+		self.ws = await websockets.connect(url = self.demo_ws if demo else self.socket_url, extra_headers = None if demo else headers, ping_interval = 15)
 		stored_ws[self.guild_id] = self.ws
 		async for message in self.ws:
 			message_data = json.loads(message)
