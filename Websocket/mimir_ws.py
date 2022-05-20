@@ -11,7 +11,7 @@ from database import db
 from config import *
 store_ws = {}
 
-class Websocket(object):
+class MimirWebSocket(object):
 	
 	def __init__(self, guild_id, client = None):
 		self.guild_id = guild_id
