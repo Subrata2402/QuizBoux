@@ -16,4 +16,4 @@ ignore_options = ["the", "of", "in", "&", "on", "for", "or", "it", "to", "at", "
 replace_options = {"1": "one", "2": "two", "3": "three", "4": "four", "5": "five",
 "6": "six", "7": "seven", "8": "eight", "9": "nine", "10": "ten"}
 
-negative_words = {" not ", "least", "except", "never", "incorrect", "incorrectly", "none", "cannot", "can't", "didn't"}
+negative_words = {" not ", "least", "except", "never", "incorrect", "incorrectly", "none", "cannot", "can't", "didn't", "doesn't", "don't"}
