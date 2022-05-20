@@ -39,7 +39,7 @@ class WebSocket(object):
 		web_url = await self.get_web_url()
 		async with aiohttp.ClientSession() as session:
 			webhook = discord.Webhook.from_url(web_url, adapter=discord.AsyncWebhookAdapter(session))
-			await webhook.send(content = content, embed = embed, username = "Display Trivia", avatar_url = self.icon_url)
+			await webhook.send(content = content, embed = embed, username = self.client.user.name, avatar_url = self.icon_url)
 			
 	async def close_ws(self):
 		"""Close Websocket."""
