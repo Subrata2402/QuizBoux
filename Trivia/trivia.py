@@ -19,7 +19,7 @@ class MimirQuiz(commands.Cog, Websocket):
         url = "https://media.discordapp.net/attachments/799861610654728212/968092655932289024/VID-20220425-WA0004.mp4"
         with open("Video/VID-20220425-WA0004.mp4", "rb") as f:
             file = discord.File(f, filename = "How-to-get-Mimir-Quiz-Authorization-Token.mp4", spoiler = False)
-            embed = discord.Embed(title = "**__HttpCanary Apk Download Link :__**", description = "**https://m.apkpure.com/httpcanary-%E2%80%94-http-sniffer-capture-analysis/com.guoshi.httpcanary/download?from=amp_info**", color = discord.Colour.random())
+            embed = discord.Embed(title = "__HttpCanary Apk Download Link :__", description = "https://m.apkpure.com/httpcanary-%E2%80%94-http-sniffer-capture-analysis/com.guoshi.httpcanary/download?from=amp_info", color = discord.Colour.random())
             await ctx.send(file = file, embed = embed)
     
     @commands.command(aliases = ["p"])
@@ -34,7 +34,7 @@ class MimirQuiz(commands.Cog, Websocket):
         async with aiohttp.ClientSession() as session:
             response = await session.get(url = url)
             if response.status != 200:
-                return await ws.send_hook("**Something unexpected happened while fetching current price!**")
+                return await ws.send_hook("Something unexpected happened while fetching current price!")
             if not mimir: mimir = 1.0
             data = await response.json()
             name = data.get("name")
@@ -44,8 +44,8 @@ class MimirQuiz(commands.Cog, Websocket):
             inr = float("{:.2f}".format(price*mimir))
             embed = discord.Embed(
                 color = discord.Colour.random(),
-                title = f"**__Current Price of {name}__**",
-                description = f"**ᛗ{mimir} ≈ ${usd} ≈ ₹{inr}**")
+                title = f"__Current Price of {name}__",
+                description = f"ᛗ{mimir} ≈ ${usd} ≈ ₹{inr}")
             await ws.send_hook(embed = embed)
 
     @commands.command()
@@ -64,7 +64,7 @@ class MimirQuiz(commands.Cog, Websocket):
         await ws.get_access_token(token)
         update = {"token": token}
         db.mimir_details.update_one({"guild_id": ctx.guild.id}, {"$set": update})
-        await ws.send_hook("**Token Successfully Updated!**")
+        await ws.send_hook("Token Successfully Updated!")
         await ctx.message.delete()
         
     @commands.command(aliases = ["quiz", "mimir"])
@@ -107,10 +107,10 @@ class MimirQuiz(commands.Cog, Websocket):
             web_url = await ws.get_web_url()
             if not web_url: return await ctx.reply(ctx.author.mention + ", You didn't setup any channel for Mimir Quiz.")
             if not ws.is_ws_open:
-                await ws.send_hook("**Websocket Opened!**")
+                await ws.send_hook("Websocket Opened!")
                 await ws.start_hook()
             else:
-                await ws.send_hook("**Websocket Already Opened!**")
+                await ws.send_hook("Websocket Already Opened!")
         elif trivia.lower() == "display":
             if "Display Access" not in [role.name for role in ctx.author.roles]:
                 return await ctx.reply(ctx.author.mention + ", You need `Display Access` role to run this command!")
@@ -120,8 +120,8 @@ class MimirQuiz(commands.Cog, Websocket):
             await ws.get_ws()
             if ws.ws:
                 if ws.ws.open:
-                    return await ws.send_hook("**Websocket Already Opened!**")
-            await ws.send_hook("**Websocket Opened!**")
+                    return await ws.send_hook("Websocket Already Opened!")
+            await ws.send_hook("Websocket Opened!")
             await ws.connect_ws()
         else:
             await ctx.reply(ctx.author.mention + ', Please mention between `Display` or `Mimir`!')
@@ -140,7 +140,7 @@ class MimirQuiz(commands.Cog, Websocket):
             if ws.is_ws_open:
                 await ws.close_hook()
             else:
-                await ws.send_hook("**Websocket Already Closed!**")
+                await ws.send_hook("Websocket Already Closed!")
         elif trivia.lower() == "display":
             if "Display Access" not in [role.name for role in ctx.author.roles]:
                 return await ctx.reply(ctx.author.mention + ", You need `Display Access` role to run this command!")
