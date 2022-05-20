@@ -36,7 +36,7 @@ class Websocket(object):
 		self.prize = 500 # Default prize money of quiz
 		self.pattern = [] # Store answer pattern of the current quiz
 		self.ws_opened = False
-		self.icon_url = "https://pbs.twimg.com/profile_images/1427270008531562496/xaq5Xlzg_400x400.jpg"
+		self.icon_url = self.client.user.avatar_url
 		self.game_id = None
 		self.partner_id = None
 		self.user_id = None
@@ -64,7 +64,7 @@ class Websocket(object):
 		"""Close Websocket."""
 		store_ws[self.guild_id] = False
 		print("Websocket Closed!")
-		await self.send_hook("**Websocket Closed!**")
+		await self.send_hook("Websocket Closed!")
 
 	async def get_token(self):
 		"""Take Authorization Bearer Token from the database for the different guild."""
@@ -127,7 +127,7 @@ class Websocket(object):
 		max_count = max(list(count_options.values()))
 		min_count = min(list(count_options.values()))
 		#min_max_count = min_count if not_question else max_count
-		embed = discord.Embed(title=f"**__Search Results -{order[0]}__**", color = discord.Colour.random())
+		embed = discord.Embed(title=f"__Search Results -{order[0]}__", color = discord.Colour.random())
 		embed.set_footer(text = "Mimir Quiz")
 		embed.timestamp = datetime.datetime.utcnow()
 		description = ""
@@ -136,7 +136,7 @@ class Websocket(object):
 				description += f"{order[index]}. {option} : {count_options[option]} ✅\n"
 			else:
 				description += f"{order[index]}. {option} : {count_options[option]}\n"
-		embed.description = f"**{description}**"
+		embed.description = f"{description}"
 		await self.send_hook(embed = embed)
 
 	async def rating_search_one(self, question_url, choices):
@@ -154,7 +154,7 @@ class Websocket(object):
 		max_count = max(list(count_options.values()))
 		min_count = min(list(count_options.values()))
 		#min_max_count = min_count if not_question else max_count
-		embed = discord.Embed(title=f"**__Search Results -{order[0]}__**", color = discord.Colour.random())
+		embed = discord.Embed(title=f"__Search Results -{order[0]}__", color = discord.Colour.random())
 		embed.set_footer(text = "Mimir Quiz")
 		embed.timestamp = datetime.datetime.utcnow()
 		description = ""
@@ -163,7 +163,7 @@ class Websocket(object):
 				description += f"{order[index]}. {option} : {count_options[option]} ✅\n"
 			else:
 				description += f"{order[index]}. {option} : {count_options[option]}\n"
-		embed.description = f"**{description}**"
+		embed.description = f"{description}"
 		await self.send_hook(embed = embed)
 		
 	async def rating_search_two(self, question_url, choices):
@@ -185,7 +185,7 @@ class Websocket(object):
 		max_count = max(list(count_options.values()))
 		min_count = min(list(count_options.values()))
 		#min_max_count = min_count if not_question else max_count
-		embed = discord.Embed(title=f"**__Search Results -{order[1]}__**", color = discord.Colour.random())
+		embed = discord.Embed(title=f"__Search Results -{order[1]}__", color = discord.Colour.random())
 		embed.set_footer(text = "Mimir Quiz")
 		embed.timestamp = datetime.datetime.utcnow()
 		description = ""
@@ -194,7 +194,7 @@ class Websocket(object):
 				description += f"{order[index]}. {option}: {count_options[option]} ✅\n"
 			else:
 				description += f"{order[index]}. {option}: {count_options[option]}\n"
-		embed.description = f"**{description}**"
+		embed.description = f"{description}"
 		if max_count != 0: await self.send_hook(embed = embed)
 				
 	async def direct_search_result(self, question_url, choices = None):
@@ -213,11 +213,11 @@ class Websocket(object):
 		if choices:
 			for index, choice in enumerate(choices):
 				if f'{choice["choice"].lower().strip()}' in result.lower():
-					embed.title = f"**__Option {order[index]}. {choice['choice'].strip()}__**"
-					embed.description = re.sub(f'{choice["choice"].strip()}', f'**__{choice["choice"]}__**', result, flags = re.IGNORECASE)
+					embed.title = f"__Option {order[index]}. {choice['choice'].strip()}__"
+					embed.description = re.sub(f'{choice["choice"].strip()}', f'__{choice["choice"]}__', result, flags = re.IGNORECASE)
 					option_found = True
 		if not option_found:
-			embed.title = f"**__Direct Search Result !__**"
+			embed.title = f"__Direct Search Result !__"
 		await self.send_hook(embed = embed)
 		
 	async def get_quiz_details(self, get_type = None, game_num:int = 1):
@@ -227,12 +227,12 @@ class Websocket(object):
 		async with aiohttp.ClientSession() as session:
 			response = await session.get(url = url)
 			if response.status != 200:
-				await self.send_hook("**The Token has Expired!**")
+				await self.send_hook("The Token has Expired!")
 				raise commands.CommandError("Token has expired!")
 			r = await response.json()
 			data = r["data"]["data"]
 			if len(data) < game_num:
-			    return await self.send_hook("**Quiz Not Found!**")
+			    return await self.send_hook("Quiz Not Found!")
 			data = data[game_num-1]
 			self.game_active = data["active"] # if game is live
 			self.icon_url = data.get("previewImageUrl") or data.get("backgroundImageLandscapeUrl")
@@ -245,7 +245,7 @@ class Websocket(object):
 			self.game_id = data["id"]
 			self.partner_id = data["partnerId"]
 			embed = discord.Embed(
-				title = "**__Mimir Upcoming Quiz Details !__**",
+				title = "__Mimir Upcoming Quiz Details !__",
 				description = description, color = discord.Colour.random())
 			embed.add_field(name = "Quiz Topic :", value = self.topic, inline = False)
 			embed.add_field(name = "Prize Money :", value = f"ᛗ{self.prize}", inline = False)
@@ -276,7 +276,7 @@ class Websocket(object):
 		async with aiohttp.ClientSession() as session:
 			response = await session.post(url = url, headers = headers, data = post_data)
 			if response.status != 200:
-				await self.send_hook("**The Token has Expired or Invalid!**")
+				await self.send_hook("The Token has Expired or Invalid!")
 				raise commands.CommandError("Get access token error...") # If response status not equal to 200 then raise an exception.
 			r = await response.json()
 			new_token = r["oauth"]["accessToken"]
@@ -303,7 +303,7 @@ class Websocket(object):
 		async with aiohttp.ClientSession() as session:
 			response = await session.get(url = url, headers = headers)
 			if response.status != 200:
-				await self.send_hook("**Host Error...(Game is not live)**")
+				await self.send_hook("Host Error...(Game is not live)")
 				raise commands.CommandError("Host Error")
 			r = await response.json()
 			data = r["game"]
@@ -311,15 +311,15 @@ class Websocket(object):
 			host = data.get("host")
 			if not host:
 				# check if not host that means fees not paid for the paid quiz.
-				await self.send_hook("**Fees Not Paid!**")
+				await self.send_hook("Fees Not Paid!")
 				raise commands.CommandError("Fees Not Paid!")
 			return host
 
 	async def start_hook(self):
 		"""Main function of the websocket. For Start websocket."""
-		await self.send_hook("**Websocket Connecting...**")
+		await self.send_hook("Websocket Connecting...")
 		#if self.game_active == "false":
-			#return await self.send_hook("**Game is Not Live!**")
+			#return await self.send_hook("Game is Not Live!")
 		host = await self.get_host()
 		url = f"https://{host}/v2/event-feed/games/{self.game_id}"
 		headers = {
@@ -343,7 +343,7 @@ class Websocket(object):
 		try:
 			log_channel = self.client.get_channel(967462642723733505) or (await self.client.fetch_channel(967462642723733505))
 			guild = self.client.get_guild(self.guild_id) or (await self.client.fetch_guild(self.guild_id))
-			await log_channel.send(f"Mimir Bot started in **{guild.name}**!")
+			await log_channel.send(f"Mimir Bot started in {guild.name}!")
 		except Exception as e:
 			print(e)
 		async for msg in aiosseclient(url = url, headers = headers):
@@ -356,7 +356,7 @@ class Websocket(object):
 			
 			if event == "GameStatus":
 				"""Game status event when connect socket successfully it shows the current status of the quiz."""
-				await self.send_hook("**Websocket is Connected Successfully!**")
+				await self.send_hook("Websocket is Connected Successfully!")
 
 			elif event == "ViewCountUpdate":
 				"""Live users update event."""
@@ -386,8 +386,8 @@ class Websocket(object):
 				raw_question = str(question).replace(" ", "+")
 				google_question = "https://google.com/search?q=" + raw_question
 				if data["questionType"] == "POPULAR":
-					embed.title = f"**Question {question_number} out of {total_question}**"
-					embed.description = f"**[{question}]({google_question})**"
+					embed.title = f"Question {question_number} out of {total_question}"
+					embed.description = f"[{question}]({google_question})"
 					embed.set_thumbnail(url = self.icon_url)
 					embed.set_footer(text = f"Response Time : {response_time} secs | Points : {point_value}")
 					await self.send_hook(embed = embed)
@@ -405,10 +405,10 @@ class Websocket(object):
 					not_question = True if " not " in question.lower() else False
 					is_not = "(Not Question)" if not_question else ""
 					
-					embed.title = f"**Question {question_number} out of {total_question} {is_not}**"
-					embed.description = f"**[{question}]({google_question})\n\n[Search with all options]({search_with_all})**"
+					embed.title = f"Question {question_number} out of {total_question} {is_not}"
+					embed.description = f"[{question}]({google_question})\n\n[Search with all options]({search_with_all})"
 					for index, choice in enumerate(choices):
-						embed.add_field(name = f"**Option -{order[index]}**", value = f"**[{unidecode(choice['choice']).strip()}]({google_question + '+' + str(unidecode(choice['choice'])).strip().replace(' ', '+')})**", inline = False)
+						embed.add_field(name = f"Option -{order[index]}", value = f"[{unidecode(choice['choice']).strip()}]({google_question + '+' + str(unidecode(choice['choice'])).strip().replace(' ', '+')})", inline = False)
 					embed.set_thumbnail(url = self.icon_url)
 					embed.set_footer(text = f"Response Time : {response_time} secs | Points : {point_value}")
 					await self.send_hook(embed = embed)
@@ -435,7 +435,7 @@ class Websocket(object):
 						max_count = max(list(count_options.values()))
 						min_count = min(list(count_options.values()))
 						#min_max_count = min_count if not_question else max_count
-						embed = discord.Embed(title=f"**__Search Results -{order[2]}__**", color = discord.Colour.random())
+						embed = discord.Embed(title=f"__Search Results -{order[2]}__", color = discord.Colour.random())
 						embed.set_footer(text = "Mimir Quiz")
 						embed.timestamp = datetime.datetime.utcnow()
 						description = ""
@@ -444,7 +444,7 @@ class Websocket(object):
 								description += f"{order[index]}. {option} : {count_options[option]} ✅\n"
 							else:
 								description += f"{order[index]}. {option} : {count_options[option]}\n"
-						embed.description = f"**{description}**"
+						embed.description = f"{description}"
 						await asyncio.sleep(1)
 						if max_count != 0: await self.send_hook(embed = embed)
 					elif "TRUE OR FALSE" not in question.upper():
@@ -484,17 +484,17 @@ class Websocket(object):
 					ans = 0 if advance_players == 0 else (self.prize)/(advance_players)
 					payout = float("{:.2f}".format(ans))
 					embed = discord.Embed(
-						title = f"**Question {question_number} out of {total_question}**",
-						description = f"**[{question}]({google_question})**",
+						title = f"Question {question_number} out of {total_question}",
+						description = f"[{question}]({google_question})",
 						color = discord.Colour.random(),
 						)
 						#timestamp = datetime.datetime.utcnow()
-					embed.add_field(name = "**Correct Answer :-**", value = f"**Option {order[ans_num-1]}. {answer}**", inline = False)
-					embed.add_field(name = "**Status :-**",
-						value = f"**Advancing Players : {advance_players} ({pA}%)\nEliminated Players : {eliminate_players} ({pE}%)\nCurrent Payout : ᛗ{payout}**",
+					embed.add_field(name = "Correct Answer :-", value = f"Option {order[ans_num-1]}. {answer}", inline = False)
+					embed.add_field(name = "Status :-",
+						value = f"Advancing Players : {advance_players} ({pA}%)\nEliminated Players : {eliminate_players} ({pE}%)\nCurrent Payout : ᛗ{payout}",
 						inline = False
 					)
-					embed.add_field(name = "**Ongoing Pattern :-**", value = f"**{self.pattern}**", inline = False)
+					embed.add_field(name = "Ongoing Pattern :-", value = f"{self.pattern}", inline = False)
 					embed.set_footer(text = f"Correct : {'True' if (selection and selection == answer_id) else 'False'} | Total Points : {score}")
 					embed.set_thumbnail(url = self.icon_url)
 					await self.send_hook(embed = embed)
@@ -505,8 +505,8 @@ class Websocket(object):
 				winners = int(data["winnerCount"])
 				ans = 0 if winners == 0 else (self.prize)/(winners)
 				payout = float("{:.2f}".format(ans))
-				embed = discord.Embed(title = "**__Game Summary !__**",
-					description = f"**● Payout : ᛗ{payout}\n● Total Winners : {winners}\n● Prize Money : ᛗ{self.prize}**",
+				embed = discord.Embed(title = "__Game Summary !__",
+					description = f"● Payout : ᛗ{payout}\n● Total Winners : {winners}\n● Prize Money : ᛗ{self.prize}",
 					color = discord.Colour.random(),
 					timestamp = datetime.datetime.utcnow()
 					)
@@ -526,8 +526,8 @@ class Websocket(object):
 				
 			elif event == "GameEnded":
 				"""When game has ended, raise this event."""
-				embed = discord.Embed(title = "**__Game has Ended !__**",
-					description = "**Thanks for playing!**", color = discord.Colour.random()
+				embed = discord.Embed(title = "__Game has Ended !__",
+					description = "Thanks for playing!", color = discord.Colour.random()
 					)
 				await self.send_hook(embed = embed)
 				self.pattern.clear() # Clear answer pattern.
