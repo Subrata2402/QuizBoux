@@ -47,7 +47,7 @@ class HQWebSocket(object):
 		async with aiohttp.ClientSession() as session:
 			response = await session.get(self.api_url)
 			if response.status != 200:
-				return await self.send_hook("Something went wrong while fetching show details!")
+				await self.send_hook("Something went wrong while fetching show details!")
 				raise ShowNotFound("Show details not found")
 			response_data = await response.json()
 			time = response_data["nextShowTime"].timestamp()
@@ -63,10 +63,27 @@ class HQWebSocket(object):
 				self.timestamp = datetime.datetime.utcnow()
 				await self.send_hook(embed = self.embed)
 			
-	async def connect_ws(self):
+	async def connect_ws(self, demo = None):
+		"""Connect websocket."""
 		await self.get_show_details()
+		if not self.game_is_live and not demo:
+			await self.send_hook("Game is not live!")
+			raise NotLive("Game is not live")
 		token = await self.get_token()
 		headers = {
 			"Authorization": f"Bearer {token}",
 			"x-hq-client": "iPhone8,2"
 		}
+		self.ws = await websockets.connect(url = self.socket_url, extra_headers = headers, ping_interval = 15)
+		stored_ws[self.guild_id] = self.ws
+		async for message in self.ws:
+			message_data = json.loads(message)
+			await self.send_hook(f"```\n{message_data}\n```")
+			if message_data['type'] == 'interaction':
+				pass
+			
+			elif message_data['type'] == 'question':
+				pass
+				
+			elif message_data["type"] == "questionClosed":
+				pass
