@@ -117,7 +117,7 @@ class MimirQuiz(commands.Cog, Websocket):
     @commands.command(aliases = ["open"])
     @commands.cooldown(1, 10, commands.BucketType.guild)
     @commands.guild_only()
-    async def start(self, ctx, trivia = "mimir"):
+    async def start(self, ctx, trivia = "mimir", demo = None):
         """Start Websocket."""
         if trivia.lower() == "mimir":
             if "Mimir Access" not in [role.name for role in ctx.author.roles]:
@@ -153,7 +153,7 @@ class MimirQuiz(commands.Cog, Websocket):
                 if ws.ws.open:
                     return await ws.send_hook("Websocket Already Opened!")
             await ws.send_hook("Websocket Opened!")
-            await ws.connect_ws()
+            await ws.connect_ws(demo)
         else:
             await ctx.reply(ctx.author.mention + ', Please mention between `Display` or `Mimir`!')
          
