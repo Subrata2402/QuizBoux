@@ -12,6 +12,7 @@ class HQWebSocket(object):
 		self.api_url = "https://api-quiz.hype.space/shows/now"
 		self.icon_url = ""
 		self.embed = discord.Embed(color = discord.Colour.random())
+		self.socket_url = None
 	
 
 	async def get_token(self):
@@ -51,6 +52,9 @@ class HQWebSocket(object):
 			response_data = await response.json()
 			time = response_data["nextShowTime"].timestamp()
 			self.prize = response_data["nextShowPrize"]
+			self.game_is_live = response_data['active']
+			if self.game_is_live:
+				self.socket_url = response_data['broadcast']['socketUrl'].replace('https', 'wss')
 			if send_hook:
 				self.embed.title = "__Next Show Details !__"
 				self.embed.description = f"Date : <t:{int(time)}>\nPrize Money : ${prize}"
@@ -59,3 +63,10 @@ class HQWebSocket(object):
 				self.timestamp = datetime.datetime.utcnow()
 				await self.send_hook(embed = self.embed)
 			
+	async def connect_ws(self):
+		await self.get_show_details()
+		token = await self.get_token()
+		headers = {
+			"Authorization": f"Bearer {token}",
+			"x-hq-client": "iPhone8,2"
+		}
