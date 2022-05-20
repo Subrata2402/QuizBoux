@@ -1,6 +1,5 @@
 import discord, aiohttp, asyncio, socket
 from discord.ext import commands
-from Websocket.ws import Websocket
 from database import db
 from translate import translate, languages
 import os, sys, traceback, datetime
