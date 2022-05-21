@@ -85,7 +85,7 @@ class MainClass(commands.Cog):
         guild = self.client.get_guild(guild_id)
         if not guild: return await ctx.send("Please provide a valid guild id!")
         embed = discord.Embed(title = "__Payment Instructions !__",
-            description = "**Paytm Link :** https://paytm.me/x-WGerG\n**Paypal link :** https://paypal.com/sakhman\n\nPlease send exactly **₹50.00** or **$1.00** to the following payment link! After payment send your Order ID (For Paytm. Example of Order ID : `2022052xxxxxxxx652`) or Email ID (For Paypal) here within 5 minutes.",
+            description = "**Paytm Link :** https://paytm.me/x-WGerG\n**Paypal Link :** https://paypal.com/sakhman\n\nPlease send exactly **₹50.00** or **$1.00** to the following payment link! After payment send your Order ID (For Paytm. Example of Order ID : `2022052xxxxxxxx652`) or Email ID (For Paypal) here within 5 minutes.",
             color = discord.Colour.random())
         #embed.set_image(url = "https://media.discordapp.net/attachments/860116826159316992/973671108421230612/IMG_20220511_010823.jpg")
         embed.set_footer(text = "Payment Created by : {}".format(ctx.author))
