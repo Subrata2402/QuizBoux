@@ -100,6 +100,7 @@ class HQWebSocket(object):
 			await self.send_hook("Game is not live!")
 			raise commands.CommandError("Game is not live")
 		token = await self.get_token()
+		await self.is_expired(token)
 		headers = {
 			"Authorization": f"Bearer {token}",
 			"x-hq-client": "iPhone8,2"
