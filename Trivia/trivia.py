@@ -152,7 +152,7 @@ class TriviaClass(commands.Cog):
             if ws.ws:
                 if ws.ws.open:
                     return await ws.send_hook("Websocket Already Opened!")
-            await ws.send_hook("Websocket Opened!")
+            await ws.send_hook("Websocket Connecting...")
             await ws.connect_ws(demo)
         else:
             await ctx.reply(ctx.author.mention + ', Please mention between `Display` or `Mimir`!')
