@@ -86,7 +86,7 @@ class MainClass(commands.Cog):
             #embed=discord.Embed(title="__Reply from Bot Owner :__", description=args, color=discord.Colour.random())
             if not args:
                 embed = discord.Embed(title = "__Invalid Transaction ID !__", color = discord.Colour.random(),
-                    description = "Invalid Transaction ID provided! Don't worry if you already paid the amount, start this process once again and send your correct Transaction ID!")
+                    description = "Invalid Transaction ID provided! Don't worry if you already paid the amount, start this process once again and send your Transaction ID!")
                 return await target.send(embed = embed)
             await target.send(args)
             embed=discord.Embed(description=f"DM successfully sent to {target.name}")
