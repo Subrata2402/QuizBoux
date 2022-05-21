@@ -104,7 +104,11 @@ class HQWebSocket(object):
 			"Authorization": f"Bearer {token}",
 			"x-hq-client": "iPhone8,2"
 		}
-		self.ws = await websockets.connect(url = self.demo_ws if demo else self.socket_url, extra_headers = None if demo else headers, ping_interval = 15)
+		try:
+			self.ws = await websockets.connect(self.demo_ws if demo else self.socket_url, extra_headers = None if demo else headers, ping_interval = 15)
+		except Exception as e:
+			print(e)
+			return await self.send_hook("Something went wrong while creating the connection.")
 		stored_ws[self.guild_id] = self.ws
 		async for message in self.ws:
 			message_data = json.loads(message)
