@@ -150,9 +150,9 @@ class MainClass(commands.Cog):
         claimed_date = f"<t:{int(claimed_time.timestamp())}>"
         embed = discord.Embed(title = "__Subscription Details !__", color = discord.Colour.random())
         if guild.id != ctx.guild.id: embed.add_field(name = "Guild Information :", value = f"Name : {guild.name}\nOwner : {guild.owner}", inline = False)
-        embed.add_field(name = "Subscription Claimed Date :", value = claimed_date, inline = False)
-        embed.add_field(name = "Subscription Claimed by :", value = subscriber, inline = False)
-        embed.add_field(name = "Subscription Expired Date :", value = expired_date, inline = False)
+        embed.add_field(name = "Claimed Date :", value = claimed_date, inline = False)
+        embed.add_field(name = "Claimed By :", value = subscriber, inline = False)
+        embed.add_field(name = "Expired Date :", value = expired_date, inline = False)
         embed.set_thumbnail(url = guild.icon_url)
         embed.set_footer(text = f"ID : {guild.id}")
         await ctx.send(embed = embed)
