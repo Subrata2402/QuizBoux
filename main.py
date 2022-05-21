@@ -154,7 +154,7 @@ class MainClass(commands.Cog):
         embed.add_field(name = "Claimed By :", value = subscriber, inline = False)
         embed.add_field(name = "Expired Date :", value = expired_date, inline = False)
         embed.set_thumbnail(url = guild.icon_url)
-        embed.set_footer(text = f"ID : {guild.id}")
+        embed.set_footer(text = f"Requested by : {ctx.author}", icon_url = ctx.author.avatar_url)
         await ctx.send(embed = embed)
     
     @commands.command(
