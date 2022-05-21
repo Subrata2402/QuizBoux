@@ -118,7 +118,7 @@ class MainClass(commands.Cog):
         
     @commands.command()
     @commands.is_owner()
-    async def addpremium(self, ctx, guild_id: int = None, days: int = None):
+    async def addpremium(self, ctx, guild_id: int = None, subscriber: int = None, days: int = None):
         if not guild_id: return await ctx.send("Guild I'd is not provided!")
         guild = self.client.get_guild(guild_id)
         check = db.display_details.find_one({"guild_id": guild_id})
@@ -126,7 +126,7 @@ class MainClass(commands.Cog):
         current_time = datetime.datetime.utcnow()
         change_time = datetime.timedelta(days = days)
         date_time = current_time + change_time
-        update = {"subscription": True, "expired_time": date_time, "claimed_time": current_time}
+        update = {"subscription": True, "expired_time": date_time, "claimed_time": current_time, "subscriber": }
         db.display_details.update_one({"guild_id": guild_id}, {"$set": update})
         await ctx.send("Subscription added successfully for **{}**!".format(guild.name))
     
@@ -137,7 +137,8 @@ class MainClass(commands.Cog):
         if "Display Access" not in [role.name for role in ctx.author.roles]:
             return await ctx.reply(ctx.author.mention + ", You need `Display Access` role to run this command!")
         if not guild_id: guild_id = ctx.guild.id
-        data = db.display_details.find_one({"guild_id": guild_id})
+        guild = self.client.get_guild(guild_id)
+        data = db.display_details.find_one({"guild_id": guild.id})
         if not data or not data.get("subscription"): return await ctx.send("This guild has not any active subscription. For subscribe use `{}subscribe [guild_id]`!".format(ctx.prefix))
         expired_time = data.get("expired_time")
         claimed_time = data.get("claimed_time")
@@ -146,7 +147,12 @@ class MainClass(commands.Cog):
             return await ctx.send("This guild has not any active subscription. For subscribe use `{}subscribe [guild_id]`!".format(ctx.prefix))
         expired_date = f"<t:{int(expired_time.timestamp())}>"
         claimed_date = f"<t:{int(claimed_time.timestamp())}>"
-        embed = discord.Embed(title = "__Subscription Details !__", description = "Subscription Claimed : {}\nSubscription Expired : {}".format(claimed_date, expired_date))
+        embed = discord.Embed(title = "__Subscription Details !__", color = discord.Colour.random())
+        if guild.id != ctx.guild.id: embed.add_field(name = "Guild Information :", value = f"Name : {guild.name}\nOwner : {guild.owner}", inline = False)
+        embed.add_field(name = "Subscription Claimed Date :", value = claimed_date, inline = False)
+        embed.add_field(name = "Subscription Claimed by :", value = subscriber, inline = False)
+        embed.add_field(name = "Subscription Expired Date :", value = expired_date, inline = False)
+        embed.set_thumbnail(url = guild.icon_url)
         await ctx.send(embed = embed)
     
     @commands.command(
