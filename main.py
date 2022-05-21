@@ -126,7 +126,7 @@ class MainClass(commands.Cog):
         current_time = datetime.datetime.utcnow()
         change_time = datetime.timedelta(days = days)
         date_time = current_time + change_time
-        update = {"subscription": True, "expired_time": date_time, "claimed_time": current_time, "subscriber": }
+        update = {"subscription": True, "expired_time": date_time, "claimed_time": current_time, "subscriber": subscriber}
         db.display_details.update_one({"guild_id": guild_id}, {"$set": update})
         await ctx.send("Subscription added successfully for **{}**!".format(guild.name))
     
@@ -153,6 +153,7 @@ class MainClass(commands.Cog):
         embed.add_field(name = "Subscription Claimed by :", value = subscriber, inline = False)
         embed.add_field(name = "Subscription Expired Date :", value = expired_date, inline = False)
         embed.set_thumbnail(url = guild.icon_url)
+        embed.set_footer(text = f"ID : {guild.id}")
         await ctx.send(embed = embed)
     
     @commands.command(
