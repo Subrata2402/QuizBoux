@@ -296,7 +296,7 @@ class HQWebSocket(object):
 				self.pattern.append(str(ans_num))
 				advance_players = message_data['advancingPlayersCount']
 				eliminate_players = message_data['eliminatedPlayersCount']
-				ans = (int(self.prize))/(int(advance_players))
+				ans = 1500/advance_players
 				payout = float("{:.2f}".format(ans))
 				total_players = advance_players + eliminate_players
 				percentAdvancing = (advance_players*100)/total_players
