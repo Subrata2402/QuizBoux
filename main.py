@@ -85,8 +85,8 @@ class MainClass(commands.Cog):
             target = await self.client.fetch_user(user_id)
             #embed=discord.Embed(title="__Reply from Bot Owner :__", description=args, color=discord.Colour.random())
             if not args:
-                embed = discord.Embed(title = "__Invalid ID !__",
-                    description = "Invalid Transaction ID provided! Don't worry if you already paid, start this process again and send your correct ID!")
+                embed = discord.Embed(title = "__Invalid Transaction ID !__", color = discord.Colour.random(),
+                    description = "Invalid Transaction ID provided! Don't worry if you already paid the amount, start this process once again and send your correct Transaction ID!")
                 return await target.send(embed = embed)
             await target.send(args)
             embed=discord.Embed(description=f"DM successfully sent to {target.name}")
@@ -106,16 +106,16 @@ class MainClass(commands.Cog):
         embed = discord.Embed(title = "__Payment Instructions !__",
             description = "**For Paytm :** [Click Here](https://paytm.me/x-WGerG)\n**For Paypal :** [Click Here](https://paypal.com/sakhman)\n\nPlease send exactly **₹50.00** or **$1.00** to the following payment link! After payment send your Transaction ID/UPI Ref.No. here within 5 minutes.",
             color = discord.Colour.random())
-        embed.set_footer(text = "Payment Created by : {}".format(ctx.author))
-        await ctx.author.send(embed = embed)
+        embed.set_footer(text = "Payment Created by : {}".format(ctx.author), icon_url = ctx.author.avatar_url)
+        m = await ctx.author.send(embed = embed)
         try:
             message = await self.client.wait_for("message", timeout = 300.0, check = lambda message: message.author == ctx.author)
         except:
-            embed = discord.Embed(title = "__Time's Up !__",
+            embed = discord.Embed(title = "__Time's Up !__", color = discord.Colour.random(),
                 description = "You failed to send your Transaction ID within time. Don't worry if you already paid the amount then start this process once again and send your Transaction ID.")
-            return await ctx.author.send(embed = embed)
+            return await m.edit(embed = embed)
         id = message.content.strip()
-        embed = discord.Embed(title = "__Payment in Review !__",
+        embed = discord.Embed(title = "__Payment in Review !__", color = discord.Colour.random(),
             description = "Thanks for the subscription. Your guild will be added as a premium after verify the payment details.")
         await ctx.author.send(embed = embed)
         channel = self.client.get_channel(940249905300131871)
