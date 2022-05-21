@@ -1,8 +1,11 @@
 import websockets, aiohttp
-import discord, datetime
+import discord, requests, asyncio
 from discord.ext import commands
 from database import db
-import aniso8601, json
+import aniso8601, json, threading
+from bs4 import BeautifulSoup
+from unidecode import unidecode
+from datetime import datetime
 from config import *
 stored_ws = {}
 total_question = 0
@@ -93,7 +96,7 @@ class HQWebSocket(object):
 				self.embed.description = f"Date : <t:{int(tm)}>\nPrize Money : ${prize}"
 				self.embed.set_thumbnail(url = self.icon_url)
 				self.embed.set_footer(text = "HQ Trivia")
-				self.timestamp = datetime.datetime.utcnow()
+				self.timestamp = datetime.utcnow()
 				await self.send_hook(embed = self.embed)
 			
 	async def get_not_question(self, question) -> bool:
@@ -153,8 +156,18 @@ class HQWebSocket(object):
 					self.embed.add_field(name = f"Option - {order[index]}", value = f"[{option.strip()}]({google_question + '+' + str(option).strip().replace(' ', '+')})", inline = False)
 				self.embed.set_footer(text = "HQ Trivia")
 				self.embed.set_thumbnail(url = self.icon_url)
-				self.embed.timestamp = datetime.datetime.utcnow()
+				self.embed.timestamp = datetime.utcnow()
 				await self.send_hook(embed = self.embed)
+				
+				target_list = [
+						self.rating_search_one(google_question, options, not_question),
+						self.rating_search_two(google_question, options, not_question),
+						self.direct_search_result(google_question, options),
+					]
+						#self.direct_search_result(search_with_all, choices)
+				for target in target_list:
+					thread = threading.Thread(target = lambda: asyncio.run(target))
+					thread.start()
 			
 			elif message_data["type"] == "questionClosed":
 				pass
