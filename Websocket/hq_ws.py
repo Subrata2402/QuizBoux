@@ -23,7 +23,6 @@ class HQWebSocket(object):
 		async with aiohttp.ClientSession() as session:
 			response = await session.get(self.host + "/users/me", headers = headers)
 			if response.status != 200:
-				print(response.text)
 				await self.send_hook("The token has expired!")
 				raise commands.CommandError("The token has expired")
 
