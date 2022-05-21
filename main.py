@@ -106,7 +106,7 @@ class MainClass(commands.Cog):
         embed = discord.Embed(title = "__Subscription Details !__",
             description = "One Week : ₹50.00/$1.00\nOne Month : ₹180.00/$3.50",
             color = discord.Colour.random())
-        embed.add_field(name = "__Payment Instruction !__", value = "Paytm : [Click Here](https://paytm.me/x-WGerG)\nPaypal : [Click Here](https://paypal.com/sakhman)\n\nPlease send the exact amount to the following payment link! After payment send your Transaction ID/UPI Ref.No. here within 5 minutes.", inline = False)
+        embed.add_field(name = "__Payment Details !__", value = "Paytm : [Click Here](https://paytm.me/x-WGerG) | Paypal : [Click Here](https://paypal.com/sakhman)\n\nPlease send the exact amount to the following payment link. After payment send your Transaction ID/UPI Ref.No. here within 5 minutes.", inline = False)
         embed.set_footer(text = "Payment Created by : {}".format(ctx.author), icon_url = ctx.author.avatar_url)
         m = await ctx.author.send(embed = embed)
         try:
