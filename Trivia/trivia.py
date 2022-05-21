@@ -60,7 +60,7 @@ class TriviaClass(commands.Cog):
         ws = HQWebSocket(guild_id = ctx.guild.id, client = self.client)
         web_url = await ws.get_web_url()
         if not web_url: return await ctx.reply(ctx.author.mention + ", Channel not setup for HQ Trivia.")
-        token = token.strip("Bearer").strip()
+        token = token.strip()
         await ws.is_expired(token)
         update = {"token": token}
         db.hq_details.update_one({"guild_id": ctx.guild.id}, {"$set": update})
