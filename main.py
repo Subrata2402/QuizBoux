@@ -139,12 +139,13 @@ class MainClass(commands.Cog):
         if not guild_id: guild_id = ctx.guild.id
         guild = self.client.get_guild(guild_id)
         data = db.display_details.find_one({"guild_id": guild.id})
-        if not data or not data.get("subscription"): return await ctx.send("This guild has not any active subscription. For subscribe use `{}subscribe [guild_id]`!".format(ctx.prefix))
+        if not data or not data.get("subscription"): return await ctx.send("This guild has not any active subscription. For subscribe use `{}subscribe [guild_id]`".format(ctx.prefix))
         expired_time = data.get("expired_time")
         claimed_time = data.get("claimed_time")
+        subscriber = self.client.get_user(data.get("subscriber"))
         current_time = datetime.datetime.utcnow()
         if current_time > expired_time:
-            return await ctx.send("This guild has not any active subscription. For subscribe use `{}subscribe [guild_id]`!".format(ctx.prefix))
+            return await ctx.send("This guild has not any active subscription. For subscribe use `{}subscribe [guild_id]`".format(ctx.prefix))
         expired_date = f"<t:{int(expired_time.timestamp())}>"
         claimed_date = f"<t:{int(claimed_time.timestamp())}>"
         embed = discord.Embed(title = "__Subscription Details !__", color = discord.Colour.random())
