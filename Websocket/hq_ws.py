@@ -3,7 +3,10 @@ import discord, datetime
 from discord.ext import commands
 from database import db
 import aniso8601, json
+from config import *
 stored_ws = {}
+total_question = 0
+question = None
 
 class HQWebSocket(object):
 	
@@ -16,6 +19,7 @@ class HQWebSocket(object):
 		self.icon_url = "https://media.discordapp.net/attachments/799861610654728212/977325044097228870/49112C0D-6021-4333-9E6D-5E385EEE77E1-modified.png"
 		self.embed = discord.Embed(color = discord.Colour.random())
 		self.socket_url = None
+		self.answer_ids = None
 	
 	async def is_expired(self, token):
 		"""Check either token is expired or not."""
@@ -92,6 +96,16 @@ class HQWebSocket(object):
 				self.timestamp = datetime.datetime.utcnow()
 				await self.send_hook(embed = self.embed)
 			
+	async def get_not_question(self, question) -> bool:
+		"""Check either a question negative or not."""
+		for negative_word in negative_words:
+			if negative_word in question:
+				not_question = True
+				break
+			else:
+				not_question = False
+		return not_question
+			
 	async def connect_ws(self, demo = None):
 		"""Connect websocket."""
 		await self.get_show_details()
@@ -120,7 +134,27 @@ class HQWebSocket(object):
 				pass
 			
 			elif message_data['type'] == 'question':
-				pass
-				
+				question = message_data['question']
+				question_number = message_data['questionNumber']
+				total_question = message_data['questionCount']
+				options = [unidecode(ans["text"].strip()) for ans in message_data["answers"]]
+				self.answer_ids = [ans["answerId"] for ans in message_data["answers"]]
+				raw_question = str(question).replace(" ", "+")
+				google_question = "https://google.com/search?q=" + raw_question
+				u_options = "+or+".join(options)
+				raw_options = str(u_options).replace(" ", "+")
+				search_with_all = "https://google.com/search?q=" + raw_question + "+" + raw_options
+				not_question = await self.get_not_question(question.lower())
+				is_not = "(Not Question)" if not_question else ""
+		
+				self.embed.title = f"Question {question_number} out of {total_question} {is_not}"
+				self.embed.description = f"[{question}]({google_question})\n\n[Search with all options]({search_with_all})"
+				for index, option in enumerate(options):
+					self.embed.add_field(name = f"Option - {order[index]}", value = f"[{option.strip()}]({google_question + '+' + str(option).strip().replace(' ', '+')})", inline = False)
+				self.embed.set_footer(text = "HQ Trivia")
+				self.embed.set_thumbnail(url = self.icon_url)
+				self.embed.timestamp = datetime.datetime.utcnow()
+				await self.send_hook(embed = self.embed)
+			
 			elif message_data["type"] == "questionClosed":
 				pass
