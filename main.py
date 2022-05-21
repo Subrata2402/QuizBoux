@@ -85,7 +85,7 @@ class MainClass(commands.Cog):
         guild = self.client.get_guild(guild_id)
         if not guild: return await ctx.send("Please provide a valid guild id!")
         embed = discord.Embed(title = "__Payment Instructions !__",
-            description = "Paytm Link : https://paytm.me/x-WGerG\nPaypal link : https://paypal.com/sakhman\n\nPlease send exactly **₹50.00** or **$1.00** to the following payment link! After payment send your Order ID (For Paytm. Example of Order ID : `2022052xxxxxxxx652`) or Email ID (For Paypal) here within 5 minutes.",
+            description = "**Paytm Link :** https://paytm.me/x-WGerG\n**Paypal link :** https://paypal.com/sakhman\n\nPlease send exactly **₹50.00** or **$1.00** to the following payment link! After payment send your Order ID (For Paytm. Example of Order ID : `2022052xxxxxxxx652`) or Email ID (For Paypal) here within 5 minutes.",
             color = discord.Colour.random())
         #embed.set_image(url = "https://media.discordapp.net/attachments/860116826159316992/973671108421230612/IMG_20220511_010823.jpg")
         embed.set_footer(text = "Payment Created by : {}".format(ctx.author))
@@ -96,10 +96,14 @@ class MainClass(commands.Cog):
             return await ctx.author.send(ctx.author.mention + ", You failed to send your order ID within time. Don't worry if already paid the amount then start this session again and send your ID.")
         id = message.content.strip()
         if len(id) != 18 or "@" not in id:
-            return await ctx.author.send(ctx.author.mention + ", Invalid Order ID or Email ID!")
-        await ctx.author.send(ctx.author.mention + ", Thanks for the subscription. Your guild will be added as a premium after verify the payment details.")
+            embed = discord.Embed(title = "__Invalid ID !__",
+                description = "Invalid Order ID or Email ID provided! Don't worry if you already paid, start this process again and send your correct ID!")
+            return await ctx.author.send(embed = embed)
+        embed = discord.Embed(title = "__Payment in Review !__",
+            description = "Thanks for the subscription. Your guild will be added as a premium after verify the payment details.")
+        await ctx.author.send(embed = embed)
         channel = self.client.get_channel(940249905300131871)
-        embed = discord.Embed(title = "Payment Information !",
+        embed = discord.Embed(title = "__Payment Information !__",
             description = f"```\n" \
                 f"Username  : {ctx.author}\n" \
                 f"User ID   : {ctx.author.id}\n" \
@@ -114,14 +118,15 @@ class MainClass(commands.Cog):
     @commands.is_owner()
     async def addpremium(self, ctx, guild_id: int = None, days: int = None):
         if not guild_id: return await ctx.send("Guild I'd is not provided!")
+        guild = self.client.get_guild(guild_id)
         check = db.display_details.find_one({"guild_id": guild_id})
         if not check: return await ctx.send("Guild does not find in the database.")
         current_time = datetime.datetime.utcnow()
         change_time = datetime.timedelta(days = days)
         date_time = current_time + change_time
-        update = {"subscription": True, "date_time": date_time}
+        update = {"subscription": True, "expired_time": date_time, "claimed_time": current_time}
         db.display_details.update_one({"guild_id": guild_id}, {"$set": update})
-        await ctx.send("Subscription added successfully!")
+        await ctx.send("Subscription added successfully for **{}**!".format(guild.name))
     
     @commands.command()
     @commands.is_owner()
@@ -132,12 +137,14 @@ class MainClass(commands.Cog):
         if not guild_id: guild_id = ctx.guild.id
         data = db.display_details.find_one({"guild_id": guild_id})
         if not data or not data.get("subscription"): return await ctx.send("This guild has not any active subscription. For subscribe use `{}subscribe [guild_id]`!".format(ctx.prefix))
-        date_time = data.get("date_time")
+        expired_time = data.get("expired_time")
+        claimed_time = data.get("claimed_time")
         current_time = datetime.datetime.utcnow()
-        if current_time > date_time:
+        if current_time > expired_time:
             return await ctx.send("This guild has not any active subscription. For subscribe use `{}subscribe [guild_id]`!".format(ctx.prefix))
-        expired_date = f"<t:{int(date_time.timestamp())}>"
-        embed = discord.Embed(title = "__Subscription Details !__", description = "Subscription expired date : {}".format(expired_date))
+        expired_date = f"<t:{int(expired_time.timestamp())}>"
+        claimed_date = f"<t:{int(claimed_time.timestamp())}>"
+        embed = discord.Embed(title = "__Subscription Details !__", description = "Subscription Claimed : {}\nSubscription Expired : {}".format(claimed_date, expired_date))
         await ctx.send(embed = embed)
     
     @commands.command(
