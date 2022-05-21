@@ -20,9 +20,9 @@ class HQWebSocket(object):
 		self.demo_ws = "wss://hqecho.herokuapp.com"
 		self.host = "https://api-quiz.hype.space"
 		self.icon_url = "https://media.discordapp.net/attachments/799861610654728212/977325044097228870/49112C0D-6021-4333-9E6D-5E385EEE77E1-modified.png"
-		self.embed = discord.Embed(color = discord.Colour.random())
 		self.socket_url = None
 		self.answer_ids = None
+		self.options = None
 	
 	async def is_expired(self, token):
 		"""Check either token is expired or not."""
@@ -92,12 +92,13 @@ class HQWebSocket(object):
 			if self.game_is_live:
 				self.socket_url = response_data['broadcast']['socketUrl'].replace('https', 'wss')
 			if send_hook:
-				self.embed.title = "__Next Show Details !__"
-				self.embed.description = f"Date : <t:{int(tm)}>\nPrize Money : ${prize}"
-				self.embed.set_thumbnail(url = self.icon_url)
-				self.embed.set_footer(text = "HQ Trivia")
+				embed = discord.Embed(color = discord.Colour.random())
+				embed.title = "__Next Show Details !__"
+				embed.description = f"Date : <t:{int(tm)}>\nPrize Money : ${prize}"
+				embed.set_thumbnail(url = self.icon_url)
+				embed.set_footer(text = "HQ Trivia")
 				self.timestamp = datetime.utcnow()
-				await self.send_hook(embed = self.embed)
+				await self.send_hook(embed = embed)
 			
 	async def get_not_question(self, question) -> bool:
 		"""Check either a question negative or not."""
@@ -140,34 +141,50 @@ class HQWebSocket(object):
 				question = message_data['question']
 				question_number = message_data['questionNumber']
 				total_question = message_data['questionCount']
-				options = [unidecode(ans["text"].strip()) for ans in message_data["answers"]]
+				self.options = [unidecode(ans["text"].strip()) for ans in message_data["answers"]]
 				self.answer_ids = [ans["answerId"] for ans in message_data["answers"]]
 				raw_question = str(question).replace(" ", "+")
 				google_question = "https://google.com/search?q=" + raw_question
-				u_options = "+or+".join(options)
+				u_options = "+or+".join(self.options)
 				raw_options = str(u_options).replace(" ", "+")
 				search_with_all = "https://google.com/search?q=" + raw_question + "+" + raw_options
 				not_question = await self.get_not_question(question.lower())
 				is_not = "(Not Question)" if not_question else ""
 		
-				self.embed.title = f"Question {question_number} out of {total_question} {is_not}"
-				self.embed.description = f"[{question}]({google_question})\n\n[Search with all options]({search_with_all})"
-				for index, option in enumerate(options):
-					self.embed.add_field(name = f"Option - {order[index]}", value = f"[{option.strip()}]({google_question + '+' + str(option).strip().replace(' ', '+')})", inline = False)
-				self.embed.set_footer(text = "HQ Trivia")
-				self.embed.set_thumbnail(url = self.icon_url)
-				self.embed.timestamp = datetime.utcnow()
-				await self.send_hook(embed = self.embed)
+				embed = discord.Embed(color = discord.Colour.random())
+				embed.title = f"Question {question_number} out of {total_question} {is_not}"
+				embed.description = f"[{question}]({google_question})\n\n[Search with all options]({search_with_all})"
+				for index, option in enumerate(self.options):
+					embed.add_field(name = f"Option - {order[index]}", value = f"[{option.strip()}]({google_question + '+' + str(option).strip().replace(' ', '+')})", inline = False)
+				embed.set_footer(text = "HQ Trivia")
+				embed.set_thumbnail(url = self.icon_url)
+				embed.timestamp = datetime.utcnow()
+				await self.send_hook(embed = embed)
 				
 				target_list = [
-						self.rating_search_one(google_question, options, not_question),
-						self.rating_search_two(google_question, options, not_question),
-						self.direct_search_result(google_question, options),
+						self.rating_search_one(google_question, self.options, not_question),
+						self.rating_search_two(google_question, self.options, not_question),
+						self.direct_search_result(google_question, self.options),
 					]
 						#self.direct_search_result(search_with_all, choices)
 				for target in target_list:
 					thread = threading.Thread(target = lambda: asyncio.run(target))
 					thread.start()
+					
+			elif message_data['type'] == 'answered':
+				username = message_data["username"]
+				ans_id = message_data["answerId"]
+				for index, answer_id in enumerate(self.answer_ids):
+					if ans_id == answer_id:
+						option = self.options[index]
+						embed = discord.Embed(color = discord.Colour.random())
+						embed.title = f"__{username}__"
+						embed.description = f"Option order[index]. {option}"
+						await self.send_hook(embed = embed)
 			
 			elif message_data["type"] == "questionClosed":
-				pass
+				embed = discord.Embed(title = "⏰ | Time's Up!", color = discord.Colour.random())
+				await self.send_hook(embed = embed)
+				
+			
+			
