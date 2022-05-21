@@ -96,7 +96,7 @@ class MainClass(commands.Cog):
             return await ctx.author.send(ctx.author.mention + ", You failed to send your order ID within time. Don't worry if already paid the amount then start this session again and send your ID.")
         id = message.content.strip()
         if len(id) != 18:
-        	if "@" not in id:
+            if "@" not in id:
                 embed = discord.Embed(title = "__Invalid ID !__",
                     description = "Invalid Order ID or Email ID provided! Don't worry if you already paid, start this process again and send your correct ID!")
                 return await ctx.author.send(embed = embed)
