@@ -10,7 +10,6 @@ from config import *
 stored_ws = {}
 question_number = total_question = 0
 
-
 class HQWebSocket(object):
 	
 	def __init__(self, guild_id: int, client: commands.Bot):
