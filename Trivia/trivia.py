@@ -226,7 +226,7 @@ class TriviaClass(commands.Cog):
                 update = {"web_url": webhook.url}
                 db.hq_details.update_one({"guild_id": ctx.guild.id}, {"$set": update})
             else:
-                db.hq_details.insert_one({"guild_id": ctx.guild.id, "web_url": webhook.url, "username": None, "password": None,"subscription": False})
+                db.hq_details.insert_one({"guild_id": ctx.guild.id, "web_url": webhook.url, "token": "eyZjskiehnjmeh.jeinfmg", "subscription": False})
             embed = discord.Embed(title = "HQ Trivia Channel Updated!", color = discord.Colour.random())
             await webhook.send(embed = embed)
             if channel != ctx.channel: await ctx.reply(ctx.author.mention + ", You have successfully setup HQ Trivia Channel.")
