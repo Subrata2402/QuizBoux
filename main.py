@@ -110,7 +110,7 @@ class MainClass(commands.Cog):
         embed.set_footer(text = "Payment Created by : {}".format(ctx.author), icon_url = ctx.author.avatar_url)
         m = await ctx.author.send(embed = embed)
         try:
-            message = await self.client.wait_for("message", timeout = 300.0, check = lambda message: message.author == ctx.author)
+            message = await self.client.wait_for("message", timeout = 300.0, check = lambda message: message.author == ctx.author and message.channel == ctx.channel)
         except:
             embed = discord.Embed(title = "__Time's Up !__", color = discord.Colour.random(),
                 description = "You failed to send your Transaction ID within time. Don't worry if you already paid the amount then start this process once again and send your Transaction ID.")
