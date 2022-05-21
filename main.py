@@ -78,6 +78,25 @@ class MainClass(commands.Cog):
         
     @commands.command()
     @commands.is_owner()
+    async def reply(self, ctx, user_id=None, *, args=None):
+        if not user_id:
+            return await ctx.channel.send("You didn't provide a user's id.")
+        try:
+            target = await self.client.fetch_user(user_id)
+            #embed=discord.Embed(title="__Reply from Bot Owner :__", description=args, color=discord.Colour.random())
+            if not args:
+                embed = discord.Embed(title = "__Invalid ID !__",
+                    description = "Invalid Transaction ID provided! Don't worry if you already paid, start this process again and send your correct ID!")
+                return await target.send(embed = embed)
+            await target.send(args)
+            embed=discord.Embed(description=f"DM successfully sent to {target.name}")
+            await ctx.channel.send(embed=embed)
+        except:
+            await ctx.channel.send("Couldn't dm the given user.")
+    
+        
+    @commands.command()
+    @commands.is_owner()
     @commands.cooldown(1, 10, commands.BucketType.user)
     async def subscribe(self, ctx, guild_id: int = None):
         if ctx.guild: await ctx.send(ctx.author.mention + "**, Please use the command in DM!**")
@@ -85,7 +104,7 @@ class MainClass(commands.Cog):
         guild = self.client.get_guild(guild_id)
         if not guild: return await ctx.send("Please provide a valid guild id!")
         embed = discord.Embed(title = "__Payment Instructions !__",
-            description = "**Paytm Link :** https://paytm.me/x-WGerG\n**Paypal Link :** https://paypal.com/sakhman\n\nPlease send exactly **₹50.00** or **$1.00** to the following payment link! After payment send your Order ID (For Paytm. Example of Order ID : `2022052xxxxxxxx652`) or Email ID (For Paypal) here within 5 minutes.",
+            description = "**For Paytm :** [Click Here](https://paytm.me/x-WGerG)\n**For Paypal :** [Click Here](https://paypal.com/sakhman)\n\nPlease send exactly **₹50.00** or **$1.00** to the following payment link! After payment send your Transaction ID here within 5 minutes.",
             color = discord.Colour.random())
         #embed.set_image(url = "https://media.discordapp.net/attachments/860116826159316992/973671108421230612/IMG_20220511_010823.jpg")
         embed.set_footer(text = "Payment Created by : {}".format(ctx.author))
@@ -95,22 +114,17 @@ class MainClass(commands.Cog):
         except:
             return await ctx.author.send(ctx.author.mention + ", You failed to send your order ID within time. Don't worry if already paid the amount then start this session again and send your ID.")
         id = message.content.strip()
-        if len(id) != 18:
-            if "@" not in id:
-                embed = discord.Embed(title = "__Invalid ID !__",
-                    description = "Invalid Order ID or Email ID provided! Don't worry if you already paid, start this process again and send your correct ID!")
-                return await ctx.author.send(embed = embed)
         embed = discord.Embed(title = "__Payment in Review !__",
             description = "Thanks for the subscription. Your guild will be added as a premium after verify the payment details.")
         await ctx.author.send(embed = embed)
         channel = self.client.get_channel(940249905300131871)
         embed = discord.Embed(title = "__Payment Information !__",
             description = f"```\n" \
-                f"Username    : {ctx.author}\n" \
-                f"User ID     : {ctx.author.id}\n" \
-                f"Guild Name  : {guild.name}\n" \
-                f"Guild ID    : {guild.id}\n" \
-                f"Order ID    : {id}\n```",
+                f"Username       : {ctx.author}\n" \
+                f"User ID        : {ctx.author.id}\n" \
+                f"Guild Name     : {guild.name}\n" \
+                f"Guild ID       : {guild.id}\n" \
+                f"Transaction ID : {id}\n```",
             color = discord.Colour.random())
         await channel.send(embed = embed)
         await channel.send(f"```\n{ctx.prefix}addpremium {guild_id}\n```")
