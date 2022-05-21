@@ -110,11 +110,13 @@ class HQWebSocket(object):
 			print(e)
 			return await self.send_hook("Something went wrong while creating the connection.")
 		stored_ws[self.guild_id] = self.ws
-		await self.send_hook("Websocket Successfully Connected!")
 		async for message in self.ws:
 			message_data = json.loads(message)
 			await self.send_hook(f"```\n{message_data}\n```")
-			if message_data['type'] == 'interaction':
+			if message_data['type'] == 'gameStatus':
+				await self.send_hook("Websocket Successfully Connected!")
+				
+			elif message_data['type'] == 'interaction':
 				pass
 			
 			elif message_data['type'] == 'question':
