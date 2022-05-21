@@ -19,7 +19,7 @@ class HQWebSocket(object):
 	
 	async def is_expired(self, token):
 		"""Check either token is expired or not."""
-		headers = {"Authorization": "Bearer " + token}
+		headers = {"Authorization": f"Bearer {token}"}
 		async with aiohttp.ClientSession() as session:
 			response = await session.get(self.host + "/users/me", headers = headers)
 			if response.status != 200:
