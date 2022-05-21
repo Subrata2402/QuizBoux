@@ -241,7 +241,7 @@ class HQWebSocket(object):
 				question = message_data['question']
 				question_number = message_data['questionNumber']
 				total_question = message_data['questionCount']
-				self.options = [unidecode(ans["text"].strip()) for ans in message_data["answers"]]
+				self.options = [unidecode(ans["answer"].strip()) for ans in message_data["answers"]]
 				self.answer_ids = [ans["answerId"] for ans in message_data["answers"]]
 				raw_question = str(question).replace(" ", "+")
 				google_question = "https://google.com/search?q=" + raw_question
