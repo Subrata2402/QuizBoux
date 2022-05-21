@@ -103,9 +103,10 @@ class MainClass(commands.Cog):
         if not guild_id: return await ctx.send("Please enter your guild id!")
         guild = self.client.get_guild(guild_id)
         if not guild: return await ctx.send("Please provide a valid guild id!")
-        embed = discord.Embed(title = "__Payment Instructions !__",
-            description = "**For Paytm :** [Click Here](https://paytm.me/x-WGerG)\n**For Paypal :** [Click Here](https://paypal.com/sakhman)\n\nPlease send exactly **₹50.00** or **$1.00** to the following payment link! After payment send your Transaction ID/UPI Ref.No. here within 5 minutes.",
+        embed = discord.Embed(title = "__Subscription Details !__",
+            description = "One Week : ₹50.00/$1.00\nOne Month : ₹180.00/$3.50",
             color = discord.Colour.random())
+        embed.add_field(name = "__Payment Instruction !__", value = "Paytm : [Click Here](https://paytm.me/x-WGerG)\nPaypal : [Click Here](https://paypal.com/sakhman)\n\nPlease send the exact amount to the following payment link! After payment send your Transaction ID/UPI Ref.No. here within 5 minutes.",
         embed.set_footer(text = "Payment Created by : {}".format(ctx.author), icon_url = ctx.author.avatar_url)
         m = await ctx.author.send(embed = embed)
         try:
