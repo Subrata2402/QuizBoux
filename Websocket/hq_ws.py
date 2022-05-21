@@ -229,7 +229,7 @@ class HQWebSocket(object):
 		stored_ws[self.guild_id] = self.ws
 		async for message in self.ws:
 			message_data = json.loads(message)
-			await self.send_hook(f"```\n{message_data}\n```")
+			#await self.send_hook(f"```\n{message_data}\n```")
 			if message_data['type'] == 'gameStatus':
 				await self.send_hook("Websocket Successfully Connected!")
 				
