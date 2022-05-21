@@ -112,7 +112,9 @@ class MainClass(commands.Cog):
         try:
             message = await self.client.wait_for("message", timeout = 300.0, check = lambda message: message.author == ctx.author)
         except:
-            return await ctx.author.send(ctx.author.mention + ", You failed to send your order ID within time. Don't worry if already paid the amount then start this session again and send your ID.")
+        	embed = discord.Embed(title = "__Time's Up !__",
+                description = "You failed to send your order ID within time. Don't worry if you already paid the amount then start this process once again and send your Transaction ID.")
+            return await ctx.author.send(embed = embed)
         id = message.content.strip()
         embed = discord.Embed(title = "__Payment in Review !__",
             description = "Thanks for the subscription. Your guild will be added as a premium after verify the payment details.")
