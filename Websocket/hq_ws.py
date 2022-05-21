@@ -24,14 +24,14 @@ class HQWebSocket(object):
 			response = await session.get(self.host + "/users/me", headers = headers)
 			if response.status != 200:
 				await self.send_hook("The token has expired!")
-				raise TokenExpired("The token has expired")
+				raise commands.CommandError("The token has expired")
 
 	async def get_token(self):
 		"""Take Authorization Bearer Token from the database for the different guild."""
 		token = db.hq_details.find_one({"guild_id": self.guild_id})
 		if not token:
 			await self.send_hook("Please add HQ token to continue this process.")
-			raise TokenNotFound("Token Not Found") # raise an exception if guild id not found in database
+			raise commands.CommandError("Token Not Found") # raise an exception if guild id not found in database
 		token = token.get("token")
 		await self.is_expired(token)
 		return token
@@ -76,7 +76,7 @@ class HQWebSocket(object):
 			response = await session.get(self.host + "/shows/now")
 			if response.status != 200:
 				await self.send_hook("Something went wrong while fetching show details!")
-				raise ShowNotFound("Show details not found")
+				raise commands.CommandError("Show details not found")
 			response_data = await response.json()
 			time = response_data["nextShowTime"]
 			tm = aniso8601.parse_datetime(time).timestamp()
@@ -97,7 +97,7 @@ class HQWebSocket(object):
 		await self.get_show_details()
 		if not self.game_is_live and not demo:
 			await self.send_hook("Game is not live!")
-			raise NotLive("Game is not live")
+			raise commands.CommandError("Game is not live")
 		token = await self.get_token()
 		headers = {
 			"Authorization": f"Bearer {token}",
