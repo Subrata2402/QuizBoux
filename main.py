@@ -80,8 +80,10 @@ class MainClass(commands.Cog):
     @commands.is_owner()
     @commands.cooldown(1, 10, commands.BucketType.user)
     async def subscribe(self, ctx, guild_id: int = None):
-        if not guild_id: return await ctx.send("Please enter your guild id!")
         if ctx.guild: await ctx.send(ctx.author.mention + "**, Please use the command in DM!**")
+        if not guild_id: return await ctx.send("Please enter your guild id!")
+        guild = self.client.get_guild(guild_id)
+        if not guild: return await ctx.send("Please provide a valid guild id!")
         embed = discord.Embed(title = "__Payment Instructions !__",
             description = "Paytm Link : https://paytm.me/x-WGerG\nPaypal link : https://paypal.com/sakhman\nPlease send exactly **₹50.00** or **$1.00** to the following payment link! After payment send your Order ID (For Paytm) or Email ID (For Paypal) here within 5 minutes.\nOrder ID Example : `2022052xxxxxxxx652`",
             color = discord.Colour.random())
