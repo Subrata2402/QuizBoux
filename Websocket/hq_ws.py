@@ -8,8 +8,8 @@ from unidecode import unidecode
 from datetime import datetime
 from config import *
 stored_ws = {}
-total_question = 0
-question = None
+question_number = total_question = 0
+
 
 class HQWebSocket(object):
 	
@@ -23,6 +23,7 @@ class HQWebSocket(object):
 		self.socket_url = None
 		self.answer_ids = None
 		self.options = None
+		self.pattern = []
 	
 	async def is_expired(self, token):
 		"""Check either token is expired or not."""
@@ -138,6 +139,7 @@ class HQWebSocket(object):
 				pass
 			
 			elif message_data['type'] == 'question':
+				global question_number, total_question
 				question = message_data['question']
 				question_number = message_data['questionNumber']
 				total_question = message_data['questionCount']
@@ -186,5 +188,35 @@ class HQWebSocket(object):
 				embed = discord.Embed(title = "⏰ | Time's Up!", color = discord.Colour.random())
 				await self.send_hook(embed = embed)
 				
+			elif message_data["type"] == "questionSummary":
+				question = message_data["question"]
+				for index, answer in enumerate(message_data["answerCounts"]):
+					if answer["correct"]:
+						option = answer["answer"]
+						ans_num = index + 1
+				self.pattern.append(str(ans_num))
+				advance_players = message_data['advancingPlayersCount']
+				eliminate_players = message_data['eliminatedPlayersCount']
+				ans = (int(self.prize))/(int(advance_players))
+				payout = float("{:.2f}".format(ans))
+				total_players = advance_players + eliminate_players
+				percentAdvancing = (advance_players*100)/total_players
+				pA = float("{:.2f}".format(percentAdvancing))
+				percentEliminated = (eliminate_players*100)/total_players
+				pE = float("{:.2f}".format(percentEliminated))
 			
-			
+				embed = discord.Embed(
+					title = f"Question {question_number} out of {total_question}",
+					description = f"[{question}]({google_question})",
+					color = discord.Colour.random(),
+					timestamp = datetime.utcnow()
+					)
+				embed.add_field(name = "Correct Answer :-", value = f"Option {order[ans_num-1]}. {option}", inline = False)
+				embed.add_field(name = "Status :-",
+					value = f"Advancing Players : {advance_players} ({pA}%)\nEliminated Players : {eliminate_players} ({pE}%)\nCurrent Payout : ${payout}",
+					inline = False
+				)
+				embed.add_field(name = "Ongoing Pattern :-", value = f"{self.pattern}", inline = False)
+				embed.set_footer(text = "HQ Trivia")
+				embed.set_thumbnail(url = self.icon_url)
+				await self.send_hook(embed = embed)
