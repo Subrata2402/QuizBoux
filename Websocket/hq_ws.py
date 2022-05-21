@@ -2,6 +2,7 @@ import websockets, aiohttp
 import discord, datetime
 from discord.ext import commands
 from database import db
+import aniso8601
 stored_ws = {}
 
 class HQWebSocket(object):
@@ -77,14 +78,15 @@ class HQWebSocket(object):
 				await self.send_hook("Something went wrong while fetching show details!")
 				raise ShowNotFound("Show details not found")
 			response_data = await response.json()
-			time = response_data["nextShowTime"].timestamp()
+			time = response_data["nextShowTime"]
+			tm = aniso8601.parse_datetime(time).timestamp()
 			self.prize = response_data["nextShowPrize"]
 			self.game_is_live = response_data['active']
 			if self.game_is_live:
 				self.socket_url = response_data['broadcast']['socketUrl'].replace('https', 'wss')
 			if send_hook:
 				self.embed.title = "__Next Show Details !__"
-				self.embed.description = f"Date : <t:{int(time)}>\nPrize Money : ${prize}"
+				self.embed.description = f"Date : <t:{int(tm)}>\nPrize Money : ${prize}"
 				self.embed.set_thumbnail(url = self.icon_url)
 				self.embed.set_footer(text = "HQ Trivia")
 				self.timestamp = datetime.datetime.utcnow()
