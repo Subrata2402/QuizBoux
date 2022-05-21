@@ -220,3 +220,14 @@ class HQWebSocket(object):
 				embed.set_footer(text = "HQ Trivia")
 				embed.set_thumbnail(url = self.icon_url)
 				await self.send_hook(embed = embed)
+				
+			elif message_data["type"] == "gameSummary":
+				winn = message_data['numWinners']
+				prizeMoney = str(message_data["winners"][0]["prize"])
+				embed=discord.Embed(title = "__Game Summary !__",description = f"● Payout : {prizeMoney}\n● Total Winners : {winn}\n● Prize Money : ${self.prize}", color = discord.Colour.random())
+				embed.set_thumbnail(url = self.icon_url)
+				embed.set_footer(text = "HQ Trivia")
+				embed.timestamp = datetime.utcnow()
+				await self.send_hook(embed = embed)
+				self.pattern.clear()
+				await self.close_ws()
