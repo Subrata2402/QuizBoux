@@ -34,7 +34,7 @@ class MainClass(commands.Cog):
             wait_time = f"```{'0' if seconds < 10 else ''}{seconds} second{'s' if seconds != 1 else ''}```"
             description = ctx.author.mention + ", This command is on cooldown, please retry after " + wait_time + "!"
             return await ctx.reply(description)
-        print(f"Ignoring exception in command {ctx.command}: Cog Name : {ctx.command.cog_name}", file=sys.stderr)
+        print(f"Ignoring exception in command {ctx.command}", file=sys.stderr)
         traceback.print_exception(
             type(error), error, error.__traceback__, file=sys.stderr
             )
