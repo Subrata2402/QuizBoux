@@ -95,10 +95,10 @@ class HQWebSocket(object):
 			if send_hook:
 				embed = discord.Embed(color = discord.Colour.random())
 				embed.title = "__Next Show Details !__"
-				embed.description = f"Date : <t:{int(tm)}>\nPrize Money : ${self.prize}"
+				embed.description = f"Date : <t:{int(tm)}>\nPrize Money : {self.prize}"
 				embed.set_thumbnail(url = self.icon_url)
 				embed.set_footer(text = "HQ Trivia")
-				self.timestamp = datetime.utcnow()
+				embed.timestamp = datetime.utcnow()
 				await self.send_hook(embed = embed)
 			
 	async def get_not_question(self, question) -> bool:
@@ -323,7 +323,7 @@ class HQWebSocket(object):
 			elif message_data["type"] == "gameSummary":
 				winn = message_data['numWinners']
 				prizeMoney = str(message_data["winners"][0]["prize"])
-				embed=discord.Embed(title = "__Game Summary !__",description = f"● Payout : {prizeMoney}\n● Total Winners : {winn}\n● Prize Money : ${self.prize}", color = discord.Colour.random())
+				embed=discord.Embed(title = "__Game Summary !__",description = f"● Payout : {prizeMoney}\n● Total Winners : {winn}\n● Prize Money : {self.prize}", color = discord.Colour.random())
 				embed.set_thumbnail(url = self.icon_url)
 				embed.set_footer(text = "HQ Trivia")
 				embed.timestamp = datetime.utcnow()
