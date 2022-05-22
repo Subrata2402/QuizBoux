@@ -13,6 +13,13 @@ class TriviaClass(commands.Cog):
     @commands.Cog.listener()
     async def on_ready(self):
         print("Trivia Cog is Ready!")
+        
+    @commands.command()
+    @commands.guild_only()
+    @commands.cooldown(1, 10, commands.BucketType.user)
+    async def nexthq(self, ctx):
+        ws = HQWebSocket(guild_id = ctx.guild.id, client = self.client)
+        await ws.get_show_details("send_message")
     
     @commands.command()
     @commands.cooldown(1, 10, commands.BucketType.user)
