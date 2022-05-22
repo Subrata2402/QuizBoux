@@ -129,7 +129,7 @@ class MainClass(commands.Cog):
                 f"Transaction ID : {id}\n```",
             color = discord.Colour.random())
         await channel.send(embed = embed)
-        await channel.send(f"```\n{ctx.prefix}addpremium {guild_id}\n```")
+        await channel.send(f"```\n{ctx.prefix}addpremium {guild_id} {ctx.author.id}\n```")
         await self.client.get_user(660337342032248832).send("Someone buy premium subscription for display Trivia!")
         
     @commands.command()
