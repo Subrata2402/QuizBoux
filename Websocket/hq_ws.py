@@ -213,7 +213,7 @@ class HQWebSocket(object):
 	async def connect_ws(self, demo = None):
 		"""Connect websocket."""
 		await self.get_show_details()
-		if not self.game_is_live and not demo:
+		if not self.game_is_live:
 			await self.send_hook("Game is not live!")
 			raise commands.CommandError("Game is not live")
 		token = await self.get_token()
@@ -223,7 +223,7 @@ class HQWebSocket(object):
 			"x-hq-client": "iPhone8,2"
 		}
 		try:
-			self.ws = await websockets.connect(self.demo_ws if demo else self.socket_url, extra_headers = None if demo else headers, ping_interval = 15)
+			self.ws = await websockets.connect(self.socket_url, extra_headers = headers, ping_interval = 15)
 		except Exception as e:
 			print(e)
 			return await self.send_hook("Something went wrong while creating the connection.")
