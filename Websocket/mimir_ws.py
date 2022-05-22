@@ -257,7 +257,7 @@ class MimirWebSocket(object):
 		}
 		post_data = json.dumps({"mimir":{"accessToken": token if token else self_token}})
 		async with aiohttp.ClientSession() as session:
-			response = await session.post(url = url, headers = headers, data = post_data, ssl = False)
+			response = await session.post(url = url, headers = headers, data = post_data)
 			if response.status != 200:
 				await self.send_hook("The Token has Expired or Invalid!")
 				raise commands.CommandError("Get access token error...") # If response status not equal to 200 then raise an exception.
@@ -284,7 +284,7 @@ class MimirWebSocket(object):
 			"accept-language": "en-US,en;q=0.9,bn;q=0.8,hi;q=0.7"
 		}
 		async with aiohttp.ClientSession() as session:
-			response = await session.get(url = url, headers = headers, ssl = False)
+			response = await session.get(url = url, headers = headers)
 			if response.status != 200:
 				await self.send_hook("Host Error...(Game is not live)")
 				raise commands.CommandError("Host Error")
