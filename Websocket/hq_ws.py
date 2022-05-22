@@ -120,7 +120,7 @@ class HQWebSocket(object):
 		count_options = dict(zip(options, response["data"]))
 		max_count, min_count = max(response['data']), min(response["data"])
 		min_max_count = min_count if not_question else max_count
-		embed = discord.Embed(title=f"__Api Search Results !__", color = discord.Colour.random())
+		embed = discord.Embed(title=f"__Search Results -{order[2]}__", color = discord.Colour.random())
 		embed.set_footer(text = "Display Trivia")
 		embed.timestamp = datetime.utcnow()
 		description = ""
