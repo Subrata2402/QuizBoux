@@ -9,6 +9,7 @@ from datetime import datetime
 from config import *
 stored_ws = {}
 question_number = total_question = 0
+question = None
 
 class HQWebSocket(object):
 	
@@ -237,11 +238,11 @@ class HQWebSocket(object):
 				pass
 			
 			elif message_data['type'] == 'question':
-				global question_number, total_question
+				global question_number, total_question, question
 				question = message_data['question']
 				question_number = message_data['questionNumber']
 				total_question = message_data['questionCount']
-				self.options = [unidecode(ans["answer"].strip()) for ans in message_data["answers"]]
+				self.options = [unidecode(ans["text"].strip()) for ans in message_data["answers"]]
 				self.answer_ids = [ans["answerId"] for ans in message_data["answers"]]
 				raw_question = str(question).replace(" ", "+")
 				google_question = "https://google.com/search?q=" + raw_question
@@ -288,7 +289,6 @@ class HQWebSocket(object):
 				await self.send_hook(embed = embed)
 				
 			elif message_data["type"] == "questionSummary":
-				question = message_data["question"]
 				for index, answer in enumerate(message_data["answerCounts"]):
 					if answer["correct"]:
 						option = answer["answer"]
