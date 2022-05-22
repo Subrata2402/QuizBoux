@@ -16,10 +16,12 @@ class TriviaClass(commands.Cog):
             description = "This guild doesn't have any active subscription. For subscribe use `{}subscribe [guild_id]` in bot's DM!".format(ctx.prefix))
         if not data or not data.get("subscription"):
             return await ctx.send(embed = em)
+            raise commands.CommandError("This Guild is missing the subscription.")
         expired_time = data.get("expired_time")
         current_time = datetime.datetime.utcnow()
         if current_time > expired_time:
             return await ctx.send(embed = em)
+            raise commands.CommandError("This guild is missing the subscription.")
     
     @commands.Cog.listener()
     async def on_ready(self):
