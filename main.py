@@ -156,7 +156,7 @@ class MainClass(commands.Cog):
         guild = self.client.get_guild(guild_id)
         data = db.display_details.find_one({"guild_id": guild.id})
         em = discord.Embed(title = "__Subscription Expired !__", color = discord.Colour.random(),
-            description = "This guild doesn't have any active subscription. For subscribe use `{}subscribe [guild_id]`".format(ctx.prefix))
+            description = "This guild doesn't have any active subscription. For subscribe use `{}subscribe [guild_id]` in bot's DM!".format(ctx.prefix))
         if not data or not data.get("subscription"):
             return await ctx.send(embed = em)
         expired_time = data.get("expired_time")
