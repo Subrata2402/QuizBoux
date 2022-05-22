@@ -106,7 +106,7 @@ class MainClass(commands.Cog):
         embed = discord.Embed(title = "__Subscription Details !__",
             description = "One Week : ₹50.00/$1.00\nOne Month : ₹180.00/$3.50",
             color = discord.Colour.random())
-        embed.add_field(name = "__Payment Details !__", value = "Paytm : [Click Here](https://paytm.me/x-WGerG) | Paypal : [Click Here](https://paypal.me/sakhman)\n\nPlease send the exact amount to the following payment link. After payment send your Transaction ID/UPI Ref.No. here within 5 minutes.", inline = False)
+        embed.add_field(name = "__Payment Details !__", value = "Paytm : [Click Here](https://paytm.me/x-WGerG) (For QR Code : [Click Here](https://cdn.discordapp.com/attachments/799861610654728212/978009606716555375/Screenshot_2022-05-23-00-29-55-83.jpg))\nPaypal : [Click Here](https://paypal.me/sakhman)\n\nPlease send the exact amount to the following payment link. After payment send your Transaction ID/UPI Ref.No. here within 5 minutes.", inline = False)
         embed.set_footer(text = "Payment Created by : {}".format(ctx.author), icon_url = ctx.author.avatar_url)
         m = await ctx.author.send(embed = embed)
         try:
@@ -155,7 +155,7 @@ class MainClass(commands.Cog):
         if not guild_id: guild_id = ctx.guild.id
         guild = self.client.get_guild(guild_id)
         data = db.display_details.find_one({"guild_id": guild.id})
-        em = discord.Embed(title = "__Subscription Expired !__", color = discord.Colour.random(),
+        em = discord.Embed(title = "__Missing Subscription !__", color = discord.Colour.random(),
             description = "This guild doesn't have any active subscription. For subscribe use `{}subscribe [guild_id]` in bot's DM!".format(ctx.prefix))
         if not data or not data.get("subscription"):
             return await ctx.send(embed = em)
