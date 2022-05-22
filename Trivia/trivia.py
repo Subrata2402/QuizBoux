@@ -1,4 +1,4 @@
-import discord, aiohttp, asyncio, socket
+import discord, aiohttp, asyncio, socket, datetime
 from discord.ext import commands
 from Websocket.mimir_ws import MimirWebSocket
 from Websocket.display_ws import DisplayWebSocket
@@ -9,6 +9,17 @@ class TriviaClass(commands.Cog):
     
     def __init__(self, client):
         self.client = client
+
+    async def check_subscription(self, ctx):
+        data = db.display_details.find_one({"guild_id": ctx.guild.id})
+        em = discord.Embed(title = "__Missing Subscription !__", color = discord.Colour.random(),
+            description = "This guild doesn't have any active subscription. For subscribe use `{}subscribe [guild_id]` in bot's DM!".format(ctx.prefix))
+        if not data or not data.get("subscription"):
+            return await ctx.send(embed = em)
+        expired_time = data.get("expired_time")
+        current_time = datetime.datetime.utcnow()
+        if current_time > expired_time:
+            return await ctx.send(embed = em)
     
     @commands.Cog.listener()
     async def on_ready(self):
@@ -110,6 +121,7 @@ class TriviaClass(commands.Cog):
         """Login to Display."""
         if "Display Access" not in [role.name for role in ctx.author.roles]:
             return await ctx.reply(ctx.author.mention + ", You need `Display Access` role to run this command!")
+        await self.check_subscription(ctx)
         if not username or not password:
             return await ctx.reply(ctx.author.mention + ", You didn't mention username or password.\n```\n{}{} [username] [password]\n```".format(ctx.prefix, ctx.command.name))
         ws = DisplayWebSocket(guild_id = ctx.guild.id, client = self.client)
@@ -141,6 +153,7 @@ class TriviaClass(commands.Cog):
         elif trivia.lower() == "display":
             if "Display Access" not in [role.name for role in ctx.author.roles]:
                 return await ctx.reply(ctx.author.mention + ", You need `Display Access` role to run this command!")
+            await self.check_subscription(ctx)
             ws = DisplayWebSocket(guild_id = ctx.guild.id, client = self.client)
             web_url = await ws.get_web_url()
             if not web_url: return await ctx.reply(ctx.author.mention + ", You didn't setup any channel for Display Trivia.")
@@ -183,6 +196,7 @@ class TriviaClass(commands.Cog):
         elif trivia.lower() == "display":
             if "Display Access" not in [role.name for role in ctx.author.roles]:
                 return await ctx.reply(ctx.author.mention + ", You need `Display Access` role to run this command!")
+            await self.check_subscription(ctx)
             ws = DisplayWebSocket(guild_id = ctx.guild.id, client = self.client)
             web_url = await ws.get_web_url()
             if not web_url: return await ctx.reply(ctx.author.mention + ", You didn't setup any channel for Display Trivia.")
