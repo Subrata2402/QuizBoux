@@ -98,6 +98,8 @@ class TriviaClass(commands.Cog):
             await ws.get_quiz_details(get_type = "send", game_num = game_num)
         elif trivia.lower() == "hq":
             ws = HQWebSocket(guild_id = ctx.guild.id, client = self.client)
+            web_url = await ws.get_web_url()
+            if not web_url: return await ctx.reply(ctx.author.mention + ", Channel not setup for HQ Trivia.")
             await ws.get_show_details("send_message")
         else:
             await ctx.send("Please choose a trivia type between `mimir` or `hq`!")
