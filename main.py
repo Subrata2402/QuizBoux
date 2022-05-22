@@ -133,20 +133,20 @@ class MainClass(commands.Cog):
         
     @commands.command()
     @commands.is_owner()
-    async def addpremium(self, ctx, guild_id: int = None, subscriber: int = None, days: int = None):
+    async def addpremium(self, ctx, guild_id: int = None, subscriber: int = None, days: int = None, hours: int = 0, minutes: int = 0, seconds: int = 0):
         if not guild_id: return await ctx.send("Guild I'd is not provided!")
         guild = self.client.get_guild(guild_id)
         check = db.display_details.find_one({"guild_id": guild_id})
         if not check: return await ctx.send("Guild does not find in the database.")
         current_time = datetime.datetime.utcnow()
-        change_time = datetime.timedelta(days = days)
+        change_time = datetime.timedelta(days = days, hours = hours, minutes = minutes, seconds = seconds)
         date_time = current_time + change_time
         update = {"subscription": True, "expired_time": date_time, "claimed_time": current_time, "subscriber": subscriber}
         db.display_details.update_one({"guild_id": guild_id}, {"$set": update})
         await ctx.send("Subscription added successfully for **{}**!".format(guild.name))
     
     @commands.command()
-    
+    @commands.cooldown(1, 10, commands.BucketType.user)
     @commands.guild_only()
     async def subscription(self, ctx, guild_id: int = None):
         if "Display Access" not in [role.name for role in ctx.author.roles]:
