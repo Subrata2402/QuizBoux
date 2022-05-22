@@ -14,12 +14,6 @@ class TriviaClass(commands.Cog):
     async def on_ready(self):
         print("Trivia Cog is Ready!")
         
-    @commands.command()
-    @commands.guild_only()
-    @commands.cooldown(1, 10, commands.BucketType.user)
-    async def nexthq(self, ctx):
-        ws = HQWebSocket(guild_id = ctx.guild.id, client = self.client)
-        await ws.get_show_details("send_message")
     
     @commands.command()
     @commands.cooldown(1, 10, commands.BucketType.user)
@@ -77,31 +71,54 @@ class TriviaClass(commands.Cog):
     @commands.command()
     @commands.guild_only()
     @commands.cooldown(1, 10, commands.BucketType.guild)
-    async def addtoken(self, ctx, *, token = None):
+    async def addtoken(self, ctx, trivia: str = None, *, token = None):
         """Add or update Token."""
-        if "Mimir Access" not in [role.name for role in ctx.author.roles]:
-            return await ctx.reply(ctx.author.mention + ", You need `Mimir Access` role to run this command!")
-        if not token: return await ctx.reply(ctx.author.mention + ", You didn't enter token.")
-        ws = MimirWebSocket(guild_id = ctx.guild.id, client = self.client)
-        web_url = await ws.get_web_url()
-        if not web_url: return await ctx.reply(ctx.author.mention + ", Channel not setup for Mimir Quiz.")
-        token = token.strip("Bearer").strip()
-        await ws.get_quiz_details()
-        await ws.get_access_token(token)
-        update = {"token": token}
-        db.mimir_details.update_one({"guild_id": ctx.guild.id}, {"$set": update})
-        await ws.send_hook("Token Successfully Updated!")
-        await ctx.message.delete()
+        if not trivia: return await ctx.send("Please choose a trivia type between `mimir` or `hq`!")
+        if trivia.lower() == "mimir":
+            if "Mimir Access" not in [role.name for role in ctx.author.roles]:
+                return await ctx.reply(ctx.author.mention + ", You need `Mimir Access` role to run this command!")
+            if not token: return await ctx.reply(ctx.author.mention + ", You didn't enter token.")
+            ws = MimirWebSocket(guild_id = ctx.guild.id, client = self.client)
+            web_url = await ws.get_web_url()
+            if not web_url: return await ctx.reply(ctx.author.mention + ", Channel not setup for Mimir Quiz.")
+            token = token.strip("Bearer").strip()
+            await ws.get_quiz_details()
+            await ws.get_access_token(token)
+            update = {"token": token}
+            db.mimir_details.update_one({"guild_id": ctx.guild.id}, {"$set": update})
+            await ws.send_hook("Token Successfully Updated!")
+            await ctx.message.delete()
+        elif trivia.lower() == "hq":
+            if "HQ Access" not in [role.name for role in ctx.author.roles]:
+                return await ctx.reply(ctx.author.mention + ", You need `HQ Access` role to run this command!")
+            if not token: return await ctx.reply(ctx.author.mention + ", You didn't enter token.")
+            ws = HQWebSocket(guild_id = ctx.guild.id, client = self.client)
+            web_url = await ws.get_web_url()
+            if not web_url: return await ctx.reply(ctx.author.mention + ", Channel not setup for HQ Trivia.")
+            token = token.strip()
+            await ws.is_expired(token)
+            update = {"token": token}
+            db.hq_details.update_one({"guild_id": ctx.guild.id}, {"$set": update})
+            await ws.send_hook("Token Successfully Updated!")
+            await ctx.message.delete()
+        else:
+               await ctx.send("Please provide a trivia type between `mimir` or `hq`!")
         
     @commands.command(aliases = ["quiz", "mimir"])
     @commands.cooldown(1, 10, commands.BucketType.user)
     @commands.guild_only()
-    async def nextquiz(self, ctx, game_num:int = 1):
+    async def nextquiz(self, ctx, trivia: str, game_num:int = 1):
         """Get next quiz details."""
-        ws = MimirWebSocket(guild_id = ctx.guild.id, client = self.client)
-        web_url = await ws.get_web_url()
-        if not web_url: return await ctx.reply(ctx.author.mention + ", Channel not setup for Mimir Quiz.")
-        await ws.get_quiz_details(get_type = "send", game_num = game_num)
+        if trivia.lower() == "mimir":
+            ws = MimirWebSocket(guild_id = ctx.guild.id, client = self.client)
+            web_url = await ws.get_web_url()
+            if not web_url: return await ctx.reply(ctx.author.mention + ", Channel not setup for Mimir Quiz.")
+            await ws.get_quiz_details(get_type = "send", game_num = game_num)
+        elif trivia.lower() == "hq":
+            ws = HQWebSocket(guild_id = ctx.guild.id, client = self.client)
+            await ws.get_show_details("send_message")
+        else:
+            await ctx.send("Please provide a trivia type between `mimir` or `hq`!")
     
     @commands.command()
     @commands.guild_only()
