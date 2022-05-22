@@ -98,7 +98,7 @@ class MainClass(commands.Cog):
     @commands.command()
     @commands.cooldown(1, 10, commands.BucketType.user)
     async def subscribe(self, ctx, guild_id: int = None):
-        if ctx.guild: await ctx.send(ctx.author.mention + "**, Please use the command in DM!**")
+        if ctx.guild: return await ctx.send(ctx.author.mention + "**, Please use the command in DM!**")
         if not guild_id: return await ctx.send("Please enter your guild id!")
         guild = self.client.get_guild(guild_id)
         if not guild: return await ctx.send("Please provide a valid guild id!")
