@@ -13,7 +13,6 @@ class TriviaClass(commands.Cog):
     @commands.Cog.listener()
     async def on_ready(self):
         print("Trivia Cog is Ready!")
-        
     
     @commands.command()
     @commands.cooldown(1, 10, commands.BucketType.user)
@@ -53,24 +52,6 @@ class TriviaClass(commands.Cog):
     @commands.command()
     @commands.guild_only()
     @commands.cooldown(1, 10, commands.BucketType.guild)
-    async def addhqtoken(self, ctx, *, token = None):
-        """Add or update Token."""
-        if "HQ Access" not in [role.name for role in ctx.author.roles]:
-            return await ctx.reply(ctx.author.mention + ", You need `HQ Access` role to run this command!")
-        if not token: return await ctx.reply(ctx.author.mention + ", You didn't enter token.")
-        ws = HQWebSocket(guild_id = ctx.guild.id, client = self.client)
-        web_url = await ws.get_web_url()
-        if not web_url: return await ctx.reply(ctx.author.mention + ", Channel not setup for HQ Trivia.")
-        token = token.strip()
-        await ws.is_expired(token)
-        update = {"token": token}
-        db.hq_details.update_one({"guild_id": ctx.guild.id}, {"$set": update})
-        await ws.send_hook("Token Successfully Updated!")
-        await ctx.message.delete()
-    
-    @commands.command()
-    @commands.guild_only()
-    @commands.cooldown(1, 10, commands.BucketType.guild)
     async def addtoken(self, ctx, trivia: str = None, *, token = None):
         """Add or update Token."""
         if not trivia: return await ctx.send("Please choose a trivia type between `mimir` or `hq`!")
@@ -102,13 +83,14 @@ class TriviaClass(commands.Cog):
             await ws.send_hook("Token Successfully Updated!")
             await ctx.message.delete()
         else:
-               await ctx.send("Please provide a trivia type between `mimir` or `hq`!")
+            await ctx.send("Please choose a trivia type between `mimir` or `hq`!")
         
-    @commands.command(aliases = ["quiz", "mimir"])
+    @commands.command(aliases = ["quiz"])
     @commands.cooldown(1, 10, commands.BucketType.user)
     @commands.guild_only()
-    async def nextquiz(self, ctx, trivia: str, game_num:int = 1):
+    async def nextquiz(self, ctx, trivia: str = None, game_num:int = 1):
         """Get next quiz details."""
+        if not trivia: return await ctx.send("Please choose a trivia type between `mimir` or `hq`!")
         if trivia.lower() == "mimir":
             ws = MimirWebSocket(guild_id = ctx.guild.id, client = self.client)
             web_url = await ws.get_web_url()
@@ -118,7 +100,7 @@ class TriviaClass(commands.Cog):
             ws = HQWebSocket(guild_id = ctx.guild.id, client = self.client)
             await ws.get_show_details("send_message")
         else:
-            await ctx.send("Please provide a trivia type between `mimir` or `hq`!")
+            await ctx.send("Please choose a trivia type between `mimir` or `hq`!")
     
     @commands.command()
     @commands.guild_only()
