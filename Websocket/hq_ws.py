@@ -212,12 +212,12 @@ class HQWebSocket(object):
 			
 	async def connect_ws(self, demo = None):
 		"""Connect websocket."""
+		token = await self.get_token()
+		await self.is_expired(token)
 		await self.get_show_details()
 		if not self.game_is_live:
 			await self.send_hook("Game is not live!")
 			raise commands.CommandError("Game is not live")
-		token = await self.get_token()
-		await self.is_expired(token)
 		headers = {
 			"Authorization": f"Bearer {token}",
 			"x-hq-client": "iPhone8,2"
