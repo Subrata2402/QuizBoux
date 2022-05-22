@@ -215,7 +215,8 @@ class MimirWebSocket(object):
 			r = await response.json()
 			data = r["data"]["data"]
 			if len(data) < game_num:
-			    return await self.send_hook("Quiz Not Found!")
+			    await self.send_hook("Quiz Not Found!")
+			    raise commands.CommandError("Quiz not found")
 			data = data[game_num-1]
 			self.game_active = data["active"] # if game is live
 			self.icon_url = data.get("previewImageUrl") or data.get("backgroundImageLandscapeUrl")
