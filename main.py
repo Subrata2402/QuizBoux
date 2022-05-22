@@ -96,7 +96,6 @@ class MainClass(commands.Cog):
     
         
     @commands.command()
-    @commands.is_owner()
     @commands.cooldown(1, 10, commands.BucketType.user)
     async def subscribe(self, ctx, guild_id: int = None):
         if ctx.guild: await ctx.send(ctx.author.mention + "**, Please use the command in DM!**")
@@ -117,7 +116,7 @@ class MainClass(commands.Cog):
             return await m.edit(embed = embed)
         id = message.content.strip()
         embed = discord.Embed(title = "__Payment in Review !__", color = discord.Colour.random(),
-            description = "Thanks for the subscription. Your guild will be added as a premium after verify the payment details.")
+            description = "Thanks for the subscription. Your guild will be added as a premium after verify the payment details. To check the subscription use `{}subscription`".format(ctx.prefix))
         await ctx.author.send(embed = embed)
         channel = self.client.get_channel(940249905300131871)
         embed = discord.Embed(title = "__Payment Information !__",
@@ -147,7 +146,7 @@ class MainClass(commands.Cog):
         await ctx.send("Subscription added successfully for **{}**!".format(guild.name))
     
     @commands.command()
-    @commands.is_owner()
+    
     @commands.guild_only()
     async def subscription(self, ctx, guild_id: int = None):
         if "Display Access" not in [role.name for role in ctx.author.roles]:
