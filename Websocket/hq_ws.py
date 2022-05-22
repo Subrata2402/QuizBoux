@@ -95,7 +95,7 @@ class HQWebSocket(object):
 			if send_hook:
 				embed = discord.Embed(color = discord.Colour.random())
 				embed.title = "__Next Show Details !__"
-				embed.description = f"Date : <t:{int(tm)}>\nPrize Money : ${prize}"
+				embed.description = f"Date : <t:{int(tm)}>\nPrize Money : ${self.prize}"
 				embed.set_thumbnail(url = self.icon_url)
 				embed.set_footer(text = "HQ Trivia")
 				self.timestamp = datetime.utcnow()
