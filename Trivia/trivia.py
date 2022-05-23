@@ -65,9 +65,8 @@ class TriviaClass(commands.Cog):
     @commands.command()
     @commands.guild_only()
     @commands.cooldown(1, 10, commands.BucketType.guild)
-    async def addtoken(self, ctx, trivia: str = None, *, token = None):
+    async def addtoken(self, ctx, trivia: str = "mimir", *, token = None):
         """Add or update Token."""
-        if not trivia: return await ctx.send("Please choose a trivia type between `mimir` or `hq`!")
         if trivia.lower() == "mimir":
             if "Mimir Access" not in [role.name for role in ctx.author.roles]:
                 return await ctx.reply(ctx.author.mention + ", You need `Mimir Access` role to run this command!")
@@ -101,9 +100,8 @@ class TriviaClass(commands.Cog):
     @commands.command(aliases = ["quiz"])
     @commands.cooldown(1, 10, commands.BucketType.user)
     @commands.guild_only()
-    async def nextquiz(self, ctx, trivia: str = None, game_num:int = 1):
+    async def nextquiz(self, ctx, trivia: str = "mimir", game_num:int = 1):
         """Get next quiz details."""
-        if not trivia: return await ctx.send("Please choose a trivia type between `mimir` or `hq`!")
         if trivia.lower() == "mimir":
             ws = MimirWebSocket(guild_id = ctx.guild.id, client = self.client)
             web_url = await ws.get_web_url()
