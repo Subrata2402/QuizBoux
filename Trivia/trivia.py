@@ -129,7 +129,7 @@ class TriviaClass(commands.Cog):
         if not web_url: return await ctx.reply(ctx.author.mention + ", Channel not setup for Display Trivia.")
         response = await ws.get_sub_protocol(username, password)
         if not response:
-            await ctx.reply(ctx.author.mention + ", Enter username or password is incorrect! If you enter all correct details then once login in your application by the same ID and password.")
+            await ctx.reply(ctx.author.mention + ", Enter username or password is incorrect! If you enter all correct details, login once in your application by the same ID and password and then try to login in bot.")
             return await ctx.message.delete()
         update = {"username": username, "password": password}
         db.display_details.update_one({"guild_id": ctx.guild.id}, {"$set": update})
