@@ -41,7 +41,7 @@ class TriviaClass(commands.Cog):
     @commands.cooldown(1, 10, commands.BucketType.user)
     async def price(self, ctx, mimir:float = None):
         """Get or calculate current price of Mimir Token."""
-        ws = Websocket(guild_id = ctx.guild.id, client = self.client)
+        ws = MimirWebSocket(guild_id = ctx.guild.id, client = self.client)
         web_url = await ws.get_web_url()
         if not web_url: return await ctx.reply(ctx.author.mention + ", Channel not setup for Mimir Quiz.")
         url = "https://api.coingecko.com/api/v3/coins/mimir-token"
