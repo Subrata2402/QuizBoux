@@ -252,7 +252,7 @@ class MainClass(commands.Cog):
         embed.add_field(name = f"{ctx.prefix}start [mimir/display/hq]", value = "Start Websocket of Mimir/Display/HQ.", inline = False)
         embed.add_field(name = f"{ctx.prefix}close [mimir/display/hq]", value = "Close Websocket of Mimir/Display/HQ.", inline = False)
         embed.add_field(name = f"{ctx.prefix}subscribe [guild_id]", value = "Buy subscription for run display bot.", inline = False)
-        embed.add_field(name = f"{ctx.prefix}subscription", value = "Check your guild subscription.", inline = False)
+        embed.add_field(name = f"{ctx.prefix}subscription", value = "Check your guild subscription details.", inline = False)
         embed.add_field(name = f"{ctx.prefix}invite", value = "Get bot invite link.", inline = False)
         embed.set_thumbnail(url = self.client.user.avatar_url)
         embed.set_author(name = f"| {self.client.user.name} Help Commands !", icon_url = self.client.user.avatar_url)
