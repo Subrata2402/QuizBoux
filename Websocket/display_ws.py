@@ -190,7 +190,7 @@ class DisplayWebSocket(object):
 		try:
 			self.ws = await websockets.connect(socket_url, subprotocols = [sub_protocol], extra_headers = headers, ping_interval = 15)
 		except Exception as e:
-			return await self.send_hook("```\nSomething went wrong while connecting to the websocket, please join once the trivia in your application by the same account which was logged in to the bot and then try to start the websocket.\n```")
+			return await self.send_hook("```\nSomething went wrong while connecting to the websocket, please join once in the trivia in your application by the same account which was logged in to the bot and then try to start the websocket.\n```")
 		storingWs[self.guild_id] = self.ws # store Websocket for each guild
 		async for message in self.ws:
 			message_data = json.loads(message)
