@@ -274,6 +274,7 @@ class DisplayWebSocket(object):
 					target_list = [
 							self.rating_search_one(google_question, options, not_question),
 							self.rating_search_two(google_question, options, not_question),
+							self.api_search_result(question, options, not_question),
 							self.direct_search_result(google_question, options),
 						]
 							#self.direct_search_result(search_with_all, choices)
