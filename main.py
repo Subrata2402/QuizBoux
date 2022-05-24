@@ -34,6 +34,17 @@ class MainClass(commands.Cog):
             wait_time = f"```{'0' if seconds < 10 else ''}{seconds} second{'s' if seconds != 1 else ''}```"
             description = ctx.author.mention + ", This command is on cooldown, please retry after " + wait_time + "!"
             return await ctx.reply(description)
+        
+        if isinstance(error, commands.CheckAnyFailure):
+            message = f", You don't have permission to run this command."
+        elif isinstance(error, commands.PrivateMessageOnly):
+            message = f", This command can only be used in private messages."
+        elif isinstance(error, commands.NoPrivateMessage):
+            message = f", This command cannot be used in private messages."
+        elif isinstance(error, commands.NotOwner):
+            message = f", You don't have permission to run this command."
+        return await ctx.send(ctx.author.mention + message)
+            
         print(f"Ignoring exception in command {ctx.command}", file=sys.stderr)
         traceback.print_exception(
             type(error), error, error.__traceback__, file=sys.stderr
