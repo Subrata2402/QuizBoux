@@ -140,6 +140,28 @@ class DisplayWebSocket(object):
 			embed.title = f"__Direct Search Result !__"
 		await self.send_hook(embed = embed)
 	
+	async def api_search_result(self, question, options, not_question) -> None:
+		"""Get Google search results through the api."""
+		if self.guild_id != 973610992510570546: return
+		url = 'https://jhatboyrahul.herokuapp.com/api/getResults'
+		headers = {"Authorization": "RainBhai12"}
+		payload = {'question': question, 'answer': options}
+		response = requests.post(url, headers=headers, json=payload).json()
+		count_options = dict(zip(options, response["data"]))
+		max_count, min_count = max(response['data']), min(response["data"])
+		min_max_count = min_count if not_question else max_count
+		embed = discord.Embed(title=f"__Api Search Results !__", color = discord.Colour.random())
+		embed.set_footer(text = "Display Trivia")
+		embed.timestamp = datetime.utcnow()
+		description = ""
+		for index, option in enumerate(count_options):
+			if max_count != 0 and count_options[option] == min_max_count:
+				description += f"{order[index]}. {option} : {count_options[option]} ✅\n"
+			else:
+				description += f"{order[index]}. {option} : {count_options[option]}\n"
+		embed.description = description
+		await self.send_hook(embed = embed)
+	
 	async def get_sub_protocol(self, username = None, password = None):
 		"""Login display social and take the auth token."""
 		username = username if username else db.display_details.find_one({"guild_id": self.guild_id})["username"]
