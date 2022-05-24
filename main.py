@@ -110,7 +110,7 @@ class MainClass(commands.Cog):
     @commands.cooldown(1, 10, commands.BucketType.user)
     async def subscribe(self, ctx, guild_id: int = None):
         if ctx.guild: return await ctx.send(ctx.author.mention + "**, Please use the command in DM!**")
-        if not guild_id: return await ctx.send("Please enter your guild id!")
+        if not guild_id: return await ctx.send("Please enter your guild id after `{}{}`".format(ctx.prefix, ctx.command.name))
         guild = self.client.get_guild(guild_id)
         if not guild: return await ctx.send("Please provide a valid guild id!")
         embed = discord.Embed(title = "__Subscription Details !__",
