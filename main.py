@@ -114,7 +114,7 @@ class MainClass(commands.Cog):
         guild = self.client.get_guild(guild_id)
         if not guild: return await ctx.send("Please provide a valid guild id!")
         embed = discord.Embed(title = "__Subscription Details !__",
-            description = "One Week : ₹50.00/$1.00\nOne Month : ₹180.00/$3.50",
+            description = "1. One Week : ₹20.00/$0.50\n2. One Month : ₹70.00/$1.50",
             color = discord.Colour.random())
         embed.add_field(name = "__Payment Details !__", value = "Paytm : [Click Here](https://paytm.me/x-WGerG) (For QR Code : [Click Here](https://cdn.discordapp.com/attachments/799861610654728212/978009606716555375/Screenshot_2022-05-23-00-29-55-83.jpg))\nPaypal : [Click Here](https://paypal.me/sakhman)\n\nPlease send the exact amount to the following payment link. After payment send your Transaction ID/UPI Ref.No. here within 5 minutes.", inline = False)
         embed.set_footer(text = "Payment Created by : {}".format(ctx.author), icon_url = ctx.author.avatar_url)
