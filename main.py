@@ -37,13 +37,16 @@ class MainClass(commands.Cog):
         
         if isinstance(error, commands.CheckAnyFailure):
             message = f", You don't have permission to run this command."
+            return await ctx.send(ctx.author.mention + message)
         elif isinstance(error, commands.PrivateMessageOnly):
             message = f", This command can only be used in private messages."
+            return await ctx.send(ctx.author.mention + message)
         elif isinstance(error, commands.NoPrivateMessage):
             message = f", This command cannot be used in private messages."
+            return await ctx.send(ctx.author.mention + message)
         elif isinstance(error, commands.NotOwner):
             message = f", You don't have permission to run this command."
-        return await ctx.send(ctx.author.mention + message)
+            return await ctx.send(ctx.author.mention + message)
             
         print(f"Ignoring exception in command {ctx.command}", file=sys.stderr)
         traceback.print_exception(
