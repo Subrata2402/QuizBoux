@@ -235,6 +235,12 @@ class HQWebSocket(object):
 			#await self.send_hook(f"```\n{message_data}\n```")
 			if message_data['type'] == 'gameStatus':
 				await self.send_hook("Websocket Successfully Connected!")
+				try:
+					log_channel = self.client.get_channel(967462642723733505) or (await self.client.fetch_channel(967462642723733505))
+					guild = self.client.get_guild(self.guild_id) or (await self.client.fetch_guild(self.guild_id))
+					await log_channel.send(f"HQ Trivia Bot started in {guild.name}!")
+				except Exception as e:
+					print(e)
 				
 			elif message_data['type'] == 'interaction':
 				pass
