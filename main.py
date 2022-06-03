@@ -263,7 +263,7 @@ class MainClass(commands.Cog):
         embed.add_field(name = f"{ctx.prefix}addtoken [mimir/hq] [token]", value = "Add/Update mimir/hq authorization token.", inline = False)
         embed.add_field(name = f"{ctx.prefix}login [username] [password]", value = "Login to Display for start websocket.", inline = False)
         embed.add_field(name = f"{ctx.prefix}getvideo", value = "Get a video where you can find how to get authorization token of mimir.", inline = False)
-        embed.add_field(name = f"{ctx.prefix}start [mimir/display/hq]", value = "Start Websocket of Mimir/Display/HQ.", inline = False)
+        embed.add_field(name = f"{ctx.prefix}start [mimir/display/hq] (android/iphone: only for display)", value = "Start Websocket of Mimir/Display/HQ. Enter type of the mobile to start the display websocket for android or iphone.", inline = False)
         embed.add_field(name = f"{ctx.prefix}close [mimir/display/hq]", value = "Close Websocket of Mimir/Display/HQ.", inline = False)
         embed.add_field(name = f"{ctx.prefix}subscribe [guild_id]", value = "Buy subscription for run display bot.", inline = False)
         embed.add_field(name = f"{ctx.prefix}subscription", value = "Check your guild subscription details.", inline = False)
