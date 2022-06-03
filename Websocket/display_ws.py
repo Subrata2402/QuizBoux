@@ -193,7 +193,7 @@ class DisplayWebSocket(object):
 			auth_token = data["data"]["auth_token"]
 			return auth_token
 
-	async def connect_ws(self, mobile: str = "android"):
+	async def connect_ws(self, mobile: str):
 		sub_protocol = await self.get_sub_protocol()
 		socket_url = "wss://trivia-websockets.tsuprod.com/"
 		headers = {
