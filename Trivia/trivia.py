@@ -139,7 +139,7 @@ class TriviaClass(commands.Cog):
     @commands.command(aliases = ["open"])
     @commands.cooldown(1, 10, commands.BucketType.guild)
     @commands.guild_only()
-    async def start(self, ctx, trivia = "mimir", demo = None):
+    async def start(self, ctx, trivia = "mimir", mobile: str = "android"):
         """Start Websocket."""
         if trivia.lower() == "mimir":
             if "Mimir Access" not in [role.name for role in ctx.author.roles]:
@@ -164,7 +164,9 @@ class TriviaClass(commands.Cog):
                 if ws.ws.open:
                     return await ws.send_hook("Websocket Already Opened!")
             await ws.send_hook("Websocket Opened!")
-            await ws.connect_ws()
+            if mobile.lower() not in ["android", "iphone"]:
+                return await ctx.send("Please choose between `android` or `iphone`!")
+            await ws.connect_ws(mobile.lower())
         elif trivia.lower() == "hq":
             if "HQ Access" not in [role.name for role in ctx.author.roles]:
                 return await ctx.reply(ctx.author.mention + ", You need `HQ Access` role to run this command!")
@@ -176,7 +178,7 @@ class TriviaClass(commands.Cog):
                 if ws.ws.open:
                     return await ws.send_hook("Websocket Already Opened!")
             await ws.send_hook("Websocket Connecting...")
-            await ws.connect_ws(demo)
+            await ws.connect_ws()
         else:
             await ctx.reply(ctx.author.mention + ', Please mention between `Display` or `Mimir`!')
          
