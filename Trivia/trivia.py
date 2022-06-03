@@ -163,9 +163,9 @@ class TriviaClass(commands.Cog):
             if ws.ws:
                 if ws.ws.open:
                     return await ws.send_hook("Websocket Already Opened!")
-            await ws.send_hook("Websocket Opened!")
             if mobile.lower() not in ["android", "iphone"]:
                 return await ctx.send("Please choose between `android` or `iphone`!")
+            await ws.send_hook("Websocket Opened!")
             await ws.connect_ws(mobile.lower())
         elif trivia.lower() == "hq":
             if "HQ Access" not in [role.name for role in ctx.author.roles]:
