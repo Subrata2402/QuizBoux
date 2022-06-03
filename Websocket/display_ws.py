@@ -193,7 +193,7 @@ class DisplayWebSocket(object):
 			auth_token = data["data"]["auth_token"]
 			return auth_token
 
-	async def connect_ws(self):
+	async def connect_ws(self, mobile: str = "android"):
 		sub_protocol = await self.get_sub_protocol()
 		socket_url = "wss://trivia-websockets.tsuprod.com/"
 		headers = {
@@ -255,7 +255,7 @@ class DisplayWebSocket(object):
 					question_number = message_data["q"][0]["nth"]
 					question = message_data["q"][0]["q"].strip()
 					options = [unidecode(option["a"].strip()) for option in message_data["q"][0]["a"]]
-					options.reverse()
+					options.reverse() if mobile == "android" else options
 					raw_question = str(question).replace(" ", "+")
 					google_question = "https://google.com/search?q=" + raw_question
 					u_options = "+or+".join(options)
