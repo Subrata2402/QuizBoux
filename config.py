@@ -20,4 +20,5 @@ negative_words = {
     " not ", "least", "except", "never", "incorrect", "incorrectly", "none", "cannot", "can’t", "didn’t", "doesn’t", "don’t",
     "won’t", "hasn’t", "haven’t", "shouldn’t", "wouldn’t", "wasn’t", "aren’t", "isn’t", "couldn’t", "weren’t", "can't", "didn't",
     "doesn't", "don't", "won't", "hasn't", "haven't", "shouldn't", "wouldn't", "wasn't", "aren't", "isn't", "couldn't", "weren't",
+    "hadn't", "hadn’t"
 }
