@@ -142,7 +142,7 @@ class DisplayWebSocket(object):
 	
 	async def api_search_result(self, question, options, not_question) -> None:
 		"""Get Google search results through the api."""
-		if self.guild_id not in [973610992510570546, 935980609908658277]: return
+		if self.guild_id not in [973610992510570546, 935980609908658277, 837649333901459487]: return
 		url = 'https://jhatboyrahul.herokuapp.com/api/getResults'
 		headers = {"Authorization": "RainBhai12"}
 		payload = {'question': question, 'answer': options}
