@@ -93,8 +93,7 @@ class DisplayWebSocket(object):
 		res = str(r.text).lower()
 		count_options = {}
 		for choice in choices:
-			option = ""
-			count_option = 0
+			option, count_option = "", 0
 			options = tuple(choice.split(" "))
 			for opt in options:
 				_option = replace_options.get(opt)
