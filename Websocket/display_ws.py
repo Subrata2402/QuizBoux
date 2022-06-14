@@ -240,7 +240,31 @@ class DisplayWebSocket(object):
 						print(e)
 			
 			if message_data.get("t") == "poll":
-				pass
+				try:
+					question_id = message_data["q"][0]["id"]
+					if question_id not in question_ids:
+						question_ids.append(question_id)
+						total_question = message_data["max_q"]
+						question_number = message_data["q"][0]["nth"]
+						question = message_data["q"][0]["q"].strip()
+						options = [unidecode(option["a"].strip()) for option in message_data["q"][0]["a"]]
+						raw_question = str(question).replace(" ", "+")
+						google_question = "https://google.com/search?q=" + raw_question
+						u_options = "+or+".join(options)
+						raw_options = str(u_options).replace(" ", "+")
+						search_with_all = "https://google.com/search?q=" + raw_question + "+" + raw_options
+						
+						embed = discord.Embed(color = discord.Colour.random())
+						embed.title = f"Poll Question"
+						embed.description = f"[{question}]({google_question})\n\n[Search with all options]({search_with_all})"
+						for index, option in enumerate(options):
+							embed.add_field(name = f"Option - {order[index]}", value = f"[{option.strip()}]({google_question + '+' + str(option).strip().replace(' ', '+')})", inline = False)
+						embed.set_footer(text = "Display Trivia")
+						embed.set_thumbnail(url = self.icon_url)
+						embed.timestamp = datetime.utcnow()
+						await self.send_hook(embed = embed)
+				except Exception as e:
+					print(e)
 
 			elif message_data.get("type") == "poll":
 				pass
