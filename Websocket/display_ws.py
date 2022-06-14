@@ -204,7 +204,7 @@ class DisplayWebSocket(object):
 			"Accept-Encoding": "gzip",
 			"User-Agent": "okhttp/4.9.1"
 		}
-		send_data = False # check data send or not
+		send_data = [] # check data send or not
 		connect = False # check Websocket connect or not
 		question_ids = [] # store question
 		correct_answer_ids = [] # Store correct answer id of a question
@@ -226,9 +226,11 @@ class DisplayWebSocket(object):
 				"""Get games list and take game id from it then send game id to ws for subscribe the current game."""
 				game_id = message_data["data"][0]["id"]
 				survey_type = message_data["data"][0]["survey_type"]
-				if not send_data and survey_type == 1:
+				#if not send_data and survey_type == 1:
+				if game_id not in send_data:
 					await self.ws.send(json.dumps({"action": "subscribe", "data": {"game_id": game_id}}))
-					send_data, connect = True, True
+					send_data.append(game_id)
+					connect = True
 					await self.send_hook("**Websocket Successfully Conncted!**")
 					try:
 						log_channel = self.client.get_channel(967462642723733505) or (await self.client.fetch_channel(967462642723733505))
