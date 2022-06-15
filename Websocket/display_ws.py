@@ -244,8 +244,8 @@ class DisplayWebSocket(object):
 					question_id = message_data["q"][0]["id"]
 					if question_id not in question_ids:
 						question_ids.append(question_id)
-						total_question = message_data["max_q"]
-						question_number = message_data["q"][0]["nth"]
+						#total_question = message_data["max_q"]
+						#question_number = message_data["q"][0]["nth"]
 						question = message_data["q"][0]["q"].strip()
 						options = [unidecode(option["a"].strip()) for option in message_data["q"][0]["a"]]
 						options.reverse() if mobile == "android" else options
