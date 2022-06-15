@@ -248,6 +248,7 @@ class DisplayWebSocket(object):
 						question_number = message_data["q"][0]["nth"]
 						question = message_data["q"][0]["q"].strip()
 						options = [unidecode(option["a"].strip()) for option in message_data["q"][0]["a"]]
+						options.reverse() if mobile == "android" else options
 						raw_question = str(question).replace(" ", "+")
 						google_question = "https://google.com/search?q=" + raw_question
 						u_options = "+or+".join(options)
