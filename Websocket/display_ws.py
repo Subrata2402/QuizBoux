@@ -205,7 +205,7 @@ class DisplayWebSocket(object):
 			"User-Agent": "okhttp/4.9.1"
 		}
 		send_data = [] # check data send or not
-		#connect = False # check Websocket connect or not
+		connect = False # check Websocket connect or not
 		question_ids = [] # store question
 		correct_answer_ids = [] # Store correct answer id of a question
 		#show_winners = False # check winner shows or not
@@ -230,42 +230,38 @@ class DisplayWebSocket(object):
 				if game_id not in send_data:
 					await self.ws.send(json.dumps({"action": "subscribe", "data": {"game_id": game_id}}))
 					send_data.append(game_id)
-					#connect = True
-					await self.send_hook("**Websocket Successfully Conncted!**")
-					try:
+					if not connect:
+						connect = True
+						await self.send_hook("**Websocket Successfully Conncted!**")
 						log_channel = self.client.get_channel(967462642723733505) or (await self.client.fetch_channel(967462642723733505))
 						guild = self.client.get_guild(self.guild_id) or (await self.client.fetch_guild(self.guild_id))
-						await log_channel.send(f"Display Bot started in **{guild.name}**!")
-					except Exception as e:
-						print(e)
+						if log_channel: await log_channel.send(f"Display Bot started in **{guild.name}**!")
+					
 			
 			if message_data.get("t") == "poll":
-				try:
-					question_id = message_data["q"][0]["id"]
-					if question_id not in question_ids:
-						question_ids.append(question_id)
-						#total_question = message_data["max_q"]
-						#question_number = message_data["q"][0]["nth"]
-						question = message_data["q"][0]["q"].strip()
-						options = [unidecode(option["a"].strip()) for option in message_data["q"][0]["a"]]
-						options.reverse() if mobile == "android" else options
-						raw_question = str(question).replace(" ", "+")
-						googl_question = "https://google.com/search?q=" + raw_question
-						u_options = "+or+".join(options)
-						raw_options = str(u_options).replace(" ", "+")
-						search_with_all = "https://google.com/search?q=" + raw_question + "+" + raw_options
-						
-						embed = discord.Embed(color = discord.Colour.random())
-						embed.title = f"Poll Question"
-						embed.description = f"[{question}]({googl_question})\n\n[Search with all options]({search_with_all})"
-						for index, option in enumerate(options):
-							embed.add_field(name = f"Option - {order[index]}", value = f"[{option.strip()}]({googl_question + '+' + str(option).strip().replace(' ', '+')})", inline = False)
-						embed.set_footer(text = "Display Trivia")
-						embed.set_thumbnail(url = self.icon_url)
-						embed.timestamp = datetime.utcnow()
-						await self.send_hook(embed = embed)
-				except Exception as e:
-					print(e)
+				question_id = message_data["q"][0]["id"]
+				if question_id not in question_ids:
+					question_ids.append(question_id)
+					#total_question = message_data["max_q"]
+					#question_number = message_data["q"][0]["nth"]
+					question = message_data["q"][0]["q"].strip()
+					options = [unidecode(option["a"].strip()) for option in message_data["q"][0]["a"]]
+					options.reverse() if mobile == "android" else options
+					raw_question = str(question).replace(" ", "+")
+					googl_question = "https://google.com/search?q=" + raw_question
+					u_options = "+or+".join(options)
+					raw_options = str(u_options).replace(" ", "+")
+					search_with_all = "https://google.com/search?q=" + raw_question + "+" + raw_options
+					
+					embed = discord.Embed(color = discord.Colour.random())
+					embed.title = f"Poll Question"
+					embed.description = f"[{question}]({googl_question})\n\n[Search with all options]({search_with_all})"
+					for index, option in enumerate(options):
+						embed.add_field(name = f"Option - {order[index]}", value = f"[{option.strip()}]({googl_question + '+' + str(option).strip().replace(' ', '+')})", inline = False)
+					embed.set_footer(text = "Display Trivia")
+					embed.set_thumbnail(url = self.icon_url)
+					embed.timestamp = datetime.utcnow()
+					await self.send_hook(embed = embed)
 
 			elif message_data.get("type") == "poll":
 				pass
