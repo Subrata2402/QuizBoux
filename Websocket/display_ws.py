@@ -239,6 +239,7 @@ class DisplayWebSocket(object):
 					
 			
 			if message_data.get("t") == "poll":
+				"""Raise this condition when come poll questions."""
 				question_id = message_data["q"][0]["id"]
 				if question_id not in question_ids:
 					question_ids.append(question_id)
