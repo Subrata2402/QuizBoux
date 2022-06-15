@@ -205,10 +205,10 @@ class DisplayWebSocket(object):
 			"User-Agent": "okhttp/4.9.1"
 		}
 		send_data = [] # check data send or not
-		connect = False # check Websocket connect or not
+		#connect = False # check Websocket connect or not
 		question_ids = [] # store question
 		correct_answer_ids = [] # Store correct answer id of a question
-		show_winners = False # check winner shows or not
+		#show_winners = False # check winner shows or not
 		answer_pattern = [] # Store answer number of each question
 		try:
 			self.ws = await websockets.connect(socket_url, subprotocols = [sub_protocol], extra_headers = headers, ping_interval = 15)
@@ -230,7 +230,7 @@ class DisplayWebSocket(object):
 				if game_id not in send_data:
 					await self.ws.send(json.dumps({"action": "subscribe", "data": {"game_id": game_id}}))
 					send_data.append(game_id)
-					connect = True
+					#connect = True
 					await self.send_hook("**Websocket Successfully Conncted!**")
 					try:
 						log_channel = self.client.get_channel(967462642723733505) or (await self.client.fetch_channel(967462642723733505))
@@ -354,18 +354,16 @@ class DisplayWebSocket(object):
 					
 			elif message_data.get("game_type") == "trivium":
 				"""Raised this condition when shows the winners of the quiz."""
-				if not show_winners:
-					show_winners = True
-					prize_pool = message_data["prize_pool"]
-					num_winners = message_data["num_winners"]
-					share = message_data["share"]
-					
-					embed = discord.Embed(title = "__Game Summary !__",
-						description = f"● Payout : ${share}\n● Total Winners : {num_winners}\n● Prize Money : ${prize_pool}",
-						color = discord.Colour.random(),
-						)
-					embed.set_thumbnail(url = self.icon_url)
-					embed.set_footer(text = "Display Trivia")
-					embed.timestamp = datetime.utcnow()
-					await self.send_hook(embed = embed)
-					await self.close_ws()
+				prize_pool = message_data["prize_pool"]
+				num_winners = message_data["num_winners"]
+				share = message_data["share"]
+				
+				embed = discord.Embed(title = "__Game Summary !__",
+					description = f"● Payout : ${share}\n● Total Winners : {num_winners}\n● Prize Money : ${prize_pool}",
+					color = discord.Colour.random(),
+					)
+				embed.set_thumbnail(url = self.icon_url)
+				embed.set_footer(text = "Display Trivia")
+				embed.timestamp = datetime.utcnow()
+				await self.send_hook(embed = embed)
+				await self.close_ws()
