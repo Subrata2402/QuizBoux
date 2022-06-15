@@ -250,16 +250,16 @@ class DisplayWebSocket(object):
 						options = [unidecode(option["a"].strip()) for option in message_data["q"][0]["a"]]
 						options.reverse() if mobile == "android" else options
 						raw_question = str(question).replace(" ", "+")
-						google_question = "https://google.com/search?q=" + raw_question
+						googl_question = "https://google.com/search?q=" + raw_question
 						u_options = "+or+".join(options)
 						raw_options = str(u_options).replace(" ", "+")
 						search_with_all = "https://google.com/search?q=" + raw_question + "+" + raw_options
 						
 						embed = discord.Embed(color = discord.Colour.random())
 						embed.title = f"Poll Question"
-						embed.description = f"[{question}]({google_question})\n\n[Search with all options]({search_with_all})"
+						embed.description = f"[{question}]({googl_question})\n\n[Search with all options]({search_with_all})"
 						for index, option in enumerate(options):
-							embed.add_field(name = f"Option - {order[index]}", value = f"[{option.strip()}]({google_question + '+' + str(option).strip().replace(' ', '+')})", inline = False)
+							embed.add_field(name = f"Option - {order[index]}", value = f"[{option.strip()}]({googl_question + '+' + str(option).strip().replace(' ', '+')})", inline = False)
 						embed.set_footer(text = "Display Trivia")
 						embed.set_thumbnail(url = self.icon_url)
 						embed.timestamp = datetime.utcnow()
