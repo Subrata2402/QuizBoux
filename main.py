@@ -110,6 +110,7 @@ class MainClass(commands.Cog):
     
         
     @commands.command()
+    @commands.is_owner()
     @commands.cooldown(1, 10, commands.BucketType.user)
     async def subscribe(self, ctx, guild_id: int = None):
         if ctx.guild: return await ctx.send(ctx.author.mention + "**, Please use the command in DM!**")
@@ -162,6 +163,7 @@ class MainClass(commands.Cog):
     @commands.command()
     @commands.cooldown(1, 10, commands.BucketType.user)
     @commands.guild_only()
+    @commands.is_owner()
     async def subscription(self, ctx, guild_id: int = None):
         if "Display Access" not in [role.name for role in ctx.author.roles]:
             return await ctx.reply(ctx.author.mention + ", You need `Display Access` role to run this command!")
@@ -265,8 +267,8 @@ class MainClass(commands.Cog):
         embed.add_field(name = f"{ctx.prefix}getvideo", value = "Get a video where you can find how to get authorization token of mimir.", inline = False)
         embed.add_field(name = f"{ctx.prefix}start [mimir/display/hq] (android/iphone: only for display)", value = "Start Websocket of Mimir/Display/HQ. Enter type of the mobile to start the display websocket for android or iphone.", inline = False)
         embed.add_field(name = f"{ctx.prefix}close [mimir/display/hq]", value = "Close Websocket of Mimir/Display/HQ.", inline = False)
-        embed.add_field(name = f"{ctx.prefix}subscribe [guild_id]", value = "Buy subscription for run display bot.", inline = False)
-        embed.add_field(name = f"{ctx.prefix}subscription", value = "Check your guild subscription details.", inline = False)
+        #embed.add_field(name = f"{ctx.prefix}subscribe [guild_id]", value = "Buy subscription for run display bot.", inline = False)
+        #embed.add_field(name = f"{ctx.prefix}subscription", value = "Check your guild subscription details.", inline = False)
         embed.add_field(name = f"{ctx.prefix}invite", value = "Get bot invite link.", inline = False)
         embed.set_thumbnail(url = self.client.user.avatar_url)
         embed.set_author(name = f"| {self.client.user.name} Help Commands !", icon_url = self.client.user.avatar_url)
