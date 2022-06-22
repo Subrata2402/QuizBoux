@@ -19,7 +19,7 @@ class DisplayWebSocket(object):
 		self.ws = None
 
 	async def get_ws(self):
-		"""Get Websocket."""
+		"""Get Websocket from stored ws."""
 		self.ws = storingWs.get(self.guild_id)
 
 	async def get_web_url(self) -> None:
