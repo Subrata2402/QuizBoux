@@ -218,7 +218,7 @@ class TriviaClass(commands.Cog):
     @commands.command()
     @commands.guild_only()
     @commands.cooldown(1, 10, commands.BucketType.guild)
-    async def setup(self, ctx, trivia = "mimir", channel: discord.TextChannel = None):
+    async def setup(self, ctx, trivia: str = "display", channel: discord.TextChannel = None):
         """Setup mimir quiz channel."""
         if not ctx.author.guild_permissions.administrator:
             return await ctx.reply(ctx.author.mention + ", You don't have enough permission to run this command!")
