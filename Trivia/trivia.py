@@ -100,7 +100,7 @@ class TriviaClass(commands.Cog):
     @commands.command(aliases = ["quiz"])
     @commands.cooldown(1, 10, commands.BucketType.user)
     @commands.guild_only()
-    async def nextquiz(self, ctx, trivia: str = "mimir", game_num:int = 1):
+    async def nextquiz(self, ctx, trivia: str = "mimir", game_num: int = 1):
         """Get next quiz details."""
         if trivia.lower() == "mimir":
             ws = MimirWebSocket(guild_id = ctx.guild.id, client = self.client)
@@ -117,7 +117,7 @@ class TriviaClass(commands.Cog):
     
     @commands.command()
     @commands.guild_only()
-    async def login(self, ctx, username = None, password = None):
+    async def login(self, ctx, username: str = None, password: str = None):
         """Login to Display."""
         if "Display Access" not in [role.name for role in ctx.author.roles]:
             return await ctx.reply(ctx.author.mention + ", You need `Display Access` role to run this command!")
@@ -139,7 +139,7 @@ class TriviaClass(commands.Cog):
     @commands.command(aliases = ["open"])
     @commands.cooldown(1, 10, commands.BucketType.guild)
     @commands.guild_only()
-    async def start(self, ctx, trivia = "mimir", mobile: str = "android"):
+    async def start(self, ctx, trivia: str = "display", mobile: str = "android"):
         """Start Websocket."""
         if trivia.lower() == "mimir":
             if "Mimir Access" not in [role.name for role in ctx.author.roles]:
@@ -185,7 +185,7 @@ class TriviaClass(commands.Cog):
     @commands.command()
     @commands.guild_only()
     @commands.cooldown(1, 10, commands.BucketType.guild)
-    async def close (self, ctx, trivia = "mimir"):
+    async def close (self, ctx, trivia: str = "display"):
         """Close Websocket."""
         if trivia.lower() == "mimir":
             if "Mimir Access" not in [role.name for role in ctx.author.roles]:
