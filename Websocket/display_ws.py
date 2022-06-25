@@ -208,7 +208,7 @@ class DisplayWebSocket(object):
 		connect = False # check Websocket connect or not
 		question_ids = [] # store question
 		correct_answer_ids = [] # Store correct answer id of a question
-		#show_winners = False # check winner shows or not
+		show_winners = False # check winner shows or not
 		answer_pattern = [] # Store answer number of each question
 		try:
 			self.ws = await websockets.connect(socket_url, subprotocols = [sub_protocol], extra_headers = headers, ping_interval = 15)
@@ -351,16 +351,18 @@ class DisplayWebSocket(object):
 					
 			elif message_data.get("game_type") == "trivium":
 				"""Raised this condition when shows the winners of the quiz."""
-				prize_pool = message_data["prize_pool"]
-				num_winners = message_data["num_winners"]
-				share = message_data["share"]
-				
-				embed = discord.Embed(title = "__Game Summary !__",
-					description = f"● Payout : ${share}\n● Total Winners : {num_winners}\n● Prize Money : ${prize_pool}",
-					color = discord.Colour.random(),
-					)
-				embed.set_thumbnail(url = self.icon_url)
-				embed.set_footer(text = "Display Trivia")
-				embed.timestamp = datetime.utcnow()
-				await self.send_hook(embed = embed)
-				await self.close_ws()
+				if not show_winners:
+					show_winners = True
+					prize_pool = message_data["prize_pool"]
+					num_winners = message_data["num_winners"]
+					share = message_data["share"]
+					
+					embed = discord.Embed(title = "__Game Summary !__",
+						description = f"● Payout : ${share}\n● Total Winners : {num_winners}\n● Prize Money : ${prize_pool}",
+						color = discord.Colour.random(),
+						)
+					embed.set_thumbnail(url = self.icon_url)
+					embed.set_footer(text = "Display Trivia")
+					embed.timestamp = datetime.utcnow()
+					await self.send_hook(embed = embed)
+					await self.close_ws()
