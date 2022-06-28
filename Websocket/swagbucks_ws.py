@@ -31,7 +31,7 @@ class SbWebSocket(object):
 		"""
 		Get token from database by username.
 		"""
-		details = db.sb_details.find_one({"username": username.lower()})
+		details = db.sb_details.find_one({"username": self.username.lower()})
 		if not details:
 			print("Not Found any account with this username")
 			return
