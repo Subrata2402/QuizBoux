@@ -27,7 +27,7 @@ class SbWebSocket(object):
 	async def game_details(self) -> None:
 		data = await self.fetch("POST", "trivia/join", headers = headers)
 		if data["success"]:
-			return self.game_is_active = True
+			self.game_is_active = True
 
 	async def fetch(self, method = "GET", function = "", params = None, headers = None, data = None):
 		"""
