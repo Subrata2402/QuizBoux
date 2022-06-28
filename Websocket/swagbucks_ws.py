@@ -6,9 +6,9 @@ from database import db
 
 class SbWebSocket(object):
 	
-	def __init__(self, client, token: str = None):
+	def __init__(self, client, username: str = None):
 		self.client = client
-		self.token = token
+		self.username = username
 		self.ws = None
 		self.vid = None
 		self.game_is_active = False
