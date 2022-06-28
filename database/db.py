@@ -5,3 +5,4 @@ db = data.get_database("MimirQuiz")
 mimir_details = db.mimir_details
 display_details = db.display_details
 hq_details = db.hq_details
+sb_details = db.sb_details
