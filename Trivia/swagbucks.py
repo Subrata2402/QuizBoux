@@ -13,8 +13,19 @@ class SwagbucksTrivia(commands.Cog):
 	async def sbstart(self, ctx, username: str = None):
 		if not username:
 			return await ctx.send("Username is required.")
+		ws = HQWebSocket(self.client, username)
+		await ws.get_ws()
+		if ws.ws:
+			if ws.ws.open:
+				return await ws.send_hook("Websocket Already Opened!")
+		await ws.send_hook("Websocket Connecting...")
+		await ws.connect_ws()
 		
-		
+	@commands.command()
+	async def sbclose(self, ctx, username: str = None):
+		ws = SbWebSocket(self.client, username)
+		await ws.close_ws()
+	
 	@commands.command()
 	async def sblogin(self, ctx, email_id: str = None, password: str = None):
 		if not email_id or not password:
