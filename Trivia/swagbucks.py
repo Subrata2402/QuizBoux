@@ -4,10 +4,10 @@ from discord.ext import commands
 from database import db
 
 class SwagbucksTrivia(commands.Cog):
-    
-    def __init__(self, client):
-    	super().__init__(client)
-        self.client = client
+	
+	def __init__(self, client):
+		super().__init__(client)
+		self.client = client
 
 	@commands.command()
 	async def sbstart(self, ctx, username: str = None):
