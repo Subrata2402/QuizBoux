@@ -24,7 +24,7 @@ class SbWebSocket(object):
 			"authorization": self.token
 		}
 		
-	async def game_is_active(self) -> None:
+	async def game_details(self) -> None:
 		data = await self.fetch("POST", "trivia/join", headers = headers)
 		if data["success"]:
 			return self.game_is_active = True
@@ -143,7 +143,8 @@ class SbWebSocket(object):
 		"""
 		Try to onnect websocket.
 		"""
-		if not game_is_active:
+		await self.game_details()
+		if not self.game_is_active:
 			return await self.send_hook("Game is not live!")
 		socket_url = "wss://api.playswagiq.com/sock/1/game/{}".format(self.vid)
 		self.ws = await websockets.connect(socket_url, extra_headers = headers, ping_interval = 15)
