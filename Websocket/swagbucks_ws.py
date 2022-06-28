@@ -50,8 +50,9 @@ class SbWebSocket(object):
 		"""
 		Request Swagbucks to perform the action.
 		"""
+		host = self._host if host else self.host
 		async with aiohttp.ClientSession() as client_session:
-			response = await client_session.request(method = method, url = self._host if host else self.host  + function, params = params, headers = headers, data = data)
+			response = await client_session.request(method = method, url = host + function, params = params, headers = headers, data = data)
 			if response.status != 200:
 				await self.send_hook("Something went wrong!")
 				#raise Exception("Something went Wrong!")
