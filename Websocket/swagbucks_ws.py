@@ -1,7 +1,7 @@
 import aiohttp, json, discord
 stored_ws = {}
 from datetime import datetime
-import websockets
+import websockets, asyncio
 from database import db
 
 class SbWebSocket(object):
@@ -21,8 +21,17 @@ class SbWebSocket(object):
 			"Host": "app.swagbucks.com",
 			"user-agent": "SwagIQ-Android/34 (okhttp/3.10.0);Realme RMX1911",
 			"accept-encoding": "gzip",
-			"authorization": self.token
+			"authorization": asyncio.run(self.get_token)
 		}
+		
+	async def get_token(self):
+		"""
+		Get token from database by username.
+		"""
+		details = db.sb_details.find_one({"username": username.lower()})
+		if not details:
+			return await self.send_hook("Token not found.")
+		return details["access_token"]
 		
 	async def game_details(self) -> None:
 		"""
@@ -151,7 +160,7 @@ class SbWebSocket(object):
 			return await self.send_hook("Game is not live!")
 		socket_url = "wss://api.playswagiq.com/sock/1/game/{}".format(self.vid)
 		self.ws = await websockets.connect(socket_url, extra_headers = headers, ping_interval = 15)
-		stored_ws[self.token] = self.ws
+		stored_ws[self.username] = self.ws
 		rejoin_used = False
 		await self.send_hook("Websocket successfully connected!")
 		async for message in self.ws:
