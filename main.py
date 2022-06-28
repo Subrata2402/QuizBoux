@@ -294,7 +294,7 @@ async def on_message(message):
         #return await message.channel.send(embed = embed)
     await client.process_commands(message)
 
-extensions = ["Trivia.trivia"]
+extensions = ["Trivia.trivia", "Trivia.swagbucks"]
 
 if __name__ == "__main__":
     failed_ext = ""
