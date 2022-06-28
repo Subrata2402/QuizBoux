@@ -15,6 +15,7 @@ class SbWebSocket(object):
 		self.partner_hash = None
 		self.answer = 2
 		self.host = "https://api.playswagiq.com/"
+		self._host = "https://app.swagbucks.com/"
 		self.icon_url = "https://cdn.discordapp.com/attachments/799861610654728212/991317134930092042/swagbucks_logo.png"
 		self.headers = {
 			"content-type": "application/x-www-form-urlencoded",
@@ -45,12 +46,12 @@ class SbWebSocket(object):
 		if data["success"]:
 			self.game_is_active = True
 
-	async def fetch(self, method = "GET", function = "", params = None, headers = None, data = None):
+	async def fetch(self, method = "GET", function = "", params = None, headers = None, data = None, host = None):
 		"""
 		Request Swagbucks to perform the action.
 		"""
 		async with aiohttp.ClientSession() as client_session:
-			response = await client_session.request(method = method, url = self.host + function, params = params, headers = headers, data = data)
+			response = await client_session.request(method = method, url = self._host if host else self.host  + function, params = params, headers = headers, data = data)
 			if response.status != 200:
 				await self.send_hook("Something went wrong!")
 				#raise Exception("Something went Wrong!")
@@ -223,7 +224,7 @@ class SwagbucksLive(SbWebSocket):
 			"appversion": "34",
 			"appid": "37"
 		}
-		data = await self.fetch("POST", "?cmd=apm-1", params = params)
+		data = await self.fetch("POST", "?cmd=apm-1", params = params, host = "host")
 		if data["status"] != 200:
 			return await ctx.send("```\n{}\n```".format(data))
 		username = data["user_name"]
@@ -262,7 +263,7 @@ class SwagbucksLive(SbWebSocket):
 			"token": token, "checkreferral": False,
 			"appid": "37", "appversion": "34"
 		}
-		data = await self.fetch("POST", "?cmd=apm-3", params = params)
+		data = await self.fetch("POST", "?cmd=apm-3", params = params, host = "host")
 		if data["status"] != 200:
 			return await ctx.send("```\n{}\n```".format(data))
 		embed = discord.Embed(title = "Swagbucks Account Details !",
