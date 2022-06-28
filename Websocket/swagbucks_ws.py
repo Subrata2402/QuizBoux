@@ -98,7 +98,7 @@ class SbWebSocket(object):
 		"""
 		Get the details of the current game show.
 		"""
-		data = await self.fetch("POST", "trivia/home", headers = headers)
+		data = await self.fetch("POST", "trivia/home", headers = self.headers)
 		prize = data["episode"]["grandPrizeDollars"]
 		time = data["episode"]["start"]
 		embed=discord.Embed(title = "__SwagIQ Next Show Details !__", description=f"• Show Name : Swagbucks Live\n• Show Time : <t:{time}>\n• Prize Money : ${prize}", color = discord.Colour.random())
@@ -130,7 +130,7 @@ class SbWebSocket(object):
 		"""
 		Send message with Discord channel Webhook.
 		"""
-		web_url = await self.get_web_url()
+		web_url = "https://discord.com/api/webhooks/988392404853874748/CGtvuLqXpX4kTuWJrV6KsTkPjXowVJRrcFk_rWKVLlJuZFQpNU7lIPWOm4UpKupKqU7T"
 		async with aiohttp.ClientSession() as session:
 			webhook = discord.Webhook.from_url(web_url, adapter=discord.AsyncWebhookAdapter(session))
 			await webhook.send(content = content, embed = embed, username = self.client.user.name, avatar_url = self.client.user.avatar_url)
