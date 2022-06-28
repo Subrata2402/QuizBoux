@@ -24,6 +24,9 @@ class SbWebSocket(object):
 			"authorization": asyncio.run(self.get_token)
 		}
 		
+	async def is_expired(self, username: str):
+		pass
+		
 	async def get_token(self):
 		"""
 		Get token from database by username.
