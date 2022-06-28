@@ -24,6 +24,9 @@ class SbWebSocket(object):
 		}
 		
 	async def game_details(self) -> None:
+		"""
+		Get game details.
+		"""
 		data = await self.fetch("POST", "trivia/join", headers = headers)
 		if data["success"]:
 			self.game_is_active = True
@@ -38,6 +41,31 @@ class SbWebSocket(object):
 				await self.send_hook("Something went wrong!")
 				#raise Exception("Something went Wrong!")
 			return await response.json()
+			
+	async def login(self, ctx, email_id: str, password: str):
+		"""
+		Login to Swagbucks with username and password.
+		"""
+		params = {
+			"emailAddress": email_id,
+			"pswd": password,
+			#"persist": "on", "showmeter": "0",
+			"sig": "cf737f54a923ae5f300a705332352e3a",
+			#"advertiserID": "e1cbd4d6-3aea-4144-82b9-2a70b8458f5b",
+			#"modelNumber": "RMX1911829", "osVersion": "10",
+			"appversion": "34",
+			"appid": "37"
+		}
+		data = await self.fetch("POST", "?cmd=apm-1", params = params)
+		if data["status"] == 200:
+			username = data["user_name"]
+			user_id = data["member_id"]
+			check = db.sb_details.find_one({"user_id": user_id})
+			if check: return await ctx.send("This account already exists in bot.")
+			token = data["token"]
+			sig = data["sig"]
+			
+			await ctx.send("Successfully login to Swagbucks. Username : {}".format(username))
 	
 	async def send_answer(self, qid: str, aid: str):
 		"""
