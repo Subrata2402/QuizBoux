@@ -102,7 +102,7 @@ class SbWebSocket(object):
 			return await ctx.send("```\n{}\n```".format(data))
 		embed = discord.Embed(title = "Swagbucks Account Details !",
 			description = f"```\n" \
-				f"User Id : {data["member_id"]}\n" \
+				f"User Id : {data[\"member_id\"]}\n" \
 				f"Email Verified : {data["email_verified"]}\n" \
 				f"Lives : {data["lives"]}\n" \
 				f"Username : {data["user_name"]}\n" \
