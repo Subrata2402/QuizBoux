@@ -8,8 +8,7 @@ class SbWebSocket(object):
 		self.vid = None
 		self.partner_hash = None
 		self.host = "https://api.playswagiq.com/"
-		with open("Photos/swagbucks_logo.png", "rb") as icon_url:
-			self.icon_url = icon_url
+		self.icon_url = "https://cdn.discordapp.com/attachments/799861610654728212/991317134930092042/swagbucks_logo.png"
 		self.headers = {
 			"content-type": "application/x-www-form-urlencoded",
 			"Host": "app.swagbucks.com",
