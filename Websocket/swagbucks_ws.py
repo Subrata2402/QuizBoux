@@ -220,7 +220,7 @@ class SwagbucksLive(SbWebSocket):
 			"emailAddress": email_id,
 			"pswd": password,
 			#"persist": "on", "showmeter": "0",
-			"sig": "cf737f54a923ae5f300a705332352e3a",
+			"sig": "172e4aebc29f853bb8033a987d470837",
 			#"advertiserID": "e1cbd4d6-3aea-4144-82b9-2a70b8458f5b",
 			#"modelNumber": "RMX1911829", "osVersion": "10",
 			"appversion": "34",
