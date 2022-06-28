@@ -6,7 +6,6 @@ from database import db
 class SwagbucksTrivia(commands.Cog):
 	
 	def __init__(self, client):
-		super().__init__(client)
 		self.client = client
 
 	@commands.command()
