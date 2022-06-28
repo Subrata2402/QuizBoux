@@ -10,6 +10,8 @@ class SbWebSocket(object):
 		self.client = client
 		self.token = token
 		self.ws = None
+		self.vid = None
+		self.game_is_active = False
 		self.partner_hash = None
 		self.answer = 2
 		self.host = "https://api.playswagiq.com/"
@@ -22,11 +24,10 @@ class SbWebSocket(object):
 			"authorization": self.token
 		}
 		
-	@property
-	def game_is_active(self) -> None:
+	async def game_is_active(self) -> None:
 		data = await self.fetch("POST", "trivia/join", headers = headers)
 		if data["success"]:
-			return True
+			return self.game_is_active = True
 
 	async def fetch(self, method = "GET", function = "", params = None, headers = None, data = None):
 		"""
@@ -131,14 +132,12 @@ class SbWebSocket(object):
 			webhook = discord.Webhook.from_url(web_url, adapter=discord.AsyncWebhookAdapter(session))
 			await webhook.send(content = content, embed = embed, username = self.client.user.name, avatar_url = self.client.user.avatar_url)
 			
-	@property
-	def vid(self) -> None:
+	async def vid(self) -> None:
 		"""
 		Request viewId for connecting to the websocket.
 		"""
 		data = await self.fetch("POST", "trivia/join", headers = headers)
-		vid = data["viewId"]
-		return vid
+		self.vid = data["viewId"]
 	
 	async def connect_websocket(self):
 		"""
