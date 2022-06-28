@@ -81,7 +81,8 @@ class SbWebSocket(object):
 		To use this function we can send a rejoin. 
 		"""
 		params = {
-			"vid": self.vid, "useLife": True, "partnerHash": self.partner_hash
+			"vid": self.vid, "useLife": True, "partnerHash": self.partner_hash,
+			"_device": "c1cd7fc0-4bd5-4026-bc7d-aaa4199b7873"
 		}
 		#self.headers["Authorization"] = "Bearer " + self.token
 		data = await self.fetch("POST", "trivia/rebuy_confirm", headers = self.headers, params = params)
