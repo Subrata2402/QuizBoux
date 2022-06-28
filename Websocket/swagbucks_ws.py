@@ -2,6 +2,7 @@ import aiohttp, json, discord
 stored_ws = {}
 from datetime import datetime
 import websockets
+from database import db
 
 class SbWebSocket(object):
 	
