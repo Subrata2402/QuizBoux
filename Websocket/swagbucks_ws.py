@@ -237,6 +237,7 @@ class SwagbucksLive(SbWebSocket):
 		sig = data["sig"]
 		
 		params = {
+			"_device": "c1cd7fc0-4bd5-4026-bc7d-aaa4199b7873",
 			"partnerMemberId": user_id,
 			"partnerUserName": username,
 			"verify": "false",
