@@ -21,19 +21,20 @@ class SbWebSocket(object):
 			"Host": "app.swagbucks.com",
 			"user-agent": "SwagIQ-Android/34 (okhttp/3.10.0);Realme RMX1911",
 			"accept-encoding": "gzip",
-			"authorization": asyncio.run(self.get_token)
+			"authorization": self.get_token()
 		}
 		
 	async def is_expired(self, username: str):
 		pass
 		
-	async def get_token(self):
+	def get_token(self):
 		"""
 		Get token from database by username.
 		"""
 		details = db.sb_details.find_one({"username": username.lower()})
 		if not details:
-			return await self.send_hook("Token not found.")
+			print("Not Found any account with this username")
+			return
 		return details["access_token"]
 		
 	async def game_details(self) -> None:
