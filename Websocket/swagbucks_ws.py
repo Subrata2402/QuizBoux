@@ -5,7 +5,7 @@ import websockets
 
 class SbWebSocket(object):
 	
-	def __init__(self, client, token: str):
+	def __init__(self, client, token: str = None):
 		self.client = client
 		self.token = token
 		self.ws = None
