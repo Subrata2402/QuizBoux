@@ -1,11 +1,12 @@
 import discord
-from Websocket.swagbucks_ws import SbWebSocket
+from Websocket.swagbucks_ws import SbWebSocket, SwagbucksLive
 from discord.ext import commands
 from database import db
 
-class SwagbucksTrivia(commands.Cog):
+class SwagbucksTrivia(commands.Cog, SwagbucksLive):
 	
 	def __init__(self, client):
+		super().__init__(client)
 		self.client = client
 
 	@commands.command()
