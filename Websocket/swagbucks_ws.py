@@ -44,7 +44,8 @@ class SbWebSocket(object):
 			
 	async def login(self, ctx, email_id: str, password: str):
 		"""
-		Login to Swagbucks with username and password.
+		Login to Swagbucks with username and password
+		and save login credentials to database.
 		"""
 		params = {
 			"emailAddress": email_id,
@@ -57,15 +58,62 @@ class SbWebSocket(object):
 			"appid": "37"
 		}
 		data = await self.fetch("POST", "?cmd=apm-1", params = params)
-		if data["status"] == 200:
-			username = data["user_name"]
-			user_id = data["member_id"]
-			check = db.sb_details.find_one({"user_id": user_id})
-			if check: return await ctx.send("This account already exists in bot.")
-			token = data["token"]
-			sig = data["sig"]
-			
-			await ctx.send("Successfully login to Swagbucks. Username : {}".format(username))
+		if data["status"] != 200:
+			return await ctx.send("```\n{}\n```".format(data))
+		username = data["user_name"]
+		user_id = data["member_id"]
+		check = db.sb_details.find_one({"user_id": user_id})
+		if check: return await ctx.send("This account already exists in bot.")
+		token = data["token"]
+		sig = data["sig"]
+		
+		params = {
+			"partnerMemberId": user_id,
+			"partnerUserName": username,
+			"verify": False,
+			"partnerApim": 1,
+			"partnerHash": sig
+		}
+		data = await self.fetch("POST", "auth/token", params = params)
+		access_token = data["accessToken"]
+		refresh_token = data["refreshToken"]
+		db.sb_details.insert_one({
+			"user_id": user_id, "username": username.lower(),
+			"access_token": access_token, "refresh_token": refresh_token,
+			"token": token
+		})
+		await ctx.send("Successfully login to Swagbucks. Username : `{}`".format(username))
+	
+	async def account_details(self, ctx, username: str):
+		"""
+		Get account details.
+		"""
+		user_details = db.sb_details.find_one({"username": username.lower()})
+		if not user_details:
+			return await ctx.send("No account found with name `{}`".format(username))
+		token = user_details["token"]
+		params = {
+			"token": token, "checkreferral": False,
+			"appid": "37", "appversion": "34"
+		}
+		data = await self.fetch("POST", "?cmd=apm-3", params = params)
+		if data["status"] != 200:
+			return await ctx.send("```\n{}\n```".format(data))
+		embed = discord.Embed(title = "Swagbucks Account Details !",
+			description = f"```\n" \
+				f"User Id : {data["member_id"]}\n" \
+				f"Email Verified : {data["email_verified"]}\n" \
+				f"Lives : {data["lives"]}\n" \
+				f"Username : {data["user_name"]}\n" \
+				f"Swagbucks : {data["swagbucks"]}\n" \
+				f"Re-Verification : {data["require_reverification"]}\n" \
+				f"Profile Complete : {data["profile_complete"]}\n" \
+				f"OTP Verified : {data["otp_verified"]}\n" \
+				f"Member Status : {data["member_status"]}\n" \
+				f"Pending Earnings : {data["pending_earnings"]}\n" \
+				f"Registered Date : {data["registered_date"]}\n" \
+				f"Lifetime Earnings : {data["lifetime_earnings"]}\n```")
+		await ctx.send(embed = embed)
 	
 	async def send_answer(self, qid: str, aid: str):
 		"""
