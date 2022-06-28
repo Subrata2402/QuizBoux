@@ -1,7 +1,7 @@
 import aiohttp, json, discord
 stored_ws = {}
 from datetime import datetime
-import websockets, asyncio
+import websockets, asyncio, requests
 from database import db
 
 class SbWebSocket(object):
@@ -56,7 +56,8 @@ class SbWebSocket(object):
 			if response.status != 200:
 				await self.send_hook("Something went wrong!")
 				#raise Exception("Something went Wrong!")
-			return await response.json()
+			content = await response.text()
+			return json.loads(content)
 	
 	async def send_answer(self, qid: str, aid: str):
 		"""
