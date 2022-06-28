@@ -1,12 +1,11 @@
 import aiohttp, json, discord
-from discord import commands
 stored_ws = {}
 from datetime import datetime
 import websockets
 
 class SbWebSocket(object):
 	
-	def __init__(self, client: commands.Bot, token: str):
+	def __init__(self, client, token: str):
 		self.client = client
 		self.token = token
 		self.ws = None
