@@ -6,7 +6,7 @@ from database import db
 
 class SbWebSocket(object):
 	
-	def __init__(self, client, username: str = None):
+	def __init__(self, client, username: str):
 		self.client = client
 		self.username = username
 		self.ws = None
