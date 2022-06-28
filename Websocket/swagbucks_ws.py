@@ -191,7 +191,7 @@ class SbWebSocket(object):
 				
 class SwagbucksLive(SbWebSocket):
 	
-	def __init__(self, client)
+	def __init__(self, client):
 		super().__init__(client)
 		self.client = client
 
