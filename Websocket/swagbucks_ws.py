@@ -239,8 +239,8 @@ class SwagbucksLive(SbWebSocket):
 		params = {
 			"partnerMemberId": user_id,
 			"partnerUserName": username,
-			"verify": False,
-			"partnerApim": 1,
+			"verify": "false",
+			"partnerApim": "1",
 			"partnerHash": sig
 		}
 		data = await self.fetch("POST", "auth/token", params = params)
