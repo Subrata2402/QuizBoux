@@ -159,7 +159,7 @@ class SbWebSocket(object):
 		"""
 		Request viewId for connecting to the websocket.
 		"""
-		data = await self.fetch("POST", "trivia/join")
+		data = await self.fetch("POST", "trivia/join", headers = self.headers)
 		self.vid = data["viewId"]
 	
 	async def connect_websocket(self):
@@ -169,15 +169,8 @@ class SbWebSocket(object):
 		await self.game_details()
 		if not self.game_is_active:
 			return await self.send_hook("Game is not live!")
-		headers = {
-			"content-type": "application/x-www-form-urlencoded",
-			"Host": "app.swagbucks.com",
-			"user-agent": "SwagIQ-Android/34 (okhttp/3.10.0);Realme RMX1911",
-			"accept-encoding": "gzip",
-			"authorization": "Bearer " + self.get_token()
-		}
 		socket_url = "wss://api.playswagiq.com/sock/1/game/{}".format(self.vid)
-		self.ws = await websockets.connect(socket_url, extra_headers = headers, ping_interval = 15)
+		self.ws = await websockets.connect(socket_url, extra_headers = self.headers, ping_interval = 15)
 		stored_ws[self.username] = self.ws
 		rejoin_used = False
 		await self.send_hook("Websocket successfully connected!")
