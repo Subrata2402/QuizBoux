@@ -9,7 +9,7 @@ signed = {
 	"baldric3250schneider@gmail.com": "172e4aebc29f853bb8033a987d470837"
 }
 
-class SbWebSocket(SwagbucksLive):
+class SbWebSocket(object):
 	
 	def __init__(self, client, username: str = None):
 		self.client = client
@@ -38,11 +38,7 @@ class SbWebSocket(SwagbucksLive):
 		data = await self.fetch("POST", "trivia/home", headers = self.headers)
 		success = data["success"]
 		if not success:
-			await self.send_hook("Account expired so old account will be deleted and replace the update account.")
-			details = db.sb_details.find_one({"username": self.username})
-			email_id, password = details["email_id"], details["password"]
-			db.sb_details.delete_one({"username": self.username})
-			await self.login(email_id, password)
+			await self.send_hook("Auth token has expired!")
 		
 	def get_token(self):
 		"""
