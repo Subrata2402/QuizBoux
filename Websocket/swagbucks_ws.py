@@ -31,7 +31,17 @@ class SbWebSocket(object):
 		}
 		
 	async def is_expired(self, username: str):
-		pass
+		"""
+		Check if an account is expired and delete it from the database.
+		And login again to update the account.
+		"""
+		data = await self.fetch("POST", "trivia/home", headers = self.headers)
+		success = data["success"]
+		if not success:
+			details = db.sb_details.find_one({"username": username})
+			email_id, password = details["email_id"], details["password"]
+			db.sb_details.delete_one({"username": username})
+			await self.login(email_id, password)
 		
 	def get_token(self):
 		"""
@@ -212,7 +222,7 @@ class SwagbucksLive(SbWebSocket):
 		super().__init__(client)
 		self.client = client
 
-	async def login(self, ctx, email_id: str, password: str):
+	async def login(self, email_id: str, password: str):
 		"""
 		Login to Swagbucks with username and password
 		and save login credentials to database.
@@ -236,11 +246,11 @@ class SwagbucksLive(SbWebSocket):
 		}
 		data = await self.fetch("POST", "?cmd=apm-1", headers = headers, params = params, host = "host")
 		if data["status"] != 200:
-			return await ctx.send("```\n{}\n```".format(data))
+			return await self.send_hook("```\n{}\n```".format(data))
 		username = data["user_name"]
 		user_id = data["member_id"]
 		check = db.sb_details.find_one({"user_id": user_id})
-		if check: return await ctx.send("This account already exists in bot.")
+		if check: return await self.send_hook("This account already exists in bot.")
 		token = data["token"]
 		sig = data["sig"]
 		
@@ -259,9 +269,10 @@ class SwagbucksLive(SbWebSocket):
 		db.sb_details.insert_one({
 			"user_id": user_id, "username": username.lower(),
 			"access_token": access_token, "refresh_token": refresh_token,
-			"token": token, "sig": sig
+			"token": token, "sig": sig,
+			"email_id": email_id, "password": password
 		})
-		await ctx.send("Successfully login to Swagbucks. Username : `{}`".format(username))
+		await self.send_hook("Successfully login to Swagbucks. Username : `{}`".format(username))
 	
 	async def account_details(self, ctx, username: str):
 		"""
