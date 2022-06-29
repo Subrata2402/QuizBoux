@@ -33,6 +33,15 @@ class SwagbucksTrivia(commands.Cog, SwagbucksLive):
 		await self.login(email_id, password)
 		
 	@commands.command()
+	async def sbupdate(self, ctx, username: str = None):
+		if not username:
+			return await ctx.send("Required username to update of Swagbucks account.")
+		details = db.sb_details.find_one({"username": username.lower()})
+		email_id, password = details["email_id"], details["password"]
+		db.sb_details.delete_one({"username": username.lower()})
+		await self.login(email_id, password)
+		
+	@commands.command()
 	async def details(self, ctx, username: str = None):
 		if not username:
 			return await ctx.send("Required username to get details of Swagbucks account.")
