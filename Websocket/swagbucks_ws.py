@@ -40,7 +40,7 @@ class SbWebSocket(object):
 		details = db.sb_details.find_one({"username": self.username.lower()})
 		if not details:
 			print("Not Found any account with this username")
-			return
+			return "gkdykludkeouflud"
 		return details["access_token"]
 		
 	async def game_details(self) -> None:
