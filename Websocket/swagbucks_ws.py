@@ -30,7 +30,7 @@ class SbWebSocket(object):
 			"authorization": "Bearer " + self.get_token()
 		}
 		
-	async def is_expired(self, username: str):
+	async def is_expired(self):
 		"""
 		Check if an account is expired and delete it from the database.
 		And login again to update the account.
@@ -38,9 +38,10 @@ class SbWebSocket(object):
 		data = await self.fetch("POST", "trivia/home", headers = self.headers)
 		success = data["success"]
 		if not success:
-			details = db.sb_details.find_one({"username": username})
+			await self.send_hook("Account expired so old account will be deleted and replace the update account.")
+			details = db.sb_details.find_one({"username": self.username})
 			email_id, password = details["email_id"], details["password"]
-			db.sb_details.delete_one({"username": username})
+			db.sb_details.delete_one({"username": self.username})
 			await self.login(email_id, password)
 		
 	def get_token(self):
@@ -173,6 +174,7 @@ class SbWebSocket(object):
 		"""
 		Try to onnect websocket.
 		"""
+		await self.is_expired()
 		await self.game_details()
 		if not self.game_is_active:
 			return await self.send_hook("Game is not live!")
@@ -280,7 +282,7 @@ class SwagbucksLive(SbWebSocket):
 		"""
 		user_details = db.sb_details.find_one({"username": username.lower()})
 		if not user_details:
-			return await ctx.send("No account found with name `{}`".format(username))
+			return await self.send_hook("No account found with name `{}`".format(username))
 		token = user_details["token"]
 		params = {
 			"token": token, "checkreferral": "false",
@@ -288,7 +290,7 @@ class SwagbucksLive(SbWebSocket):
 		}
 		data = await self.fetch("POST", "?cmd=apm-3", params = params, host = "host")
 		if data["status"] != 200:
-			return await ctx.send("```\n{}\n```".format(data))
+			return await self.send_hook("```\n{}\n```".format(data))
 		embed = discord.Embed(title = "Swagbucks Account Details !",
 			description = f"```\n" \
 				f"User Id : {data['member_id']}\n" \
@@ -303,4 +305,4 @@ class SwagbucksLive(SbWebSocket):
 				f"Pending Earnings : {data['pending_earnings']}\n" \
 				f"Registered Date : {data['registered_date']}\n" \
 				f"Lifetime Earnings : {data['lifetime_earnings']}\n```")
-		await ctx.send(embed = embed)
+		await self.send_hook(embed = embed)
