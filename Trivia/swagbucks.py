@@ -39,9 +39,7 @@ class SwagbucksTrivia(commands.Cog, SwagbucksLive):
 		await self.account_details(ctx, username)
 		
 	@commands.command()
-	async def nextshow(self, ctx, username: str = None):
-		if not username:
-			return await ctx.send("Required username to get show details.")
+	async def nextshow(self, ctx):
 		token = list(db.sb_details.find())[0]["access_token"]
 		ws = SbWebSocket(self.client, token)
 		await ws.show_details()
