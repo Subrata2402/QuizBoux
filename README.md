@@ -1,2 +1,2 @@
 # QuizBoux
-It's a trivia answer bot for mimir and display.
+It's a trivia answer bot for mimir, display and HQ.
