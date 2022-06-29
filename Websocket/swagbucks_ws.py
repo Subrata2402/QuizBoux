@@ -145,7 +145,7 @@ class SbWebSocket(object):
 			"accept-encoding": "gzip",
 			"authorization": "Bearer " + self.get_token()
 		}
-		data = await self.fetch("POST", "trivia/home")
+		data = await self.fetch("POST", "trivia/home", headers = headers)
 		prize = data["episode"]["grandPrizeDollars"]
 		time = data["episode"]["start"]
 		embed=discord.Embed(title = "__SwagIQ Next Show Details !__", description=f"• Show Name : Swagbucks Live\n• Show Time : <t:{time}>\n• Prize Money : ${prize}", color = discord.Colour.random())
