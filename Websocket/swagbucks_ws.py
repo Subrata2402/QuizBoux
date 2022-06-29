@@ -295,7 +295,7 @@ class SwagbucksLive(SbWebSocket):
 			return await ctx.send("No account found with name `{}`".format(username))
 		token = user_details["token"]
 		params = {
-			"token": token, "checkreferral": False,
+			"token": token, "checkreferral": "false",
 			"appid": "37", "appversion": "34"
 		}
 		data = await self.fetch("POST", "?cmd=apm-3", params = params, host = "host")
