@@ -30,13 +30,13 @@ class SwagbucksTrivia(commands.Cog, SwagbucksLive):
 	async def sblogin(self, ctx, email_id: str = None, password: str = None):
 		if not email_id or not password:
 			return await ctx.send("Username or Password is required to login to Swagbucks.")
-		await self.login(ctx, email_id, password)
+		await self.login(email_id, password)
 		
 	@commands.command()
 	async def details(self, ctx, username: str = None):
 		if not username:
 			return await ctx.send("Required username to get details of Swagbucks account.")
-		await self.account_details(ctx, username)
+		await self.account_details(username)
 		
 	@commands.command()
 	async def nextshow(self, ctx):
