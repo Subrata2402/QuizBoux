@@ -58,10 +58,10 @@ class SbWebSocket(object):
 		host = self._host if host else self.host
 		async with aiohttp.ClientSession() as client_session:
 			response = await client_session.request(method = method, url = host + function, params = params, headers = headers, data = data)
-			if response.status != 200:
-				await self.send_hook("Something went wrong!")
-				#raise Exception("Something went Wrong!")
 			content = await response.text()
+			if response.status != 200:
+				await self.send_hook(content)
+				#raise Exception("Something went Wrong!")
 			return json.loads(content)
 	
 	async def send_answer(self, qid: str, aid: str):
