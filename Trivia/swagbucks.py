@@ -41,7 +41,7 @@ class SwagbucksTrivia(commands.Cog, SwagbucksLive):
 	@commands.command()
 	async def nextshow(self, ctx):
 		username = list(db.sb_details.find())[0]["username"]
-		ws = SbWebSocket(self.client, username)
+		ws = SwagbucksLive(self.client, username)
 		await ws.show_details()
 		
 def setup(client):
