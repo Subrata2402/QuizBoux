@@ -78,7 +78,7 @@ class SbWebSocket(object):
 		data = await self.fetch("POST", "trivia/answer", headers = self.headers, params = params)
 		success = data.get("success")
 		if success:
-			await self.send_hook("Successfully sent the answer.")
+			await self.send_hook("Successfully sent the answer.\n```\n{}\n```".format(data))
 		else:
 			await self.send_hook("Failed to send answer.\n```\n{}\n```".format(data))
 	
