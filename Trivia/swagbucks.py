@@ -13,7 +13,7 @@ class SwagbucksTrivia(commands.Cog, SwagbucksLive):
 	async def sbstart(self, ctx, username: str = None):
 		if not username:
 			return await ctx.send("Username is required.")
-		ws = SbWebSocket(self.client, username)
+		ws = SbWebSocket(self.client, username.lower())
 		await ws.get_ws()
 		if ws.ws:
 			if ws.ws.open:
@@ -23,7 +23,7 @@ class SwagbucksTrivia(commands.Cog, SwagbucksLive):
 		
 	@commands.command()
 	async def sbclose(self, ctx, username: str = None):
-		ws = SbWebSocket(self.client, username)
+		ws = SbWebSocket(self.client, username.lower())
 		await ws.close_ws()
 	
 	@commands.command()
@@ -36,7 +36,7 @@ class SwagbucksTrivia(commands.Cog, SwagbucksLive):
 	async def details(self, ctx, username: str = None):
 		if not username:
 			return await ctx.send("Required username to get details of Swagbucks account.")
-		await self.account_details(username)
+		await self.account_details(username.lower())
 		
 	@commands.command()
 	async def nextshow(self, ctx):
