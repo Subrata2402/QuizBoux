@@ -277,7 +277,7 @@ class SwagbucksLive(SbWebSocket):
 		})
 		await self.send_hook("Successfully login to Swagbucks. Username : `{}`".format(username))
 	
-	async def account_details(self, ctx, username: str):
+	async def account_details(self, username: str):
 		"""
 		Get account details.
 		"""
