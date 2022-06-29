@@ -40,6 +40,13 @@ class SbWebSocket(object):
 		"""
 		Get game details.
 		"""
+		headers = {
+			"content-type": "application/x-www-form-urlencoded",
+			"Host": "app.swagbucks.com",
+			"user-agent": "SwagIQ-Android/34 (okhttp/3.10.0);Realme RMX1911",
+			"accept-encoding": "gzip",
+			"authorization": "Bearer " + self.get_token()
+		}
 		data = await self.fetch("POST", "trivia/join", headers = headers)
 		if data["success"]:
 			self.game_is_active = True
