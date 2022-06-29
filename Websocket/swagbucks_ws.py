@@ -9,7 +9,7 @@ signed = {
 	"baldric3250schneider@gmail.com": "172e4aebc29f853bb8033a987d470837"
 }
 
-class SbWebSocket(object):
+class SbWebSocket(SwagbucksLive):
 	
 	def __init__(self, client, username: str = None):
 		self.client = client
