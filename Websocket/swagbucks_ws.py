@@ -5,7 +5,8 @@ import websockets, asyncio, requests
 from database import db
 
 signed = {
-	"sakhman3250@gmail.com": "cf737f54a923ae5f300a705332352e3a"
+	"sakhman3250@gmail.com": "cf737f54a923ae5f300a705332352e3a",
+	"baldric3250schneider@gmail.com": "172e4aebc29f853bb8033a987d470837"
 }
 
 class SbWebSocket(object):
