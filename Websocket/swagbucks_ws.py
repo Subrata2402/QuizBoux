@@ -54,6 +54,8 @@ class SbWebSocket(object):
 		"""
 		Request Swagbucks to perform the action.
 		"""
+		if "auth" in function:
+			self.headers["authorization"] = None
 		host = self._host if host else self.host
 		async with aiohttp.ClientSession() as client_session:
 			response = await client_session.request(method = method, url = host + function, params = params, headers = headers, data = data)
@@ -250,7 +252,7 @@ class SwagbucksLive(SbWebSocket):
 		# 	"partnerHash": sig
 		# }
 		data = f"_device=f6acc085-c395-4688-913f-ea2b36d4205f&partnerMemberId={user_id}&partnerUserName={username}&verify=false&partnerApim=1&partnerHash={sig}"
-		data = await self.fetch("POST", "auth/token", data = data)
+		data = await self.fetch("POST", "auth/token", headers = self.headers, data = data)
 		access_token = data["accessToken"]
 		refresh_token = data["refreshToken"]
 		db.sb_details.insert_one({
