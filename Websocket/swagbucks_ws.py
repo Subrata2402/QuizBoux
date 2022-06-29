@@ -50,6 +50,9 @@ class SbWebSocket(object):
 		data = await self.fetch("POST", "trivia/join", headers = self.headers)
 		if data["success"]:
 			self.game_is_active = True
+			self.vid = data["viewId"]
+			
+			
 
 	async def fetch(self, method = "GET", function = "", headers = None, params = None, data = None, host = None):
 		"""
@@ -155,12 +158,6 @@ class SbWebSocket(object):
 			webhook = discord.Webhook.from_url(web_url, adapter=discord.AsyncWebhookAdapter(session))
 			await webhook.send(content = content, embed = embed, username = self.client.user.name, avatar_url = self.client.user.avatar_url)
 			
-	async def vid(self) -> None:
-		"""
-		Request viewId for connecting to the websocket.
-		"""
-		data = await self.fetch("POST", "trivia/join", headers = self.headers)
-		self.vid = data["viewId"]
 	
 	async def connect_websocket(self):
 		"""
@@ -262,7 +259,7 @@ class SwagbucksLive(SbWebSocket):
 		db.sb_details.insert_one({
 			"user_id": user_id, "username": username.lower(),
 			"access_token": access_token, "refresh_token": refresh_token,
-			"token": token
+			"token": token, "sig": sig
 		})
 		await ctx.send("Successfully login to Swagbucks. Username : `{}`".format(username))
 	
