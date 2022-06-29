@@ -131,6 +131,13 @@ class SbWebSocket(object):
 		"""
 		Get the details of the current game show.
 		"""
+		headers = {
+			"content-type": "application/x-www-form-urlencoded",
+			"Host": "app.swagbucks.com",
+			"user-agent": "SwagIQ-Android/34 (okhttp/3.10.0);Realme RMX1911",
+			"accept-encoding": "gzip",
+			"authorization": "Bearer " + self.get_token()
+		}
 		data = await self.fetch("POST", "trivia/home")
 		prize = data["episode"]["grandPrizeDollars"]
 		time = data["episode"]["start"]
