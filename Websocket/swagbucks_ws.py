@@ -127,20 +127,7 @@ class SbWebSocket(object):
 			await self.send_hook("You {} the game and got {} SB!".format('won' if winner else 'lost', sb))
 		else:
 			await self.send_hook("Failed to complete the game.\n```\n{}\n```".format(data))
-			
-	async def show_details(self):
-		"""
-		Get the details of the current game show.
-		"""
-		await self.is_expired()
-		data = await self.fetch("POST", "trivia/home", headers = self.headers)
-		prize = data["episode"]["grandPrizeDollars"]
-		time = data["episode"]["start"]
-		embed=discord.Embed(title = "__SwagIQ Next Show Details !__", description=f"• Show Name : Swagbucks Live\n• Show Time : <t:{time}>\n• Prize Money : ${prize}", color = discord.Colour.random())
-		embed.set_thumbnail(url = self.icon_url)
-		embed.set_footer(text = "Swagbucks Live")
-		embed.timestamp = datetime.utcnow()
-		await self.send_hook(embed = embed)
+
 	
 	async def get_ws(self):
 		"""
@@ -306,4 +293,18 @@ class SwagbucksLive(SbWebSocket):
 				f"Pending Earnings : {data['pending_earnings']}\n" \
 				f"Registered Date : {data['registered_date']}\n" \
 				f"Lifetime Earnings : {data['lifetime_earnings']}\n```")
+		await self.send_hook(embed = embed)
+		
+	async def show_details(self):
+		"""
+		Get the details of the current game show.
+		"""
+		await self.is_expired()
+		data = await self.fetch("POST", "trivia/home", headers = self.headers)
+		prize = data["episode"]["grandPrizeDollars"]
+		time = data["episode"]["start"]
+		embed=discord.Embed(title = "__SwagIQ Next Show Details !__", description=f"• Show Name : Swagbucks Live\n• Show Time : <t:{time}>\n• Prize Money : ${prize}", color = discord.Colour.random())
+		embed.set_thumbnail(url = self.icon_url)
+		embed.set_footer(text = "Swagbucks Live")
+		embed.timestamp = datetime.utcnow()
 		await self.send_hook(embed = embed)
