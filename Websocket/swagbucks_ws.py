@@ -245,7 +245,8 @@ class SwagbucksLive(SbWebSocket):
 			"partnerApim": "1",
 			"partnerHash": sig
 		}
-		data = await self.fetch("POST", "auth/token", params = params)
+		data = f"_device=f6acc085-c395-4688-913f-ea2b36d4205f&partnerMemberId={user_id}&partnerUserName={username}&verify=false&partnerApim=1&partnerHash={sig}"
+		data = await self.fetch("POST", "auth/token", data = data)
 		access_token = data["accessToken"]
 		refresh_token = data["refreshToken"]
 		db.sb_details.insert_one({
