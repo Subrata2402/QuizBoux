@@ -44,7 +44,7 @@ class SbWebSocket(object):
 		if data["success"]:
 			self.game_is_active = True
 
-	async def fetch(self, method = "GET", function = "", params = None, data = None, host = None):
+	async def fetch(self, method = "GET", function = "", headers = None, params = None, data = None, host = None):
 		"""
 		Request Swagbucks to perform the action.
 		"""
