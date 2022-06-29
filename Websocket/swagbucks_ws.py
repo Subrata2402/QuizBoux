@@ -4,6 +4,10 @@ from datetime import datetime
 import websockets, asyncio, requests
 from database import db
 
+signed = {
+	"sakhman3250@gmail.com": "cf737f54a923ae5f300a705332352e3a"
+}
+
 class SbWebSocket(object):
 	
 	def __init__(self, client, username: str = None):
@@ -221,7 +225,7 @@ class SwagbucksLive(SbWebSocket):
 			"emailAddress": email_id,
 			"pswd": password,
 			#"persist": "on", "showmeter": "0",
-			"sig": "172e4aebc29f853bb8033a987d470837",
+			"sig": signed[email_id],
 			#"advertiserID": "e1cbd4d6-3aea-4144-82b9-2a70b8458f5b",
 			#"modelNumber": "RMX1911829", "osVersion": "10",
 			"appversion": "34",
@@ -237,14 +241,14 @@ class SwagbucksLive(SbWebSocket):
 		token = data["token"]
 		sig = data["sig"]
 		
-		params = {
-			"_device": "c1cd7fc0-4bd5-4026-bc7d-aaa4199b7873",
-			"partnerMemberId": user_id,
-			"partnerUserName": username,
-			"verify": "false",
-			"partnerApim": "1",
-			"partnerHash": sig
-		}
+		# params = {
+		# 	"_device": "c1cd7fc0-4bd5-4026-bc7d-aaa4199b7873",
+		# 	"partnerMemberId": user_id,
+		# 	"partnerUserName": username,
+		# 	"verify": "false",
+		# 	"partnerApim": "1",
+		# 	"partnerHash": sig
+		# }
 		data = f"_device=f6acc085-c395-4688-913f-ea2b36d4205f&partnerMemberId={user_id}&partnerUserName={username}&verify=false&partnerApim=1&partnerHash={sig}"
 		data = await self.fetch("POST", "auth/token", data = data)
 		access_token = data["accessToken"]
