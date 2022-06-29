@@ -111,7 +111,7 @@ class SbWebSocket(object):
 			
 	async def complete_game(self):
 		"""
-		After end of the game check the details won or not
+		After end of the game check the details of winnings 
 		and how many sb earn from the live game.
 		"""
 		params = {
