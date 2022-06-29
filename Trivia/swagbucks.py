@@ -13,7 +13,7 @@ class SwagbucksTrivia(commands.Cog, SwagbucksLive):
 	async def sbstart(self, ctx, username: str = None):
 		if not username:
 			return await ctx.send("Username is required.")
-		ws = HQWebSocket(self.client, username)
+		ws = SbWebSocket(self.client, username)
 		await ws.get_ws()
 		if ws.ws:
 			if ws.ws.open:
