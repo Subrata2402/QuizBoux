@@ -60,7 +60,7 @@ class SbWebSocket(object):
 			response = await client_session.request(method = method, url = host + function, params = params, headers = headers, data = data)
 			content = await response.text()
 			if response.status != 200:
-				await self.send_hook(content)
+				await self.send_hook(f"```\n{content}\n```")
 				#raise Exception("Something went Wrong!")
 			return json.loads(content)
 	
