@@ -38,7 +38,7 @@ class SbWebSocket(object):
 		data = await self.fetch("POST", "trivia/home", headers = self.headers)
 		success = data["success"]
 		if not success:
-			await self.send_hook("Auth token has expired!")
+			return await self.send_hook("Auth token has expired!")
 		
 	def get_token(self):
 		"""
