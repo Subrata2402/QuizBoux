@@ -37,6 +37,8 @@ class SwagbucksTrivia(commands.Cog, SwagbucksLive):
 		if not username:
 			return await ctx.send("Required username to update of Swagbucks account.")
 		details = db.sb_details.find_one({"username": username.lower()})
+		if not details:
+			return await ctx.send("No account found.")
 		email_id, password = details["email_id"], details["password"]
 		db.sb_details.delete_one({"username": username.lower()})
 		await self.login(email_id, password)
