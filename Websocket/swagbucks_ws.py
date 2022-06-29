@@ -132,6 +132,7 @@ class SbWebSocket(object):
 		"""
 		Get the details of the current game show.
 		"""
+		await self.is_expired()
 		data = await self.fetch("POST", "trivia/home", headers = self.headers)
 		prize = data["episode"]["grandPrizeDollars"]
 		time = data["episode"]["start"]
