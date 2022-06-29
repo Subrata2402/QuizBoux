@@ -47,14 +47,7 @@ class SbWebSocket(object):
 		"""
 		Get game details.
 		"""
-		headers = {
-			"content-type": "application/x-www-form-urlencoded",
-			"Host": "app.swagbucks.com",
-			"user-agent": "SwagIQ-Android/34 (okhttp/3.10.0);Realme RMX1911",
-			"accept-encoding": "gzip",
-			"authorization": "Bearer " + self.get_token()
-		}
-		data = await self.fetch("POST", "trivia/join", headers = headers)
+		data = await self.fetch("POST", "trivia/join", headers = self.headers)
 		if data["success"]:
 			self.game_is_active = True
 
@@ -79,14 +72,7 @@ class SbWebSocket(object):
 		params = {
 			"vid": self.vid, "qid": qid, "aid": aid, "timeDelta": 5000
 		}
-		headers = {
-			"content-type": "application/x-www-form-urlencoded",
-			"Host": "app.swagbucks.com",
-			"user-agent": "SwagIQ-Android/34 (okhttp/3.10.0);Realme RMX1911",
-			"accept-encoding": "gzip",
-			"authorization": "Bearer " + self.get_token()
-		}
-		data = await self.fetch("POST", "trivia/answer", headers = headers, params = params)
+		data = await self.fetch("POST", "trivia/answer", headers = self.headers, params = params)
 		success = data.get("success")
 		if success:
 			await self.send_hook("Successfully sent the answer.")
@@ -103,14 +89,7 @@ class SbWebSocket(object):
 			"vid": self.vid, "useLife": True, "partnerHash": self.partner_hash,
 			"_device": "c1cd7fc0-4bd5-4026-bc7d-aaa4199b7873"
 		}
-		headers = {
-			"content-type": "application/x-www-form-urlencoded",
-			"Host": "app.swagbucks.com",
-			"user-agent": "SwagIQ-Android/34 (okhttp/3.10.0);Realme RMX1911",
-			"accept-encoding": "gzip",
-			"authorization": "Bearer " + self.get_token()
-		}
-		data = await self.fetch("POST", "trivia/rebuy_confirm", headers = headers, params = params)
+		data = await self.fetch("POST", "trivia/rebuy_confirm", headers = self.headers, params = params)
 		success = data.get("success")
 		if success:
 			await self.send_hook("Successfully rejoin in the game.")
@@ -125,14 +104,7 @@ class SbWebSocket(object):
 		params = {
 			"vid": self.vid
 		}
-		headers = {
-			"content-type": "application/x-www-form-urlencoded",
-			"Host": "app.swagbucks.com",
-			"user-agent": "SwagIQ-Android/34 (okhttp/3.10.0);Realme RMX1911",
-			"accept-encoding": "gzip",
-			"authorization": "Bearer " + self.get_token()
-		}
-		data = await self.fetch("POST", "trivia/rebuy_confirm", headers = headers, params = params)
+		data = await self.fetch("POST", "trivia/rebuy_confirm", headers = self.headers, params = params)
 		success = data.get("success")
 		if success:
 			await self.send_hook("Successfully complete the game.")
@@ -146,13 +118,6 @@ class SbWebSocket(object):
 		"""
 		Get the details of the current game show.
 		"""
-		headers = {
-			"content-type": "application/x-www-form-urlencoded",
-			"Host": "app.swagbucks.com",
-			"user-agent": "SwagIQ-Android/34 (okhttp/3.10.0);Realme RMX1911",
-			"accept-encoding": "gzip",
-			"authorization": "Bearer " + self.get_token()
-		}
 		data = await self.fetch("POST", "trivia/home", headers = self.headers)
 		prize = data["episode"]["grandPrizeDollars"]
 		time = data["episode"]["start"]
