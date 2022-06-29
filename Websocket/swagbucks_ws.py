@@ -134,7 +134,7 @@ class SbWebSocket(object):
 		"""
 		Get Websocket.
 		"""
-		self.ws = stored_ws.get(self.token)
+		self.ws = stored_ws.get(self.username)
 
 	async def close_ws(self):
 		"""
