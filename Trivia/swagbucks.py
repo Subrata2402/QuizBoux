@@ -19,7 +19,7 @@ class SwagbucksTrivia(commands.Cog, SwagbucksLive):
 			if ws.ws.open:
 				return await ws.send_hook("Websocket Already Opened!")
 		await ws.send_hook("Websocket Connecting...")
-		await ws.connect_ws()
+		await ws.connect_websocket()
 		
 	@commands.command()
 	async def sbclose(self, ctx, username: str = None):
