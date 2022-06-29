@@ -21,13 +21,7 @@ class SbWebSocket(object):
 		self.host = "https://api.playswagiq.com/"
 		self._host = "https://app.swagbucks.com/"
 		self.icon_url = "https://cdn.discordapp.com/attachments/799861610654728212/991317134930092042/swagbucks_logo.png"
-		self.headers = {
-			"content-type": "application/x-www-form-urlencoded",
-			"Host": "app.swagbucks.com",
-			"user-agent": "SwagIQ-Android/34 (okhttp/3.10.0);Realme RMX1911",
-			"accept-encoding": "gzip",
-			"authorization": self.get_token()
-		}
+		
 		
 	async def is_expired(self, username: str):
 		pass
@@ -50,12 +44,19 @@ class SbWebSocket(object):
 		if data["success"]:
 			self.game_is_active = True
 
-	async def fetch(self, method = "GET", function = "", params = None, headers = None, data = None, host = None):
+	async def fetch(self, method = "GET", function = "", params = None, data = None, host = None):
 		"""
 		Request Swagbucks to perform the action.
 		"""
-		if "auth" in function:
-			self.headers["authorization"] = None
+		headers = {
+			"content-type": "application/x-www-form-urlencoded",
+			"Host": "app.swagbucks.com",
+			"user-agent": "SwagIQ-Android/34 (okhttp/3.10.0);Realme RMX1911",
+			"accept-encoding": "gzip",
+			#"authorization": self.get_token()
+		}
+		if "auth" not in function:
+			headers["authorization"] = self.get_token()
 		host = self._host if host else self.host
 		async with aiohttp.ClientSession() as client_session:
 			response = await client_session.request(method = method, url = host + function, params = params, headers = headers, data = data)
@@ -72,8 +73,8 @@ class SbWebSocket(object):
 		params = {
 			"vid": self.vid, "qid": qid, "aid": aid, "timeDelta": 5000
 		}
-		#self.headers["Authorization"] = "Bearer " + self.token
-		data = await self.fetch("POST", "trivia/answer", headers = self.headers, params = params)
+		#headers["Authorization"] = "Bearer " + self.token
+		data = await self.fetch("POST", "trivia/answer", params = params)
 		success = data.get("success")
 		if success:
 			await self.send_hook("Successfully sent the answer.")
@@ -90,8 +91,8 @@ class SbWebSocket(object):
 			"vid": self.vid, "useLife": True, "partnerHash": self.partner_hash,
 			"_device": "c1cd7fc0-4bd5-4026-bc7d-aaa4199b7873"
 		}
-		#self.headers["Authorization"] = "Bearer " + self.token
-		data = await self.fetch("POST", "trivia/rebuy_confirm", headers = self.headers, params = params)
+		#headers["Authorization"] = "Bearer " + self.token
+		data = await self.fetch("POST", "trivia/rebuy_confirm", params = params)
 		success = data.get("success")
 		if success:
 			await self.send_hook("Successfully rejoin in the game.")
@@ -106,8 +107,8 @@ class SbWebSocket(object):
 		params = {
 			"vid": self.vid
 		}
-		#self.headers["Authorization"] = "Bearer " + self.token
-		data = await self.fetch("POST", "trivia/rebuy_confirm", headers = self.headers, params = params)
+		#headers["Authorization"] = "Bearer " + self.token
+		data = await self.fetch("POST", "trivia/rebuy_confirm", params = params)
 		success = data.get("success")
 		if success:
 			await self.send_hook("Successfully complete the game.")
@@ -121,7 +122,7 @@ class SbWebSocket(object):
 		"""
 		Get the details of the current game show.
 		"""
-		data = await self.fetch("POST", "trivia/home", headers = self.headers)
+		data = await self.fetch("POST", "trivia/home")
 		prize = data["episode"]["grandPrizeDollars"]
 		time = data["episode"]["start"]
 		embed=discord.Embed(title = "__SwagIQ Next Show Details !__", description=f"• Show Name : Swagbucks Live\n• Show Time : <t:{time}>\n• Prize Money : ${prize}", color = discord.Colour.random())
@@ -162,7 +163,7 @@ class SbWebSocket(object):
 		"""
 		Request viewId for connecting to the websocket.
 		"""
-		data = await self.fetch("POST", "trivia/join", headers = headers)
+		data = await self.fetch("POST", "trivia/join")
 		self.vid = data["viewId"]
 	
 	async def connect_websocket(self):
@@ -172,6 +173,13 @@ class SbWebSocket(object):
 		await self.game_details()
 		if not self.game_is_active:
 			return await self.send_hook("Game is not live!")
+		headers = {
+			"content-type": "application/x-www-form-urlencoded",
+			"Host": "app.swagbucks.com",
+			"user-agent": "SwagIQ-Android/34 (okhttp/3.10.0);Realme RMX1911",
+			"accept-encoding": "gzip",
+			"authorization": self.get_token()
+		}
 		socket_url = "wss://api.playswagiq.com/sock/1/game/{}".format(self.vid)
 		self.ws = await websockets.connect(socket_url, extra_headers = headers, ping_interval = 15)
 		stored_ws[self.username] = self.ws
@@ -252,7 +260,7 @@ class SwagbucksLive(SbWebSocket):
 		# 	"partnerHash": sig
 		# }
 		data = f"_device=f6acc085-c395-4688-913f-ea2b36d4205f&partnerMemberId={user_id}&partnerUserName={username}&verify=false&partnerApim=1&partnerHash={sig}"
-		data = await self.fetch("POST", "auth/token", headers = self.headers, data = data)
+		data = await self.fetch("POST", "auth/token", headers = headers, data = data)
 		access_token = data["accessToken"]
 		refresh_token = data["refreshToken"]
 		db.sb_details.insert_one({
