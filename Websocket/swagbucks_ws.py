@@ -76,7 +76,7 @@ class SbWebSocket(object):
 		Send answer to the game.
 		"""
 		params = {
-			"vid": self.vid, "qid": qid, "aid": aid, "timeDelta": 5000
+			"vid": self.vid, "qid": qid, "aid": aid, "timeDelta": "5000"
 		}
 		data = await self.fetch("POST", "trivia/answer", headers = self.headers, params = params)
 		success = data.get("success")
