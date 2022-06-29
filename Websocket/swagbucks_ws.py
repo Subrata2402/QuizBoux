@@ -22,7 +22,13 @@ class SbWebSocket(object):
 		self.host = "https://api.playswagiq.com/"
 		self._host = "https://app.swagbucks.com/"
 		self.icon_url = "https://cdn.discordapp.com/attachments/799861610654728212/991317134930092042/swagbucks_logo.png"
-		
+		self.headers = {
+			"content-type": "application/x-www-form-urlencoded",
+			"Host": "app.swagbucks.com",
+			"user-agent": "SwagIQ-Android/34 (okhttp/3.10.0);Realme RMX1911",
+			"accept-encoding": "gzip",
+			"authorization": "Bearer " + self.get_token()
+		}
 		
 	async def is_expired(self, username: str):
 		pass
@@ -62,6 +68,7 @@ class SbWebSocket(object):
 			content = await response.text()
 			if response.status != 200:
 				await self.send_hook(f"```\n{content}\n```")
+				return None
 				#raise Exception("Something went Wrong!")
 			return json.loads(content)
 	
@@ -146,7 +153,7 @@ class SbWebSocket(object):
 			"accept-encoding": "gzip",
 			"authorization": "Bearer " + self.get_token()
 		}
-		data = await self.fetch("POST", "trivia/home", headers = headers)
+		data = await self.fetch("POST", "trivia/home", headers = self.headers)
 		prize = data["episode"]["grandPrizeDollars"]
 		time = data["episode"]["start"]
 		embed=discord.Embed(title = "__SwagIQ Next Show Details !__", description=f"• Show Name : Swagbucks Live\n• Show Time : <t:{time}>\n• Prize Money : ${prize}", color = discord.Colour.random())
