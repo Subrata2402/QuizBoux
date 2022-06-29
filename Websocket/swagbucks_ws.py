@@ -51,7 +51,7 @@ class SbWebSocket(object):
 		if data["success"]:
 			self.game_is_active = True
 			self.vid = data["viewId"]
-			
+			self.partner_hash = db.sb_details.find_one({"username": self.username})["sig"]
 			
 
 	async def fetch(self, method = "GET", function = "", headers = None, params = None, data = None, host = None):
