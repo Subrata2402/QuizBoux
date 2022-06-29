@@ -48,15 +48,6 @@ class SbWebSocket(object):
 		"""
 		Request Swagbucks to perform the action.
 		"""
-		headers = {
-			"content-type": "application/x-www-form-urlencoded",
-			"Host": "app.swagbucks.com",
-			"user-agent": "SwagIQ-Android/34 (okhttp/3.10.0);Realme RMX1911",
-			"accept-encoding": "gzip",
-			#"authorization": self.get_token()
-		}
-		if "auth" not in function:
-			headers["authorization"] = self.get_token()
 		host = self._host if host else self.host
 		async with aiohttp.ClientSession() as client_session:
 			response = await client_session.request(method = method, url = host + function, params = params, headers = headers, data = data)
@@ -73,8 +64,14 @@ class SbWebSocket(object):
 		params = {
 			"vid": self.vid, "qid": qid, "aid": aid, "timeDelta": 5000
 		}
-		#headers["Authorization"] = "Bearer " + self.token
-		data = await self.fetch("POST", "trivia/answer", params = params)
+		headers = {
+			"content-type": "application/x-www-form-urlencoded",
+			"Host": "app.swagbucks.com",
+			"user-agent": "SwagIQ-Android/34 (okhttp/3.10.0);Realme RMX1911",
+			"accept-encoding": "gzip",
+			"authorization": "Bearer " + self.get_token()
+		}
+		data = await self.fetch("POST", "trivia/answer", headers = headers, params = params)
 		success = data.get("success")
 		if success:
 			await self.send_hook("Successfully sent the answer.")
@@ -91,8 +88,14 @@ class SbWebSocket(object):
 			"vid": self.vid, "useLife": True, "partnerHash": self.partner_hash,
 			"_device": "c1cd7fc0-4bd5-4026-bc7d-aaa4199b7873"
 		}
-		#headers["Authorization"] = "Bearer " + self.token
-		data = await self.fetch("POST", "trivia/rebuy_confirm", params = params)
+		headers = {
+			"content-type": "application/x-www-form-urlencoded",
+			"Host": "app.swagbucks.com",
+			"user-agent": "SwagIQ-Android/34 (okhttp/3.10.0);Realme RMX1911",
+			"accept-encoding": "gzip",
+			"authorization": "Bearer " + self.get_token()
+		}
+		data = await self.fetch("POST", "trivia/rebuy_confirm", headers = headers, params = params)
 		success = data.get("success")
 		if success:
 			await self.send_hook("Successfully rejoin in the game.")
@@ -107,8 +110,14 @@ class SbWebSocket(object):
 		params = {
 			"vid": self.vid
 		}
-		#headers["Authorization"] = "Bearer " + self.token
-		data = await self.fetch("POST", "trivia/rebuy_confirm", params = params)
+		headers = {
+			"content-type": "application/x-www-form-urlencoded",
+			"Host": "app.swagbucks.com",
+			"user-agent": "SwagIQ-Android/34 (okhttp/3.10.0);Realme RMX1911",
+			"accept-encoding": "gzip",
+			"authorization": "Bearer " + self.get_token()
+		}
+		data = await self.fetch("POST", "trivia/rebuy_confirm", headers = headers, params = params)
 		success = data.get("success")
 		if success:
 			await self.send_hook("Successfully complete the game.")
@@ -178,7 +187,7 @@ class SbWebSocket(object):
 			"Host": "app.swagbucks.com",
 			"user-agent": "SwagIQ-Android/34 (okhttp/3.10.0);Realme RMX1911",
 			"accept-encoding": "gzip",
-			"authorization": self.get_token()
+			"authorization": "Bearer " + self.get_token()
 		}
 		socket_url = "wss://api.playswagiq.com/sock/1/game/{}".format(self.vid)
 		self.ws = await websockets.connect(socket_url, extra_headers = headers, ping_interval = 15)
@@ -241,7 +250,14 @@ class SwagbucksLive(SbWebSocket):
 			"appversion": "34",
 			"appid": "37"
 		}
-		data = await self.fetch("POST", "?cmd=apm-1", params = params, host = "host")
+		headers = {
+			"content-type": "application/x-www-form-urlencoded",
+			"Host": "app.swagbucks.com",
+			"user-agent": "SwagIQ-Android/34 (okhttp/3.10.0);Realme RMX1911",
+			"accept-encoding": "gzip",
+			#"authorization": self.get_token()
+		}
+		data = await self.fetch("POST", "?cmd=apm-1", headers = headers, params = params, host = "host")
 		if data["status"] != 200:
 			return await ctx.send("```\n{}\n```".format(data))
 		username = data["user_name"]
@@ -260,7 +276,7 @@ class SwagbucksLive(SbWebSocket):
 		# 	"partnerHash": sig
 		# }
 		data = f"_device=f6acc085-c395-4688-913f-ea2b36d4205f&partnerMemberId={user_id}&partnerUserName={username}&verify=false&partnerApim=1&partnerHash={sig}"
-		data = await self.fetch("POST", "auth/token", data = data)
+		data = await self.fetch("POST", "auth/token", headers = headers, data = data)
 		access_token = data["accessToken"]
 		refresh_token = data["refreshToken"]
 		db.sb_details.insert_one({
