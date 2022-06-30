@@ -95,12 +95,12 @@ class SbWebSocket(object):
 		allow_rebuy = self.data["whenIncorrect"]["allowRebuy"]
 		if not allow_rebuy:
 			return None
-		# params = {
-		# 	"vid": self.vid, "useLife": "true", "partnerHash": self.partner_hash,
-		# 	#"_device": "c1cd7fc0-4bd5-4026-bc7d-aaa4199b7873"
-		# }
-		post_data = f"_device=c1cd7fc0-4bd5-4026-bc7d-aaa4199b7873&vid={self.vid}&useLife=true&partnerHash={self.partner_hash}"
-		data = await self.fetch("POST", "trivia/rebuy_confirm", headers = self.headers, data = post_data)
+		params = {
+			"vid": self.vid, "useLife": "true", "partnerHash": self.partner_hash,
+			"_device": "c1cd7fc0-4bd5-4026-bc7d-aaa4199b7873"
+		}
+		# post_data = f"_device=c1cd7fc0-4bd5-4026-bc7d-aaa4199b7873&vid={self.vid}&useLife=true&partnerHash={self.partner_hash}"
+		data = await self.fetch("POST", "trivia/rebuy_confirm", headers = self.headers, params = params)
 		success = data.get("success")
 		if success:
 			await self.send_hook("Successfully rejoin in the game.")
@@ -112,11 +112,9 @@ class SbWebSocket(object):
 		After end of the game check the details of winnings 
 		and how many sb earn from the live game.
 		"""
-		# params = {
-		# 	"vid": self.vid
-		# }
-		post_data = f"vid={self.vid}"
-		data = await self.fetch("POST", "trivia/rebuy_confirm", headers = self.headers, data = post_data)
+		params = {"vid": self.vid}
+		#post_data = f"vid={self.vid}"
+		data = await self.fetch("POST", "trivia/complete", headers = self.headers, params = params)
 		success = data.get("success")
 		if success:
 			await self.send_hook("Successfully complete the game.")
