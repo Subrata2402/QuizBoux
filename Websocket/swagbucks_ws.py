@@ -120,7 +120,7 @@ class SbWebSocket(object):
 			await self.send_hook("Successfully complete the game.")
 			winner = data.get("winner")
 			sb = data.get("sb")
-			await self.send_hook("You {} the game and got {} SB!".format('won' if winner else 'lost', sb))
+			await self.send_hook("You **{}** the game and got **{} SB**!".format('won' if winner else 'lost', sb))
 		else:
 			await self.send_hook("Failed to complete the game.\n```\n{}\n```".format(data))
 
