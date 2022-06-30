@@ -19,6 +19,7 @@ class SbWebSocket(object):
 		self.game_is_active = False
 		self.partner_hash = None
 		self.answer = 2
+		self.data = None
 		self.host = "https://api.playswagiq.com/"
 		self._host = "https://app.swagbucks.com/"
 		self.icon_url = "https://cdn.discordapp.com/attachments/799861610654728212/991317134930092042/swagbucks_logo.png"
@@ -78,8 +79,8 @@ class SbWebSocket(object):
 		params = {
 			"vid": self.vid, "qid": qid, "aid": aid, "timeDelta": "5000"
 		}
-		data = await self.fetch("POST", "trivia/answer", headers = self.headers, params = params)
-		success = data.get("success")
+		self.data = await self.fetch("POST", "trivia/answer", headers = self.headers, params = params)
+		success = self.data.get("success")
 		if success:
 			await self.send_hook("Successfully sent the answer.\n```\n{}\n```".format(data))
 		else:
@@ -91,11 +92,15 @@ class SbWebSocket(object):
 		For come back and join again to the game we use a rejoin.
 		To use this function we can send a rejoin. 
 		"""
-		params = {
-			"vid": self.vid, "useLife": "true", "partnerHash": self.partner_hash,
-			#"_device": "c1cd7fc0-4bd5-4026-bc7d-aaa4199b7873"
-		}
-		data = await self.fetch("POST", "trivia/rebuy_confirm", headers = self.headers, params = params)
+		allow_rebuy = self.data["whenIncorrect"]["allowRebuy"]
+		if not allow_rebuy:
+			return None
+		# params = {
+		# 	"vid": self.vid, "useLife": "true", "partnerHash": self.partner_hash,
+		# 	#"_device": "c1cd7fc0-4bd5-4026-bc7d-aaa4199b7873"
+		# }
+		post_data = f"_device=c1cd7fc0-4bd5-4026-bc7d-aaa4199b7873&vid={self.vid}&useLife=true&partnerHash={self.partner_hash}"
+		data = await self.fetch("POST", "trivia/rebuy_confirm", headers = self.headers, data = post_data)
 		success = data.get("success")
 		if success:
 			await self.send_hook("Successfully rejoin in the game.")
@@ -107,10 +112,11 @@ class SbWebSocket(object):
 		After end of the game check the details of winnings 
 		and how many sb earn from the live game.
 		"""
-		params = {
-			"vid": self.vid
-		}
-		data = await self.fetch("POST", "trivia/rebuy_confirm", headers = self.headers, params = params)
+		# params = {
+		# 	"vid": self.vid
+		# }
+		post_data = f"vid={self.vid}"
+		data = await self.fetch("POST", "trivia/rebuy_confirm", headers = self.headers, data = post_data)
 		success = data.get("success")
 		if success:
 			await self.send_hook("Successfully complete the game.")
@@ -175,7 +181,7 @@ class SbWebSocket(object):
 				await self.send_hook(embed = embed)
 				
 				try:
-					user_input = await self.client.wait_for("message", timeout = 10.0)
+					user_input = await self.client.wait_for("message", timeout = 10.0, check = lambda message: message.channel.id == 988391891659800616)
 					self.answer = int(user_input.content)
 					answer_id = answer_ids[self.answer - 1]
 					await self.send_answer(question_id, answer_id)
@@ -191,7 +197,7 @@ class SbWebSocket(object):
 				embed = discord.Embed(title = f"Correct Answer : {ans_num}")
 				await self.send_hook(embed = embed)
 				
-				if self.answer != ans_num and not rejoin_used:
+				if self.answer != ans_num:
 					await self.confirm_rebuy()
 					
 			if message_data["code"] == 49:
