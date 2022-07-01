@@ -208,7 +208,7 @@ class SwagbucksLive(SbWebSocket):
 		super().__init__(client)
 		self.client = client
 
-	async def login(self, email_id: str, password: str):
+	async def login(self, email_id: str, password: str, get_token: str = None):
 		"""
 		Login to Swagbucks with username and password
 		and save login credentials to database.
@@ -252,6 +252,8 @@ class SwagbucksLive(SbWebSocket):
 		data = await self.fetch("POST", "auth/token", headers = headers, data = data)
 		access_token = data["accessToken"]
 		refresh_token = data["refreshToken"]
+		if get_token:
+			return access_token
 		db.sb_details.insert_one({
 			"user_id": user_id, "username": username.lower(),
 			"access_token": access_token, "refresh_token": refresh_token,
