@@ -55,5 +55,14 @@ class SwagbucksTrivia(commands.Cog, SwagbucksLive):
 		ws = SwagbucksLive(self.client, username)
 		await ws.show_details()
 		
+	@commands.command()
+	async def sbtoken(self, ctx, email_id: str = None, password: str = None):
+		if ctx.guild:
+			return await ctx.send("Please use this command in Private Messages.")
+		if not email_id or not password:
+			return await ctx.send("Username or Password is required to login to Swagbucks.")
+		token = await self.login(email_id, password, "GET")
+		await ctx.send("```\n{}\n```".format(token))
+		
 def setup(client):
 	client.add_cog(SwagbucksTrivia(client))
