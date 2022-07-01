@@ -229,10 +229,10 @@ class SwagbucksLive(SbWebSocket):
 		params = {
 			"emailAddress": email_id,
 			"pswd": password,
-			#"persist": "on", "showmeter": "0",
+			# "persist": "on", "showmeter": "0",
 			"sig": signed[email_id],
-			#"advertiserID": "e1cbd4d6-3aea-4144-82b9-2a70b8458f5b",
-			#"modelNumber": "RMX1911829", "osVersion": "10",
+			# "advertiserID": "e1cbd4d6-3aea-4144-82b9-2a70b8458f5b",
+			# "modelNumber": "RMX1911829", "osVersion": "10",
 			"appversion": "34",
 			"appid": "37"
 		}
@@ -241,7 +241,7 @@ class SwagbucksLive(SbWebSocket):
 			"Host": "app.swagbucks.com",
 			"user-agent": "SwagIQ-Android/34 (okhttp/3.10.0);Realme RMX1911",
 			"accept-encoding": "gzip",
-			#"authorization": self.get_token()
+			# "authorization": self.get_token()
 		}
 		data = await self.fetch("POST", "?cmd=apm-1", headers = headers, params = params, host = "host")
 		if data["status"] != 200:
