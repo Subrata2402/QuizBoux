@@ -80,11 +80,7 @@ class SbWebSocket(object):
 			"vid": self.vid, "qid": qid, "aid": aid, "timeDelta": "5000"
 		}
 		self.data = await self.fetch("POST", "trivia/answer", headers = self.headers, params = params)
-		success = self.data.get("success")
-		if success:
-			await self.send_hook("Successfully sent the answer.\n```\n{}\n```".format(data))
-		else:
-			await self.send_hook("Failed to send answer.\n```\n{}\n```".format(data))
+		await self.send_hook("\n```\n{}\n```".format(self.data))
 	
 	async def confirm_rebuy(self):
 		"""
@@ -95,34 +91,51 @@ class SbWebSocket(object):
 		allow_rebuy = self.data["whenIncorrect"]["allowRebuy"]
 		if not allow_rebuy:
 			return None
-		params = {
-			"vid": self.vid, "useLife": "true", "partnerHash": self.partner_hash,
-			"_device": "c1cd7fc0-4bd5-4026-bc7d-aaa4199b7873"
-		}
-		# post_data = f"_device=c1cd7fc0-4bd5-4026-bc7d-aaa4199b7873&vid={self.vid}&useLife=true&partnerHash={self.partner_hash}"
-		data = await self.fetch("POST", "trivia/rebuy_confirm", headers = self.headers, params = params)
-		success = data.get("success")
-		if success:
-			await self.send_hook("Successfully rejoin in the game.")
-		else:
-			await self.send_hook("Failed to rejoin in the game.\n```\n{}\n```".format(data))
+		# params = {
+		# 	"vid": self.vid, "useLife": "true", "partnerHash": self.partner_hash,
+		# 	#"_device": "c1cd7fc0-4bd5-4026-bc7d-aaa4199b7873"
+		# }
+		post_data = f"vid={self.vid}&useLife=true&partnerHash={self.partner_hash}"
+		data = await self.fetch("POST", "trivia/rebuy_confirm", headers = self.headers, data = post_data)
+		await self.send_hook("\n```\n{}\n```".format(data))
 			
+	async def confirm_sb(self):
+		"""
+		If lost the game, Swagbucks asked to confirm to take bonus sb.
+		Then you need confirm sb to credited sb in Swagbucks wallet.
+		"""
+		# params = {
+		# 	"vid": self.vid, "useLife": "true", "partnerHash": self.partner_hash,
+		# 	#"_device": "c1cd7fc0-4bd5-4026-bc7d-aaa4199b7873"
+		# }
+		
+		post_data = f"vid={self.vid}"
+		data = await self.fetch("POST", "trivia/confirm_sb", headers = self.headers, data = post_data)
+		await self.send_hook("\n```\n{}\n```".format(data))
+	
 	async def complete_game(self):
 		"""
 		After end of the game check the details of winnings 
 		and how many sb earn from the live game.
 		"""
-		params = {"vid": self.vid}
-		#post_data = f"vid={self.vid}"
-		data = await self.fetch("POST", "trivia/complete", headers = self.headers, params = params)
-		success = data.get("success")
-		if success:
-			await self.send_hook("Successfully complete the game.")
-			winner = data.get("winner")
-			sb = data.get("sb")
-			await self.send_hook("You **{}** the game and got **{} SB**!".format('won' if winner else 'lost', sb))
-		else:
-			await self.send_hook("Failed to complete the game.\n```\n{}\n```".format(data))
+		# params = {"vid": self.vid}
+		post_data = f"vid={self.vid}"
+		data = await self.fetch("POST", "trivia/complete", headers = self.headers, data = post_data)
+		# success = data.get("success")
+		# if success:
+		# 	await self.send_hook("Successfully complete the game.")
+		# 	winner = data.get("winner")
+		# 	sb = data.get("sb")
+		# 	await self.send_hook("You **{}** the game and got **{} SB**!".format('won' if winner else 'lost', sb))
+		# else:
+		# 	await self.send_hook("Failed to complete the game.\n```\n{}\n```".format(data))
+		await self.send_hook("\n```\n{}\n```".format(data))
+		
+		confirm = data["confirm"]
+		winner = data["winner"]
+		if confirm and not winner:
+			data = await self.confirm_sb()
+			await self.send_hook("\n```\n{}\n```".format(data))
 
 	
 	async def get_ws(self):
