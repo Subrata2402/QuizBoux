@@ -134,8 +134,8 @@ class SbWebSocket(object):
 		confirm = data["confirm"]
 		winner = data["winner"]
 		if confirm and not winner:
-			data = await self.confirm_sb()
-			await self.send_hook("\n```\n{}\n```".format(data))
+			await self.confirm_sb()
+			# await self.send_hook("\n```\n{}\n```".format(data))
 
 	
 	async def get_ws(self):
