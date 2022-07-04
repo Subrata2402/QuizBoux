@@ -217,8 +217,8 @@ class SbWebSocket(object):
 				
 class SwagbucksLive(SbWebSocket):
 	
-	def __init__(self, client):
-		super().__init__(client)
+	def __init__(self, client, username):
+		super().__init__(client, username)
 		self.client = client
 
 	async def login(self, email_id: str, password: str, get_token: str = None):
