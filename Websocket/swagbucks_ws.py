@@ -170,7 +170,7 @@ class SbWebSocket(object):
 	
 	async def connect_websocket(self):
 		"""
-		Try to onnect websocket.
+		Connect websocket to join Swagbucks Live game and play.
 		"""
 		await self.is_expired()
 		await self.game_details()
