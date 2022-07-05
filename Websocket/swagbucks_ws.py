@@ -6,7 +6,8 @@ from database import db
 
 signed = {
 	"sakhman3250@gmail.com": "cf737f54a923ae5f300a705332352e3a",
-	"baldric3250schneider@gmail.com": "172e4aebc29f853bb8033a987d470837"
+	"baldric3250schneider@gmail.com": "172e4aebc29f853bb8033a987d470837",
+	"subratadas3250@gmail.com": "a516124913fb217d2f8b2d3dfe661950"
 }
 
 class SbWebSocket(object):
