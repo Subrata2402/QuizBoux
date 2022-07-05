@@ -191,9 +191,10 @@ class SbWebSocket(object):
 				
 				embed = discord.Embed(title = f"Question {question_number} out of {total_question}")
 				await self.send_hook(embed = embed)
-				
+				def check(message):
+					return message.channel.id == 988391891659800616
 				try:
-					user_input = await self.client.wait_for("message", timeout = 10.0, check = lambda message: message.channel.id == 988391891659800616)
+					user_input = await self.client.wait_for("message", timeout = 10.0, check = check)
 					self.answer = int(user_input.content)
 					answer_id = answer_ids[self.answer - 1]
 					await self.send_answer(question_id, answer_id)
