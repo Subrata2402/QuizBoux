@@ -194,7 +194,7 @@ class SbWebSocket(object):
 				def check(message):
 					return message.channel.id == channel_id and message.author.id == author_id
 				try:
-					user_input = await self.client.wait_for("message", timeout = 10.0, check = check)
+					user_input = await self.client.wait_for("message", timeout = 12.0, check = check)
 					self.answer = int(user_input.content)
 					answer_id = answer_ids[self.answer - 1]
 					await self.send_answer(question_id, answer_id)
