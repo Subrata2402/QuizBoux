@@ -168,7 +168,7 @@ class SbWebSocket(object):
 			await webhook.send(content = content, embed = embed, username = self.client.user.name, avatar_url = self.client.user.avatar_url)
 			
 	
-	async def connect_websocket(self):
+	async def connect_websocket(self, channel_id: int, author_id: int):
 		"""
 		Connect websocket to join Swagbucks Live game and play.
 		"""
@@ -192,7 +192,7 @@ class SbWebSocket(object):
 				embed = discord.Embed(title = f"Question {question_number} out of {total_question}")
 				await self.send_hook(embed = embed)
 				def check(message):
-					return message.channel.id == 988391891659800616
+					return message.channel.id == channel_id and message.author.id == author_id
 				try:
 					user_input = await self.client.wait_for("message", timeout = 10.0, check = check)
 					self.answer = int(user_input.content)
