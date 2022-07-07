@@ -57,6 +57,7 @@ class SbWebSocket(object):
 		Get game details.
 		"""
 		data = await self.fetch("POST", "trivia/join", headers = self.headers)
+		
 		if data["success"]:
 			self.game_is_active = True
 			self.vid = data["viewId"]
