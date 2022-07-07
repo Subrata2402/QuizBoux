@@ -304,18 +304,18 @@ class SwagbucksLive(SbWebSocket):
 		if data["status"] != 200:
 			return await self.send_hook("```\n{}\n```".format(data))
 		description = f"```\n" \
-				f"User Id           : {data['member_id']}\n" \
-				f"Email Verified    : {data['email_verified']}\n" \
-				f"Lives             : {data['lives']}\n" \
-				f"Username          : {data['user_name']}\n" \
-				f"Swagbucks         : {data['swagbucks']}\n" \
-				f"Re-Verification   : {data['require_reverification']}\n" \
-				f"Profile Complete  : {data['profile_complete']}\n" \
-				f"OTP Verified      : {data['otp_verified']}\n" \
-				f"Member Status     : {data['member_status']}\n" \
-				f"Pending Earnings  : {data['pending_earnings']}\n" \
-				f"Registered Date   : {data['registered_date']}\n" \
-				f"Lifetime Earnings : {data['lifetime_earnings']}\n```"
+				f"• User Id             ::  {data['member_id']}\n" \
+				f"• Email Verified      ::  {data['email_verified']}\n" \
+				f"• Lives               ::  {data['lives']}\n" \
+				f"• Username            ::  {data['user_name']}\n" \
+				f"• Swagbucks           ::  {data['swagbucks']}\n" \
+				f"• Re-Verification     ::  {data['require_reverification']}\n" \
+				f"• Profile Complete    ::  {data['profile_complete']}\n" \
+				f"• OTP Verified        ::  {data['otp_verified']}\n" \
+				f"• Member Status       ::  {data['member_status']}\n" \
+				f"• Pending Earnings    ::  {data['pending_earnings']}\n" \
+				f"• Registered Date     ::  {data['registered_date']}\n" \
+				f"• Lifetime Earnings   ::  {data['lifetime_earnings']}\n```"
 		await self.send_hook(description)
 		
 	async def show_details(self) -> None:
