@@ -18,7 +18,6 @@ class SbWebSocket(object):
 		self.ws = None
 		self.vid = None
 		self.game_is_active = False
-		self.partner_hash = None
 		self.answer = 2
 		self.data = None
 		self.host = "https://api.playswagiq.com/"
@@ -57,12 +56,24 @@ class SbWebSocket(object):
 		Get game details.
 		"""
 		data = await self.fetch("POST", "trivia/join", headers = self.headers)
-		
 		if data["success"]:
 			self.game_is_active = True
 			self.vid = data["viewId"]
-			self.partner_hash = db.sb_details.find_one({"username": self.username})["sig"]
-			
+	
+	async def get_partner_hash(self):
+		"""
+		Get partner hash for confirmation of rejoin in the live game.
+		"""
+		user_details = db.sb_details.find_one({"username": self.username})
+		if not user_details:
+			return await self.send_hook("No account found with name `{}`".format(self.username))
+		token = user_details["token"]
+		params = {
+			"token": token, "checkreferral": "false",
+			"appid": "37", "appversion": "34"
+		}
+		data = await self.fetch("POST", "?cmd=apm-3", params = params, host = "host")
+		return data["sig"]
 
 	async def fetch(self, method = "GET", function = "", headers = None, params = None, data = None, host = None):
 		"""
@@ -96,7 +107,8 @@ class SbWebSocket(object):
 		# 	#"_device": "c1cd7fc0-4bd5-4026-bc7d-aaa4199b7873"
 		# }
 		if allow_rebuy:
-			post_data = f"vid={self.vid}&useLife=true&partnerHash={self.partner_hash}"
+			partner_hash = await self.get_partner_hash()
+			post_data = f"vid={self.vid}&useLife=true&partnerHash={partner_hash}"
 			data = await self.fetch("POST", "trivia/rebuy_confirm", headers = self.headers, data = post_data)
 			await self.send_hook("\n```\n{}\n```".format(data))
 			
