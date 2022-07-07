@@ -306,9 +306,9 @@ class SwagbucksLive(SbWebSocket):
 		description = f"```\n" \
 				f"• User Id             ::  {data['member_id']}\n" \
 				f"• Email Verified      ::  {data['email_verified']}\n" \
-				f"• Lives               ::  {data['lives']}\n" \
+				f"• Rejoins (Lives)     ::  {data['lives']}\n" \
 				f"• Username            ::  {data['user_name']}\n" \
-				f"• Swagbucks           ::  {data['swagbucks']}\n" \
+				f"• Swagbucks (SB)      ::  {data['swagbucks']}\n" \
 				f"• Re-Verification     ::  {data['require_reverification']}\n" \
 				f"• Profile Complete    ::  {data['profile_complete']}\n" \
 				f"• OTP Verified        ::  {data['otp_verified']}\n" \
