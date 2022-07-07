@@ -316,7 +316,7 @@ class SwagbucksLive(SbWebSocket):
 				f"Pending Earnings  : {data['pending_earnings']}\n" \
 				f"Registered Date   : {data['registered_date']}\n" \
 				f"Lifetime Earnings : {data['lifetime_earnings']}\n```"
-		await self.send_hook("```\n{}\n```".format(description))
+		await self.send_hook(description)
 		
 	async def show_details(self) -> None:
 		"""
