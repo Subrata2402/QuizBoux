@@ -85,7 +85,7 @@ class SbWebSocket(object):
 			content = await response.text()
 			return json.loads(content)
 	
-	async def send_answer(self, qid: str, aid: str):
+	async def send_answer(self, qid: str, aid: str) -> None:
 		"""
 		Send answer to the game.
 		"""
@@ -95,7 +95,7 @@ class SbWebSocket(object):
 		self.data = await self.fetch("POST", "trivia/answer", headers = self.headers, params = params)
 		await self.send_hook("\n```\n{}\n```".format(self.data))
 	
-	async def confirm_rebuy(self):
+	async def confirm_rebuy(self) -> None:
 		"""
 		If any question is wrong then we are eliminated.
 		For come back and join again to the game we use a rejoin.
@@ -112,7 +112,7 @@ class SbWebSocket(object):
 			data = await self.fetch("POST", "trivia/rebuy_confirm", headers = self.headers, data = post_data)
 			await self.send_hook("\n```\n{}\n```".format(data))
 			
-	async def confirm_sb(self):
+	async def confirm_sb(self) -> None:
 		"""
 		If lost the game, Swagbucks asked to confirm to take bonus sb.
 		Then you need confirm sb to credited sb in Swagbucks wallet.
@@ -126,7 +126,7 @@ class SbWebSocket(object):
 		data = await self.fetch("POST", "trivia/confirm_sb", headers = self.headers, data = post_data)
 		await self.send_hook("\n```\n{}\n```".format(data))
 	
-	async def complete_game(self):
+	async def complete_game(self) -> None:
 		"""
 		After end of the game check the details of winnings 
 		and how many sb earn from the live game.
@@ -151,13 +151,13 @@ class SbWebSocket(object):
 			# await self.send_hook("\n```\n{}\n```".format(data))
 
 	
-	async def get_ws(self):
+	async def get_ws(self) -> None:
 		"""
 		Get Websocket.
 		"""
 		self.ws = stored_ws.get(self.username)
 
-	async def close_ws(self):
+	async def close_ws(self) -> None:
 		"""
 		Close Websocket.
 		"""
@@ -170,7 +170,7 @@ class SbWebSocket(object):
 			await self.ws.close()
 			await self.send_hook("**Websocket Closed!**")
 			
-	async def send_hook(self, content = "", embed = None):
+	async def send_hook(self, content = "", embed = None) -> None:
 		"""
 		Send message with Discord channel Webhook.
 		"""
@@ -320,7 +320,7 @@ class SwagbucksLive(SbWebSocket):
 				f"Lifetime Earnings : {data['lifetime_earnings']}\n```")
 		await self.send_hook(embed = embed)
 		
-	async def show_details(self):
+	async def show_details(self) -> None:
 		"""
 		Get the details of the current game show.
 		"""
