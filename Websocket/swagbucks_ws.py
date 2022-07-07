@@ -90,15 +90,14 @@ class SbWebSocket(object):
 		To use this function we can send a rejoin. 
 		"""
 		allow_rebuy = self.data["whenIncorrect"]["allowRebuy"]
-		if not allow_rebuy:
-			return None
 		# params = {
 		# 	"vid": self.vid, "useLife": "true", "partnerHash": self.partner_hash,
 		# 	#"_device": "c1cd7fc0-4bd5-4026-bc7d-aaa4199b7873"
 		# }
-		post_data = f"vid={self.vid}&useLife=true&partnerHash={self.partner_hash}"
-		data = await self.fetch("POST", "trivia/rebuy_confirm", headers = self.headers, data = post_data)
-		await self.send_hook("\n```\n{}\n```".format(data))
+		if allow_rebuy:
+			post_data = f"vid={self.vid}&useLife=true&partnerHash={self.partner_hash}"
+			data = await self.fetch("POST", "trivia/rebuy_confirm", headers = self.headers, data = post_data)
+			await self.send_hook("\n```\n{}\n```".format(data))
 			
 	async def confirm_sb(self):
 		"""
