@@ -191,7 +191,6 @@ class SbWebSocket(object):
 		socket_url = "wss://api.playswagiq.com/sock/1/game/{}".format(self.vid)
 		self.ws = await websockets.connect(socket_url, extra_headers = self.headers, ping_interval = 15)
 		stored_ws[self.username] = self.ws
-		rejoin_used = False
 		await self.send_hook("Websocket successfully connected!")
 		async for message in self.ws:
 			message_data = json.loads(message)
@@ -304,8 +303,7 @@ class SwagbucksLive(SbWebSocket):
 		data = await self.fetch("POST", "?cmd=apm-3", params = params, host = "host")
 		if data["status"] != 200:
 			return await self.send_hook("```\n{}\n```".format(data))
-		embed = discord.Embed(title = "Swagbucks Account Details !",
-			description = f"```\n" \
+		description = f"```\n" \
 				f"User Id           : {data['member_id']}\n" \
 				f"Email Verified    : {data['email_verified']}\n" \
 				f"Lives             : {data['lives']}\n" \
@@ -317,8 +315,8 @@ class SwagbucksLive(SbWebSocket):
 				f"Member Status     : {data['member_status']}\n" \
 				f"Pending Earnings  : {data['pending_earnings']}\n" \
 				f"Registered Date   : {data['registered_date']}\n" \
-				f"Lifetime Earnings : {data['lifetime_earnings']}\n```")
-		await self.send_hook(embed = embed)
+				f"Lifetime Earnings : {data['lifetime_earnings']}\n```"
+		await self.send_hook("```\n{}\n```".format(description))
 		
 	async def show_details(self) -> None:
 		"""
