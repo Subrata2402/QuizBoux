@@ -8,9 +8,6 @@ signed = {
 	"sakhman3250@gmail.com": "cf737f54a923ae5f300a705332352e3a",
 	"baldric3250schneider@gmail.com": "172e4aebc29f853bb8033a987d470837",
 	"subratadas3250@gmail.com": "a516124913fb217d2f8b2d3dfe661950",
-	"josephine325": "cf737f54a923ae5f300a705332352e3a",
-	"baldric3250schne": "172e4aebc29f853bb8033a987d470837",
-	"subrata3250": "a516124913fb217d2f8b2d3dfe661950",
 }
 
 class SbWebSocket(object):
@@ -28,8 +25,8 @@ class SbWebSocket(object):
 		self.icon_url = "https://cdn.discordapp.com/attachments/799861610654728212/991317134930092042/swagbucks_logo.png"
 		self.headers = {
 			"content-type": "application/x-www-form-urlencoded",
-			"Host": "app.swagbucks.com",
-			"user-agent": "SwagIQ-Android/34 (okhttp/3.10.0);Realme RMX1911",
+			"Host": "api.playswagiq.com",
+			"user-agent": "SwagIQ-Android/34 (okhttp/3.10.0)",
 			"accept-encoding": "gzip",
 			"authorization": "Bearer " + self.get_token()
 		}
@@ -110,8 +107,8 @@ class SbWebSocket(object):
 		# 	#"_device": "c1cd7fc0-4bd5-4026-bc7d-aaa4199b7873"
 		# }
 		if allow_rebuy:
-			#partner_hash = await self.get_partner_hash()
-			post_data = f"vid={self.vid}&useLife=true&partnerHash={signed[self.username]}"
+			partner_hash = await self.get_partner_hash()
+			post_data = f"vid={self.vid}&useLife=true&partnerHash={partner_hash}"
 			data = await self.fetch("POST", "trivia/rebuy_confirm", headers = self.headers, data = post_data)
 			await self.send_hook("\n```\n{}\n```".format(data))
 			
