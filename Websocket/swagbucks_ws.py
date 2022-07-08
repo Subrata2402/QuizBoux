@@ -65,8 +65,6 @@ class SbWebSocket(object):
 		Get partner hash for confirmation of rejoin in the live game.
 		"""
 		user_details = db.sb_details.find_one({"username": self.username})
-		if not user_details:
-			return await self.send_hook("No account found with name `{}`".format(self.username))
 		token = user_details["token"]
 		params = {
 			"token": token, "checkreferral": "false",
