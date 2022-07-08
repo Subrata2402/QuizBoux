@@ -7,7 +7,10 @@ from database import db
 signed = {
 	"sakhman3250@gmail.com": "cf737f54a923ae5f300a705332352e3a",
 	"baldric3250schneider@gmail.com": "172e4aebc29f853bb8033a987d470837",
-	"subratadas3250@gmail.com": "a516124913fb217d2f8b2d3dfe661950"
+	"subratadas3250@gmail.com": "a516124913fb217d2f8b2d3dfe661950",
+	"josephine325": "cf737f54a923ae5f300a705332352e3a",
+	"baldric3250schne": "172e4aebc29f853bb8033a987d470837",
+	"subrata3250": "a516124913fb217d2f8b2d3dfe661950",
 }
 
 class SbWebSocket(object):
@@ -107,8 +110,8 @@ class SbWebSocket(object):
 		# 	#"_device": "c1cd7fc0-4bd5-4026-bc7d-aaa4199b7873"
 		# }
 		if allow_rebuy:
-			partner_hash = await self.get_partner_hash()
-			post_data = f"vid={self.vid}&useLife=true&partnerHash={partner_hash}"
+			#partner_hash = await self.get_partner_hash()
+			post_data = f"vid={self.vid}&useLife=true&partnerHash={signed[self.username]}"
 			data = await self.fetch("POST", "trivia/rebuy_confirm", headers = self.headers, data = post_data)
 			await self.send_hook("\n```\n{}\n```".format(data))
 			
@@ -205,12 +208,12 @@ class SbWebSocket(object):
 				def check(message):
 					return message.channel.id == channel_id and message.author.id == author_id
 				try:
-					user_input = await self.client.wait_for("message", timeout = 12.0, check = check)
+					user_input = await self.client.wait_for("message", timeout = 15.0, check = check)
 					self.answer = int(user_input.content)
-					answer_id = answer_ids[self.answer - 1]
-					await self.send_answer(question_id, answer_id)
 				except Exception as e:
 					await self.send_hook("You failed to send your answer within time or something went wrong.\n```\n{}\n```".format(e))
+				answer_id = answer_ids[self.answer - 1]
+				await self.send_answer(question_id, answer_id)
 					
 			if message_data["code"] == 42:
 				ansid = message_data["correctAnswerId"]
