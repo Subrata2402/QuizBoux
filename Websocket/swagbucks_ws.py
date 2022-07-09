@@ -5,9 +5,9 @@ import websockets, asyncio, requests
 from database import db
 
 signed = {
-	"sakhman3250@gmail.com": "cf737f54a923ae5f300a705332352e3a",
-	"baldric3250schneider@gmail.com": "172e4aebc29f853bb8033a987d470837",
-	"subratadas3250@gmail.com": "a516124913fb217d2f8b2d3dfe661950",
+	"josephine325": "cf737f54a923ae5f300a705332352e3a",
+	"baldric3250schne": "172e4aebc29f853bb8033a987d470837",
+	"subrata3250": "a516124913fb217d2f8b2d3dfe661950",
 }
 
 class SbWebSocket(object):
@@ -15,11 +15,13 @@ class SbWebSocket(object):
 	def __init__(self, client, username: str = None):
 		self.client = client
 		self.username = username if username else "User"
-		self.ws = None
-		self.vid = None
-		self.game_is_active = False
+		self.ws = None # websocket 
+		self.vid = None # current game view id or video id
+		self.game_is_active = False # game is live or not
 		self.answer = 2
-		self.data = None
+		self.data = None # send answer data
+		self.game_id = None # 1254
+		self.note = None # 2022-07-06 5:00pm PT
 		self.host = "https://api.playswagiq.com/"
 		self._host = "https://app.swagbucks.com/"
 		self.icon_url = "https://cdn.discordapp.com/attachments/799861610654728212/991317134930092042/swagbucks_logo.png"
@@ -59,18 +61,22 @@ class SbWebSocket(object):
 		if data["success"]:
 			self.game_is_active = True
 			self.vid = data["viewId"]
+			self.game_id = data["episode"]["id"]
+			self.note = data["episode"]["title"]
 	
-	async def get_partner_hash(self):
+	async def get_partner_hash(self, question_number: str):
 		"""
 		Get partner hash for confirmation of rejoin in the live game.
 		"""
-		user_details = db.sb_details.find_one({"username": self.username})
+		user_details = db.sb_details.find_one({"username": self.username.lower()})
 		token = user_details["token"]
 		params = {
-			"token": token, "checkreferral": "false",
-			"appid": "37", "appversion": "34"
+			"token": token, "gameID": self.game_id,
+			"price": "0", "questionNumber": question_number,
+			"note": self.note, "useLife": "true", "appid": "37",
+			"appversion": "34", "sig": signed[self.username],
 		}
-		data = await self.fetch("POST", "?cmd=apm-3", params = params, host = "host")
+		data = await self.fetch("POST", "?cmd=apm-70", headers = self.headers, params = params, host = "host")
 		return data["sig"]
 
 	async def fetch(self, method = "GET", function = "", headers = None, params = None, data = None, host = None):
@@ -93,7 +99,7 @@ class SbWebSocket(object):
 		self.data = await self.fetch("POST", "trivia/answer", headers = self.headers, params = params)
 		await self.send_hook("\n```\n{}\n```".format(self.data))
 	
-	async def confirm_rebuy(self) -> None:
+	async def confirm_rebuy(self, question_number: str) -> None:
 		"""
 		If any question is wrong then we are eliminated.
 		For come back and join again to the game we use a rejoin.
@@ -105,7 +111,7 @@ class SbWebSocket(object):
 		# 	#"_device": "c1cd7fc0-4bd5-4026-bc7d-aaa4199b7873"
 		# }
 		if allow_rebuy:
-			partner_hash = await self.get_partner_hash()
+			partner_hash = await self.get_partner_hash(question_number)
 			post_data = f"vid={self.vid}&useLife=true&partnerHash={partner_hash}"
 			data = await self.fetch("POST", "trivia/rebuy_confirm", headers = self.headers, data = post_data)
 			await self.send_hook("\n```\n{}\n```".format(data))
@@ -189,6 +195,7 @@ class SbWebSocket(object):
 		socket_url = "wss://api.playswagiq.com/sock/1/game/{}".format(self.vid)
 		self.ws = await websockets.connect(socket_url, extra_headers = self.headers, ping_interval = 15)
 		stored_ws[self.username] = self.ws
+		question_number = 0
 		await self.send_hook("Websocket successfully connected!")
 		async for message in self.ws:
 			message_data = json.loads(message)
@@ -220,7 +227,7 @@ class SbWebSocket(object):
 				await self.send_hook(embed = embed)
 				
 				if self.answer != ans_num:
-					await self.confirm_rebuy()
+					await self.confirm_rebuy(str(question_number))
 					
 			if message_data["code"] == 49:
 				await self.complete_game()
