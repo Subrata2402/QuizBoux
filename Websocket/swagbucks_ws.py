@@ -77,7 +77,7 @@ class SbWebSocket(object):
 			"appversion": "34", "sig": signed[self.username],
 		}
 		data = await self.fetch("POST", "?cmd=apm-70", headers = self.headers, params = params, host = "host")
-		return data["sig"]
+		return data["sig"] # {"status":200,"message":"Success","sig":"d05b6fe016c02602383b3e00c9702843b1e13ba50f1b81eb0775a5f97efdcccd"}
 
 	async def fetch(self, method = "GET", function = "", headers = None, params = None, data = None, host = None):
 		"""
