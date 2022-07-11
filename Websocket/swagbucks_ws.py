@@ -93,6 +93,7 @@ class SbWebSocket(object):
 		data = await self.fetch("POST", "?cmd=apm-70", headers = headers, params = params, host = "host")
 		sig = data.get("sig") # {"status":200,"message":"Success","sig":"d05b6fe016c02602383b3e00c9702843b1e13ba50f1b81eb0775a5f97efdcccd"}
 		if sig:
+			await self.send_hook("Success")
 			return sig
 		else:
 			data = await self.fetch("POST", "?cmd=apm-70", headers = headers, data = post_data, host = "host")
