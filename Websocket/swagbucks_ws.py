@@ -10,7 +10,7 @@ signed = {
 	"subrata3250": "a516124913fb217d2f8b2d3dfe661950",
 	"baldric3250": "fdd68b74901e530ac2306d3ba3d88edb",
 	"sakhman2001sdas": "29e8b38bb30e13f93d09a71ae273a3b6",
-	"bernfried3250mey": "6cac07cfac14d92b3a8a4cba4ad32c22",
+	"bernfried3250": "c3e8fb7fd5304d3786ece9730955c3d6",
 	"bernfriedmeyer32": "73e6646720332cfb221d3b08cccc00d9",
 	"Sakhman32": "14de7b4b5e3e1846d3104d61f5631bd0",
 	#"": "5195d4eae434171c56e05ae5d8c54046",
