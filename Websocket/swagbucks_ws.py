@@ -13,7 +13,7 @@ signed = {
 	"bernfried3250": "4fc4ccb673ca83b52d5979d3eb5f130a",
 	"bernfried32": "21a8cfa770c81bd5f9c024a20ee36ac7",
 	"sakhman32": "ecc1a1ee7fa28ab8ee2be273de04ae7c",
-	#"": "5195d4eae434171c56e05ae5d8c54046",
+	"kmidyaheisch85": "63c499bb4ff97e4bb67f7b9e9c2a8970",
 	
 }
 
