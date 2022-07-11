@@ -11,7 +11,7 @@ signed = {
 	"baldric3250": "fdd68b74901e530ac2306d3ba3d88edb",
 	"sakhman2001sdas": "29e8b38bb30e13f93d09a71ae273a3b6",
 	"bernfried3250": "4fc4ccb673ca83b52d5979d3eb5f130a",
-	"bernfried32": "73e6646720332cfb221d3b08cccc00d9",
+	"bernfried32": "21a8cfa770c81bd5f9c024a20ee36ac7",
 	"Sakhman32": "14de7b4b5e3e1846d3104d61f5631bd0",
 	#"": "5195d4eae434171c56e05ae5d8c54046",
 	
