@@ -78,7 +78,7 @@ class SbWebSocket(object):
 		user_details = db.sb_details.find_one({"username": self.username.lower()})
 		token = user_details["token"]
 		params = {
-			"token": token, "gameID": self.game_id,
+			"token": token, "gameID": str(self.game_id),
 			"price": "0", "questionNumber": question_number,
 			"note": self.note, "useLife": "true", "appid": "37",
 			"appversion": "34", "sig": signed[self.username],
