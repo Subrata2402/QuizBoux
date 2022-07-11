@@ -83,6 +83,12 @@ class SbWebSocket(object):
 			"note": self.note, "useLife": "true", "appid": "37",
 			"appversion": "34", "sig": signed[self.username],
 		}
+		headers = {
+			"content-type": "application/x-www-form-urlencoded",
+			"Host": "app.swagbucks.com",
+			"user-agent": "SwagIQ-Android/34 (okhttp/3.10.0);Realme RMX1911",
+			"accept-encoding": "gzip",
+		}
 		data = await self.fetch("POST", "?cmd=apm-70", headers = self.headers, params = params, host = "host")
 		return data["sig"] # {"status":200,"message":"Success","sig":"d05b6fe016c02602383b3e00c9702843b1e13ba50f1b81eb0775a5f97efdcccd"}
 
@@ -312,7 +318,14 @@ class SwagbucksLive(SbWebSocket):
 			"token": token, "checkreferral": "false",
 			"appid": "37", "appversion": "34"
 		}
-		data = await self.fetch("POST", "?cmd=apm-3", params = params, host = "host")
+		headers = {
+			"content-type": "application/x-www-form-urlencoded",
+			"Host": "app.swagbucks.com",
+			"user-agent": "SwagIQ-Android/34 (okhttp/3.10.0);Realme RMX1911",
+			"accept-encoding": "gzip",
+			# "authorization": self.get_token()
+		}
+		data = await self.fetch("POST", "?cmd=apm-3", headers = headers, params = params, host = "host")
 		if data["status"] != 200:
 			return await self.send_hook("```\n{}\n```".format(data))
 		description = f"```\n" \
