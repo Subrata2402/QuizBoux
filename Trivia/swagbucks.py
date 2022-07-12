@@ -10,7 +10,7 @@ class SwagbucksTrivia(commands.Cog, SwagbucksLive):
 		self.client = client
 
 	async def start(self, ctx, username: str):
-		ws = SbWebSocket(self.client, data["username"])
+		ws = SbWebSocket(self.client, username)
 		await ws.get_ws()
 		if ws.ws:
 			if ws.ws.open:
