@@ -14,7 +14,7 @@ signed = {
 	"bernfried32": "21a8cfa770c81bd5f9c024a20ee36ac7",
 	"sakhman32": "ecc1a1ee7fa28ab8ee2be273de04ae7c",
 	"kamal3085": "d9a3583b33ccd0f070d9cb343690a3c6",
-	
+	"kmidya1233": "ef8db1cbccfdc6b2b12d2ecb99d0b46f"
 }
 
 class SbWebSocket(object):
