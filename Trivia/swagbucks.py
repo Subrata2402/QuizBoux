@@ -25,13 +25,14 @@ class SwagbucksTrivia(commands.Cog, SwagbucksLive):
 		"""
 		if not username:
 			return await ctx.send("username is required!")
-		if username == "all":
-			details = list(db.sb_details.find())
-			for data in details:
-				if data["username"] == "subrata3250": continue
-				await self.start(ctx, data["username"])
-		else:
-			await self.start(ctx, username)
+		# if username == "all":
+		# 	details = list(db.sb_details.find())
+		# 	for data in details:
+		# 		if data["username"] == "subrata3250": continue
+		# 		await self.start(ctx, data["username"])
+		# else:
+		await self.start(ctx, username)
+		
 		
 	@commands.command()
 	async def sbclose(self, ctx, username: str = None):
