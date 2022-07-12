@@ -9,20 +9,29 @@ class SwagbucksTrivia(commands.Cog, SwagbucksLive):
 		super().__init__(client)
 		self.client = client
 
-	@commands.command()
-	async def sbstart(self, ctx, username: str = None):
-		"""
-		Check and open a websocket by username.
-		"""
-		if not username:
-			return await ctx.send("Username is required.")
-		ws = SbWebSocket(self.client, username.lower())
+	async def start(self, ctx, username: str):
+		ws = SbWebSocket(self.client, data["username"])
 		await ws.get_ws()
 		if ws.ws:
 			if ws.ws.open:
 				return await ws.send_hook("Websocket Already Opened!")
 		await ws.send_hook("Websocket Connecting...")
 		await ws.connect_websocket(ctx.channel.id, ctx.author.id)
+
+	@commands.command()
+	async def sbstart(self, ctx, username: str = None):
+		"""
+		Check and open a websocket by username.
+		"""
+		if not username:
+			return await ctx.send("username is required!")
+		if username == "all":
+			details = list(db.sb_details.find())
+			for data in details:
+				if data["username"] == "subrata3250": continue
+				await self.start(ctx, data["username"])
+		else:
+			await self.start(ctx, username)
 		
 	@commands.command()
 	async def sbclose(self, ctx, username: str = None):
