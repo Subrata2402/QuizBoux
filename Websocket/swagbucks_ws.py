@@ -128,6 +128,7 @@ class SbWebSocket(object):
 		# }
 		if allow_rebuy:
 			partner_hash = await self.get_partner_hash(question_number)
+			if not partner_hash: return 
 			post_data = f"vid={self.vid}&useLife=true&partnerHash={partner_hash}"
 			data = await self.fetch("POST", "trivia/rebuy_confirm", headers = self.headers, data = post_data)
 			await self.send_hook("\n```\n{}\n```".format(data))
