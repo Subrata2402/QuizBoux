@@ -83,7 +83,7 @@ class SbWebSocket(object):
 			"note": self.note, "useLife": "true", "appid": "37",
 			"appversion": "34", "sig": signed[self.username],
 		}
-		post_data = f"token={token}&gameID={str(self.game_id)}&price=0&questionNumber={question_number}&note={self.note}&useLife=true&appid=37&appversion=34&sig={signed[self.username]}"
+		# post_data = f"token={token}&gameID={str(self.game_id)}&price=0&questionNumber={question_number}&note={self.note}&useLife=true&appid=37&appversion=34&sig={signed[self.username]}"
 		headers = {
 			"content-type": "application/x-www-form-urlencoded",
 			"Host": "app.swagbucks.com",
@@ -91,13 +91,9 @@ class SbWebSocket(object):
 			"accept-encoding": "gzip",
 		}
 		data = await self.fetch("POST", "?cmd=apm-70", headers = headers, params = params, host = "host")
-		sig = data.get("sig") # {"status":200,"message":"Success","sig":"d05b6fe016c02602383b3e00c9702843b1e13ba50f1b81eb0775a5f97efdcccd"}
-		if sig:
-			await self.send_hook("Success")
-			return sig
-		else:
-			data = await self.fetch("POST", "?cmd=apm-70", headers = headers, data = post_data, host = "host")
-			return data.get("sig")
+		await self.send_hook("\n```\n{}\n```".format(data))
+		return data.get("sig")
+
 	
 	async def fetch(self, method = "GET", function = "", headers = None, params = None, data = None, host = None):
 		"""
