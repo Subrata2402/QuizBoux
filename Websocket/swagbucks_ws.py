@@ -121,7 +121,10 @@ class SbWebSocket(object):
 		For come back and join again to the game we use a rejoin.
 		To use this function we can send a rejoin. 
 		"""
-		allow_rebuy = self.data["whenIncorrect"]["allowRebuy"]
+		if self.data.get("whenIncorrect"):
+			allow_rebuy = self.data["whenIncorrect"]["allowRebuy"]
+		else:
+			return None
 		# params = {
 		# 	"vid": self.vid, "useLife": "true", "partnerHash": self.partner_hash,
 		# 	#"_device": "c1cd7fc0-4bd5-4026-bc7d-aaa4199b7873"
@@ -227,7 +230,7 @@ class SbWebSocket(object):
 				def check(message):
 					return message.channel.id == channel_id and message.author.id == author_id
 				try:
-					user_input = await self.client.wait_for("message", timeout = 12.0, check = check)
+					user_input = await self.client.wait_for("message", timeout = 11.0, check = check)
 					self.answer = int(user_input.content)
 				except Exception as e:
 					await self.send_hook("You failed to send your answer within time or something went wrong.\n```\n{}\n```".format(e))
