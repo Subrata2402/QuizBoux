@@ -30,7 +30,7 @@ class SwagbucksTrivia(commands.Cog, SwagbucksLive):
 		details = list(db.sb_details.find())
 		for data in details:
 		# 		if data["username"] == "subrata3250": continue
-			thread = threading.Thread(target = lambda: asyncio.run(start(ctx, data["username"])))
+			thread = threading.Thread(target = lambda: asyncio.run(self.start(ctx, data["username"])))
 			thread.start()
 		# else:
 		# await self.start(ctx, username)
