@@ -231,7 +231,7 @@ class SbWebSocket(object):
 					return message.channel.id == channel_id and message.author.id == author_id
 				try:
 					user_input = await self.client.wait_for("message", timeout = 11.0, check = check)
-					self.answer = int(user_input.content)
+					self.answer = int(user_input.content.strip())
 				except Exception as e:
 					await self.send_hook("You failed to send your answer within time or something went wrong.\n```\n{}\n```".format(e))
 				answer_id = answer_ids[self.answer - 1]
