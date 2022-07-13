@@ -69,7 +69,7 @@ class SwagbucksTrivia(commands.Cog, SwagbucksLive):
 		await self.login(email_id, password)
 		
 	@commands.command()
-	async def details(self, ctx, username: str = None):
+	async def sbdetails(self, ctx, username: str = None):
 		"""
 		Get stats details of a Swagbucks account.
 		"""
@@ -79,7 +79,7 @@ class SwagbucksTrivia(commands.Cog, SwagbucksLive):
 		
 	
 	@commands.command()
-	async def accounts(self, ctx):
+	async def sbaccounts(self, ctx):
 		"""
 		Get all accounts username, stored in the database.
 		"""
