@@ -2,6 +2,7 @@ import discord
 from Websocket.swagbucks_ws import SbWebSocket, SwagbucksLive
 from discord.ext import commands
 from database import db
+import threading, asyncio
 
 class SwagbucksTrivia(commands.Cog, SwagbucksLive):
 	
@@ -23,15 +24,16 @@ class SwagbucksTrivia(commands.Cog, SwagbucksLive):
 		"""
 		Check and open a websocket by username.
 		"""
-		if not username:
-			return await ctx.send("username is required!")
+		# if not username:
+		#	return await ctx.send("username is required!")
 		# if username == "all":
-		# 	details = list(db.sb_details.find())
-		# 	for data in details:
+		details = list(db.sb_details.find())
+		for data in details:
 		# 		if data["username"] == "subrata3250": continue
-		# 		await self.start(ctx, data["username"])
+			thread = threading.Thread(asyncio.run(start(ctx, data["username"]))
+			thread.start()
 		# else:
-		await self.start(ctx, username)
+		# await self.start(ctx, username)
 		
 		
 	@commands.command()
