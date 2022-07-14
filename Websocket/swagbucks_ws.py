@@ -225,7 +225,7 @@ class SbWebSocket(object):
 				question_id = message_data["question"]["idSigned"]
 				answer_ids = [answer["idSigned"] for answer in message_data["question"]["answers"]]
 				
-				embed = discord.Embed(title = f"Question {question_number} out of {total_question}")
+				embed = discord.Embed(title = f"Question {question_number} out of {total_question}", url = "https://google.com")
 				await self.send_hook(embed = embed)
 				def check(message):
 					return message.channel.id == channel_id and message.author.id == author_id
