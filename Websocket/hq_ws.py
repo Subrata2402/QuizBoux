@@ -286,7 +286,7 @@ class HQWebSocket(object):
 						option = self.options[index]
 						embed = discord.Embed(color = discord.Colour.random())
 						embed.title = f"__{username}__"
-						embed.description = f"Option order[{index}]. {option}"
+						embed.description = f"Option {order[index]}. {option}"
 						await self.send_hook(embed = embed)
 			
 			elif message_data["type"] == "questionClosed":
