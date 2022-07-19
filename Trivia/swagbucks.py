@@ -99,7 +99,7 @@ class SwagbucksTrivia(commands.Cog, SwagbucksLive):
 		accounts = list(db.sb_details.find())
 		description = ""
 		for index, data in enumerate(accounts):
-		    sb = await self.account_details(data["username"].lower(), True)
+			sb = await self.account_details(data["username"].lower(), True)
 			description += "{} - {} - {} SB\n".format(index+1, data["username"], sb)
 		if not accounts:
 			return await ctx.send("No accounts found.")
