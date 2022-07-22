@@ -1,4 +1,4 @@
-import websockets, aiohttp
+import websockets, aiohttp, re
 import discord, requests, asyncio
 from discord.ext import commands
 from database import db
