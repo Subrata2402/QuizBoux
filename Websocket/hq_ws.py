@@ -286,6 +286,10 @@ class HQWebSocket(object):
 					
 			elif message_data['type'] == 'answered':
 				username = message_data["username"]
+				if username.lower() == "baldric3250":
+					username = "Private Friend - 1"
+				elif username.lower() == "wolvardt85":
+					username = "Private Friend - 2"
 				ans_id = message_data["answerId"]
 				for index, answer_id in enumerate(self.answer_ids):
 					if ans_id == answer_id:
