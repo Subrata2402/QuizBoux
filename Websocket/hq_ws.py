@@ -24,6 +24,7 @@ class HQWebSocket(object):
 		self.answer_ids = None
 		self.options = None
 		self.pattern = []
+		self.avatar_url = "https://media.discordapp.net/attachments/827262575439380542/1002321282098012240/4512244a7400da3f31a30698bf1b68ca.webp"
 	
 	async def is_expired(self, token):
 		"""Check either token is expired or not."""
@@ -76,7 +77,12 @@ class HQWebSocket(object):
 		web_url = await self.get_web_url()
 		async with aiohttp.ClientSession() as session:
 			webhook = discord.Webhook.from_url(web_url, adapter=discord.AsyncWebhookAdapter(session))
-			await webhook.send(content = content, embed = embed, username = self.client.user.name, avatar_url = self.client.user.avatar_url)
+			await webhook.send(
+				content = content,
+				embed = embed,
+				username = self.client.user.name if self.guild_id != 831051146880614431 else "DarbouxCoins",
+				avatar_url = self.client.user.avatar_url if self.guild_id != 831051146880614431 else self.avatar_url
+				)
 			
 	async def get_show_details(self, send_hook = None):
 		"""Get show details of HQ Trivia."""
