@@ -322,6 +322,13 @@ class SwagbucksLive(SbWebSocket):
 			return await self.send_hook("Not found with this username.")
 		user_id = details["user_id"]
 		sig = details["sig"]
+		headers = {
+			"content-type": "application/x-www-form-urlencoded",
+			"Host": "app.swagbucks.com",
+			"user-agent": "SwagIQ-Android/34 (okhttp/3.10.0);Realme RMX1911",
+			"accept-encoding": "gzip",
+			# "authorization": self.get_token()
+		}
 		data = f"_device=f6acc085-c395-4688-913f-ea2b36d4205f&partnerMemberId={user_id}&partnerUserName={username}&verify=false&partnerApim=1&partnerHash={sig}"
 		data = await self.fetch("POST", "auth/token", headers = headers, data = data)
 		access_token = data["accessToken"]
