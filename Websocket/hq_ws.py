@@ -280,9 +280,10 @@ class HQWebSocket(object):
 						self.direct_search_result(google_question, self.options),
 					]
 						#self.direct_search_result(search_with_all, choices)
-				for target in target_list:
-					thread = threading.Thread(target = lambda: asyncio.run(target))
-					thread.start()
+				if self.guild_id != 831051146880614431:
+					for target in target_list:
+						thread = threading.Thread(target = lambda: asyncio.run(target))
+						thread.start()
 					
 			elif message_data['type'] == 'answered':
 				username = message_data["username"]
