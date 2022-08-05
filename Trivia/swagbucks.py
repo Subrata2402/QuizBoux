@@ -61,7 +61,7 @@ class SwagbucksTrivia(commands.Cog, SwagbucksLive):
 		"""
 		if not username:
 			return await ctx.send("Required username to update of Swagbucks account.")
-		await self.update_account(username.lower())
+		await self.update_account(username)
 		
 	@commands.command()
 	async def sbdetails(self, ctx, username: str = None):
