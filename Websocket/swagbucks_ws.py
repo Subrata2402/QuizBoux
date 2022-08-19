@@ -317,7 +317,7 @@ class SwagbucksLive(SbWebSocket):
 		"""
 		If the bearer token is expired then refresh the token and update account.
 		"""
-		details = db.sb_details.find_one({"username": username})
+		details = db.sb_details.find_one({"username": username.lower()})
 		if not details:
 			return await self.send_hook("Not found with this username.")
 		user_id = details["user_id"]
@@ -329,7 +329,7 @@ class SwagbucksLive(SbWebSocket):
 			"accept-encoding": "gzip",
 			# "authorization": self.get_token()
 		}
-		if username.lower() in ["subrata3250", "josephine325"]:
+		if username.lower() in ["subrata3250", "josephine325", "sakhman32"]:
 			username = username.title()
 		data = f"_device=f6acc085-c395-4688-913f-ea2b36d4205f&partnerMemberId={user_id}&partnerUserName={username}&verify=false&partnerApim=1&partnerHash={sig}"
 		data = await self.fetch("POST", "auth/token", headers = headers, data = data)
