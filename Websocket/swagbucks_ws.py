@@ -361,7 +361,7 @@ class SwagbucksLive(SbWebSocket):
 		data = await self.fetch("POST", "?cmd=apm-3", headers = headers, params = params, host = "host")
 		if data["status"] != 200:
 			return await self.send_hook("```\n{}\n```".format(data))
-		if sb: return data["swagbucks"]
+		if sb: return data.get("swagbucks")
 		description = f"```\n" \
 				f"• User Id             ::  {data['member_id']}\n" \
 				f"• Email Verified      ::  {data['email_verified']}\n" \
