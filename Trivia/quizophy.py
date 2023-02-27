@@ -190,6 +190,7 @@ class Quizophy(commands.Cog):
 		
 	@commands.command()
 	async def answer(self, ctx, key:str = "str", language: str = "english"):
+		"""To get the answer of the quiz."""
 		user_id = random.randint(12288, 18829)
 		file = {
 			'userid' : (None, user_id),
@@ -221,14 +222,17 @@ class Quizophy(commands.Cog):
 		
 	@commands.command()
 	async def quiz(self, ctx, quiz_type: str = "paid", number: int = 1):
+		"""To get the quiz details."""
 		await self.get_quiz_details(ctx, quiz_type, number)
 		
 	@commands.command()
 	async def gans(self, ctx, key:str = "str", language: str = "english"):
+		"""To get the google answer."""
 		await self.get_ques_and_ans(ctx, key, language)
 
 	@commands.command()
 	async def openai(self, ctx, *, question: str):
+		"""To get open ai search result."""
 		openai.api_key = "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"
 		response = openai.Completion.create(
 			model="text-davinci-003",
