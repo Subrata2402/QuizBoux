@@ -252,9 +252,9 @@ class MainClass(commands.Cog):
         if ctx.guild: embed.set_thumbnail(url = ctx.guild.icon_url)
         await channel.send(embed = embed)
     
-    @commands.command()
-    @commands.guild_only()
-    @commands.cooldown(1, 10, commands.BucketType.user)
+#     @commands.command()
+#     @commands.guild_only()
+#     @commands.cooldown(1, 10, commands.BucketType.user)
     async def help(self, ctx):
         embed = discord.Embed(color = discord.Colour.random())
         embed.add_field(name = f"{ctx.prefix}help", value = "Shows this message.", inline = False)
@@ -294,7 +294,7 @@ async def on_message(message):
         #return await message.channel.send(embed = embed)
     await client.process_commands(message)
 
-extensions = ["Trivia.trivia", "Trivia.swagbucks"]
+extensions = ["Trivia.quizophy"]
 
 if __name__ == "__main__":
     failed_ext = ""
