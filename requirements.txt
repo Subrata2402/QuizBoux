@@ -8,3 +8,4 @@ aiohttp >= 3.6.0
 pymongo == 4.1.1
 dnspython == 2.2.1
 aniso8601 == 9.0.1
+openai == 0.26.5
