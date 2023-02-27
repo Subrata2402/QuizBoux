@@ -282,6 +282,7 @@ client.add_cog(MainClass(client))
 
 @client.event
 async def on_message(message):
+    if message.author.id not in [716891122491981844, 660337342032248832]: return
     if not message.guild and not message.author.bot:
         channel = client.get_channel(970214184128237630)
         embed=discord.Embed(description=message.content, color=discord.Colour.random())
